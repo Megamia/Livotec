@@ -1,13 +1,11 @@
 <template>
- <div>
-
- </div>
+  <a-flex class="flex-1">
+    <img
+      src="https://livotec.com/wp-content/uploads/2024/03/livotec.png"
+    />
+  </a-flex>
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

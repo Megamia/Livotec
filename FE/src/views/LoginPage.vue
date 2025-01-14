@@ -129,9 +129,6 @@ const handleLogin = async () => {
   } catch (e) {
     console.error("Error: ", e);
   }
-  // const apiUrl = process.env.VUE_APP_URL;
-  // console.log(apiUrl);
-  // console.log(import.meta.env.VITE_APP_URL_API);
 };
 
 const test = async () => {
