@@ -1,10 +1,10 @@
 <template>
-  <a-flex class="flex-1 flex-col">
+  <div>
     <DefaultLayout>
-      <span>Home</span>
-      <div class="h-[2000px]"></div>
+      <div></div>
+      <span>test</span>
     </DefaultLayout>
-  </a-flex>
+  </div>
 </template>
 
 <script setup>
