@@ -1,14 +1,14 @@
 <template>
   <div>
-    <a-flex class="justify-center bg-[#02B6AC]">
+    <a-flex class="justify-center bg-[#02B6AC] sticky top-0">
       <HeaderComponent />
     </a-flex>
     <main>
       <slot></slot>
     </main>
-    <div class="relative bottom-0 left-0">
+    <a-flex class="justify-center bg-[#EAEBF4] bottom-0">
       <FooterComponent />
-    </div>
+    </a-flex>
   </div>
 </template>
 

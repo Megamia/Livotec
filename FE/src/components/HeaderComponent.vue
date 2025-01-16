@@ -13,9 +13,9 @@
           <BxSearch />
         </template>
       </a-input>
-      <a-flex class="text-white gap-10">
+      <a-flex class="text-white flex-wrap gap-x-[8px] ">
         <a-dropdown
-          class="flex flex-row items-center gap-1"
+          class="flex flex-row items-center gap-1 hover:text-white  text-nowrap basis-1/7 "
           v-for="item in data"
           :key="item.id"
         >
@@ -100,10 +100,45 @@ const data = ref([
   {
     id: 2,
     name: "Bếp từ",
+    itemChil: [
+      { id: 1, name: "chil1" },
+      { id: 2, name: "chil2" },
+      { id: 3, name: "chil3" },
+    ],
   },
   {
     id: 3,
     name: "Bình nước nóng",
+    itemChil: [
+      { id: 1, name: "chil1" },
+      { id: 2, name: "chil2" },
+      { id: 3, name: "chil3" },
+    ],
+  },
+  {
+    id: 4,
+    name: "Linh kiện lõi lọc",
+  },
+  {
+    id: 5,
+    name: "Tin tức",
+  },
+  {
+    id: 6,
+    name: "Giới thiệu",
+  },
+  {
+    id: 7,
+    name: "Bảo hành",
+  },
+  {
+    id: 8,
+    name: "Thư viện",
+    itemChil: [
+      { id: 1, name: "chil1" },
+      { id: 2, name: "chil2" },
+      { id: 3, name: "chil3" },
+    ],
   },
 ]);
 </script>
