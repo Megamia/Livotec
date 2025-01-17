@@ -49,10 +49,14 @@
       <AnOutlinedMenu class="icon iconHidden" @click="showMenu" />
       <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
       <a-flex class="items-center">
-        <RouterLink to="/login" class="text-white" v-if="isLogin == false">
+        <AnOutlinedUser
+          v-if="isLogin"
+          @click="handleLogout"
+          class="icon iconShow"
+        />
+        <RouterLink to="/login" class="text-white" v-else>
           Đăng nhập</RouterLink
         >
-        <AnOutlinedUser v-else @click="handleLogout" class="icon iconShow" />
       </a-flex>
     </a-flex>
   </a-flex>
@@ -74,7 +78,11 @@ import {
 const isLogin = ref(false);
 
 const handleLogout = () => {
-  isLogin.value = false;
+  if (confirm("Chắc chắn muốn đăng xuất?")) {
+    isLogin.value = false;
+  } else {
+    return;
+  }
 };
 
 const fetchData = () => {
