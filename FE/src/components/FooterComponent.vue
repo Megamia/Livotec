@@ -78,18 +78,22 @@
             <a-flex class="flex-wrap">
               <img
                 src="https://livotec.com/wp-content/themes/livotec/assets/app/images/icons/png/visa.png"
+                class="hoverImg"
               />
 
               <img
                 src="https://livotec.com/wp-content/themes/livotec/assets/app/images/icons/png/credit.png"
+                class="hoverImg"
               />
 
               <img
                 src="https://livotec.com/wp-content/themes/livotec/assets/app/images/icons/png/jcb.png"
+                class="hoverImg"
               />
 
               <img
                 src="https://livotec.com/wp-content/themes/livotec/assets/app/images/icons/png/vnpay.png"
+                class="hoverImg"
               />
             </a-flex>
           </a-flex>
@@ -100,7 +104,7 @@
             <a-flex class="flex-wrap">
               <img
                 src="https://livotec.com/wp-content/themes/livotec/assets/app/images/icons/png/viettelpost.jpg"
-                class="w-[80px]"
+                class="w-[80px] hoverImg"
               />
             </a-flex>
           </a-flex>
@@ -170,4 +174,10 @@ const dataFooter = ref([
 ]);
 </script>
 
-<style scoped></style>
+<style scoped>
+.hoverImg:hover {
+  transform: translateY(-4px);
+  animation-duration: 200ms;
+  transition: 0.15s ease;
+}
+</style>
