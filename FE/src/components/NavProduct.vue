@@ -23,7 +23,7 @@ const data = ref([
 </script>
 
 <style scoped>
-.a ::v-deep(.ant-tabs-tab) {
+.a::v-deep(.ant-tabs-tab) {
   margin: 0;
   padding-inline: 0.5rem;
 }

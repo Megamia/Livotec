@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
     "@kalimahapps/vue-icons": "^1.7.1",
     "ant-design-vue": "^4.2.6",
     "axios": "^1.7.9",

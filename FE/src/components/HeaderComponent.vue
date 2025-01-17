@@ -13,9 +13,9 @@
           <BxSearch />
         </template>
       </a-input>
-      <a-flex class="text-white flex-wrap gap-x-[8px] ">
+      <a-flex class="text-white flex-wrap gap-x-[8px]">
         <a-dropdown
-          class="flex flex-row items-center gap-1 hover:text-white  text-nowrap basis-1/7 "
+          class="flex flex-row items-center gap-1 hover:text-white text-nowrap basis-1/7"
           v-for="item in data"
           :key="item.id"
         >
@@ -34,7 +34,8 @@
       </a-flex>
     </a-flex>
     <a-flex class="items-center justify-end gap-4">
-      <BxSearch class="icon iconHidden" />
+      <BxSearch class="icon iconHidden" @click="showSearch" />
+      <SearchComponent v-if="isOpenSearch" @close-search="showSearch" />
       <a-badge
         count="5"
         :number-style="{
@@ -45,7 +46,8 @@
       >
         <BsCart2 class="icon iconShow" @click="showCart" />
       </a-badge>
-      <AnOutlinedMenu class="icon iconHidden" />
+      <AnOutlinedMenu class="icon iconHidden" @click="showMenu" />
+      <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
       <a-flex class="items-center">
         <RouterLink to="/login" class="text-white" v-if="isLogin == false">
           Đăng nhập</RouterLink
@@ -57,6 +59,8 @@
 </template>
 
 <script setup>
+import MenuComponent from "./MenuComponent.vue";
+import SearchComponent from "./SearchComponent.vue";
 import { ref, onMounted } from "vue";
 import "./header.css";
 import {
@@ -83,8 +87,20 @@ const fetchData = () => {
 };
 onMounted(() => fetchData());
 
+const isOpenMenu = ref(false);
+const isOpenSearch = ref(false);
+
 const showCart = () => {
   alert(" Làm gì có 5 nào! \n Bị lừa rồi");
+};
+
+const showMenu = () => {
+  isOpenMenu.value = !isOpenMenu.value;
+  console.log(isOpenMenu.value);
+};
+
+const showSearch = () => {
+  isOpenSearch.value = !isOpenSearch.value;
 };
 
 const data = ref([
