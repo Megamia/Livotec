@@ -7,7 +7,7 @@
         />
       </router-link>
     </a-flex>
-    <a-flex class="flex-1" vertical>
+    <a-flex class="flex-1 hidden-mobie" vertical>
       <a-input placeholder="Chúng tôi có thể giúp bạn tìm kiếm?">
         <template #suffix>
           <BxSearch />

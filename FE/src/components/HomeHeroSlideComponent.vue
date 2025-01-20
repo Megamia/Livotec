@@ -4,7 +4,7 @@
       clickable: true,
     }"
     :modules="modules"
-    class="mySlide"
+    class="mySlide max-w-[100%]"
   >
     <swiper-slide>
       <img
@@ -57,15 +57,5 @@ const modules = [Pagination];
 .mySlide::v-deep(.swiper-pagination-bullet-active),
 .mySlide::v-deep(.swiper-pagination-bullet):hover {
   background-color: #5893ed;
-}
-.mySlide::v-deep(
-    .swiper
-      .swiper-initialized
-      .swiper-horizontal
-      .swiper-pointer-events
-      .mySlide
-      .swiper-backface-hidden
-  ) {
-  max-width: 100%;
 }
 </style>

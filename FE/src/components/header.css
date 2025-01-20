@@ -21,12 +21,11 @@
 
 .icon {
   cursor: pointer;
-  color:white;
+  color: white;
   font-size: 20px;
-
 }
 .icon:hover {
-  color:white;
+  color: white;
 
   opacity: 75;
 }
@@ -42,5 +41,8 @@
   }
   .iconShow {
     font-size: 20px;
+  }
+  .hidden-mobie {
+    display: none;
   }
 }
