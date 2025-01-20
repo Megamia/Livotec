@@ -14,3 +14,9 @@ columns:
         type: text
         searchable: true
         sortable: true
+    available:
+        label: 'Khả dụng'
+        type: switch
+        searchable: true
+        invisible: false
+        sortable: true

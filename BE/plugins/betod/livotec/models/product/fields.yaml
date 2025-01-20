@@ -1,7 +1,7 @@
 tabs:
     fields:
         thongso:
-            label: ''
+            label: 'Thông Số'
             prompt: 'Add new item'
             displayMode: accordion
             span: full
@@ -10,14 +10,18 @@ tabs:
             form:
                 fields:
                     thuoc_tinh:
-                        label: 'Thuộc tính'
+                        label: 'Thuộc Tính'
                         span: auto
                         type: text
                     gia_tri:
-                        label: 'Giá trị'
+                        label: 'Giá Trị'
                         span: auto
                         type: text
 fields:
+    available:
+        label: 'Khả dung·'
+        span: full
+        type: switch
     name:
         label: 'Tên sản phẩm'
         span: auto
@@ -32,21 +36,8 @@ fields:
     description:
         label: 'Mô tả'
         size: large
-        span: auto
+        span: full
         type: richeditor
-    image:
-        label: 'Ảnh preview'
-        mode: image
-        useCaption: true
-        thumbOptions:
-            mode: crop
-            extension: auto
-        span: auto
-        type: fileupload
-    price:
-        label: Giá
-        span: auto
-        type: number
     category:
         label: 'Danh mục'
         nameFrom: name
@@ -55,3 +46,25 @@ fields:
         required: 0
         containerAttributes: {  }
         type: relation
+    price:
+        label: Giá
+        span: auto
+        type: number
+    image:
+        label: 'Ảnh preview'
+        mode: image
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: left
+        type: fileupload
+    gallery:
+        label: 'Ảnh sản phẩm'
+        mode: image
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: auto
+        type: fileupload
