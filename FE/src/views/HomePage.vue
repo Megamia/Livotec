@@ -1,13 +1,14 @@
 <template>
   <a-flex class="flex-1 flex-col">
     <DefaultLayout>
-      <span>Home</span>
-      <div class="h-[2000px]"></div>
+      <HomeHeroSlideComponent />
+      <a-flex>abs</a-flex>
     </DefaultLayout>
   </a-flex>
 </template>
 
 <script setup>
+import HomeHeroSlideComponent from "@/components/HomeHeroSlideComponent.vue";
 import DefaultLayout from "./DefaultLayout.vue";
 </script>
 

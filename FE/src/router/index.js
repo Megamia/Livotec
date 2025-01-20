@@ -33,6 +33,11 @@ const router = createRouter({
       name: "menu",
       component: () => import("../components/MenuComponent.vue"),
     },
+    {
+      path: "/slide",
+      name: "slide",
+      component: () => import("../components/HomeHeroSlideComponent.vue"),
+    },
   ],
 });
 
