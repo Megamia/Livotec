@@ -1,12 +1,16 @@
 <template>
-  <div>
-    <h1 class="text-[24px] font-semibold text-[#02b6ac]">Livotec-Công nghệ thông minh, sống khỏe mỗi ngày</h1>
+  <a-flex vertical align="center">
+    <h1 class="text-[24px] font-semibold text-[#02b6ac]">
+      Livotec-Công nghệ thông minh, sống khỏe mỗi ngày
+    </h1>
     <a-tabs v-model:activeKey="activeKey" class="a">
       <a-tab-pane v-for="item in data" :key="item.id" :tab="item.name">
-        {{ item.data }}
+        <a-flex>
+          {{ item.data }}
+        </a-flex>
       </a-tab-pane>
     </a-tabs>
-  </div>
+  </a-flex>
 </template>
 
 <script setup>
@@ -29,7 +33,7 @@ const data = ref([
 }
 
 .a::v-deep(.ant-tabs-nav .ant-tabs-tab-btn) {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
 }
 </style>
