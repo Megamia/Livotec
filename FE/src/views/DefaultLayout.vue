@@ -1,9 +1,11 @@
 <template>
   <div>
-    <a-flex class="justify-center bg-[#02B6AC] sticky top-0 z-10 border-b-2">
+    <a-flex
+      class="justify-center bg-[#02B6AC] sticky top-0 z-50 border-b-[1px] border-white"
+    >
       <HeaderComponent />
     </a-flex>
-    <main class="justify-center flex">
+    <main class="flex flex-col flex-1 gap-[100px]">
       <slot></slot>
     </main>
     <a-flex class="justify-center bg-[#EAEBF4] bottom-0">

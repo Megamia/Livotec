@@ -28,6 +28,21 @@ const router = createRouter({
       name: "test",
       component: () => import("../views/TestPage.vue"),
     },
+    {
+      path: "/nav",
+      name: "nav",
+      component: () => import("../components/NavProduct.vue"),
+    },
+    {
+      path: "/menu",
+      name: "menu",
+      component: () => import("../components/MenuComponent.vue"),
+    },
+    {
+      path: "/slide",
+      name: "slide",
+      component: () => import("../components/HomeHeroSlideComponent.vue"),
+    },
   ],
 });
 
