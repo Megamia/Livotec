@@ -16,7 +16,7 @@ class Product extends Model
      */
     public $table = 'betod_livotec_product';
 
-    protected $jsonable = ['thongso '];
+    protected $jsonable = ['thongso'];
     /**Relations */
     public $belongsTo = [
         'category' => 'Betod\Livotec\Models\Category'
@@ -24,6 +24,9 @@ class Product extends Model
     /* image preview*/
     public $attachOne = [
         'image' => 'System\Models\File'
+    ];
+    public $attachMany = [
+        'gallery' => 'System\Models\File'
     ];
 
     /**
