@@ -1,5 +1,5 @@
 <template>
-  <a-flex vertical align="center">
+  <a-flex vertical align="center" class="w-[100%]">
     <h1 class="text-[24px] font-semibold text-[#02b6ac]">
       Livotec - Công nghệ thông minh, sống khỏe mỗi ngày
     </h1>
@@ -15,25 +15,63 @@
       </a-tabs>
     </a-flex>
 
-    <a-flex v-if="haveData" gap="10px" class="w-[900px]">
-        <swiper
-          :slidesPerView="4"
-          :navigation="true"
-          :modules="modules"
-          class="max-w-[1000px] mySlide"
-        >
-          <swiper-slide>
-            <a-flex vertical v-for="itemChil in dataChil" :key="itemChil.id">
+    <a-flex v-if="haveData" class="max-w-[100%] px-[100px] py-[30px]">
+      <swiper
+        :slides-per-view="Math.min(dataChil.length, 4)"
+        :spaceBetween="20"
+        :modules="modules"
+        :navigation="true"
+      >
+        <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id">
+          <a-flex vertical class="flex-1 bg-[#F3F4F6]">
+            <div
+              class="absolute bg-gradient-to-r from-black/50 to-black/50 w-full text-white p-2"
+            >
+              <div v-html="itemChil.description" class="h-[180px] "/>
+            </div>
+            <a-flex vertical align="center" class="flex-1 py-[20px]">
+              <img
+                src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
+              />
+              <a-flex class="px-[10px] w-[100%]">
+                <a-flex gap="12" vertical class="flex-1">
+                  <span class="text-[16px] font-bold">
+                    {{ itemChil.name }}
+                  </span>
+                  <span class="text-[16px] font-bold text-[#02B6AC]">
+                    {{ itemChil.price }}
+                  </span>
+                  <a-flex vertical class="gap-[10px] text-[16px] font-bold">
+                    <button
+                      class="flex-1 px-[12px] py-[10px] rounded-[9999px] text-white bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
+                    >
+                      Mua ngay
+                    </button>
+
+                    <button
+                      class="flex-1 font-sans px-[12px] py-[10px] rounded-[9999px] text-white bg-[#02b6ac]"
+                    >
+                      Chi tiết
+                    </button>
+                  </a-flex>
+                </a-flex>
+              </a-flex>
+            </a-flex>
+            <!-- <div class="relative">
+              <img src="../../../../../../Downloads/429480182_1083868169326367_8227484725033197706_n.png"/>
+            </div>
+            <a-flex>
               <div>Tên: {{ itemChil.name }}</div>
               <div>Giá: {{ itemChil.price }}</div>
-            </a-flex>
-          </swiper-slide>
-          <!-- <swiper-slide>1</swiper-slide>
+            </a-flex> -->
+          </a-flex>
+        </swiper-slide>
+        <!-- <swiper-slide>1</swiper-slide>
           <swiper-slide>2</swiper-slide>
           <swiper-slide>3</swiper-slide>
           <swiper-slide>4</swiper-slide>
           <swiper-slide>5</swiper-slide> -->
-        </swiper>
+      </swiper>
 
       <!-- <a-flex v-for="itemChil in dataChil" :key="itemChil.id" class="item">
         <a-flex vertical>
@@ -83,6 +121,8 @@ const fetchData = async (id) => {
     );
     if (response.data && response.data.length > 0) {
       dataChil.value = response.data;
+      console.log(dataChil.value);
+
       haveData.value = true;
     } else {
       dataChil.value = [];
@@ -98,7 +138,7 @@ const fetchData = async (id) => {
 onMounted(() => fetchData(activeKey.value));
 </script>
 
-<style>
+<style scoped>
 .a::v-deep(.ant-tabs-tab) {
   margin: 0;
   padding-inline: 0.5rem;
@@ -120,28 +160,5 @@ onMounted(() => fetchData(activeKey.value));
 .test ul li {
   position: relative;
   padding-left: 10px;
-}
-</style>
-<style scoped>
-.mySlide::v-deep(.swiper-pagination) {
-  width: auto;
-  display: flex;
-  gap: 15px;
-  border-radius: 15px;
-  background: #f5f1f1;
-  padding: 12px 15px;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-}
-.mySlide::v-deep(.swiper-pagination-bullet) {
-  background-color: #706a6a;
-  opacity: 1;
-}
-
-.mySlide::v-deep(.swiper-pagination-bullet-active),
-.mySlide::v-deep(.swiper-pagination-bullet):hover {
-  background-color: #5893ed;
 }
 </style>
