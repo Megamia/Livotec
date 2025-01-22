@@ -2,34 +2,77 @@
   <DefaultLayout>
     <section v-if="product" class="w-full container">
       <main :key="product.id">
-        <div class="w-full flex flex-wrap gap-2 max-md:flex-col">
-          <div class="flex-1 flex px-2 flex-col m-3 border rounded-md">
-            <a-image-preview-group>
-              <div class="w-full">
-                <a-image :src="activeImage" alt="Product Image" />
+        <div class="py-2 border-b-2">
+          <a-breadcrumb>
+            <template #separator><span>></span></template>
+            <a-breadcrumb-item
+              ><a href="/" class="text-[15px] font-semibold"
+                >Trang chủ</a
+              ></a-breadcrumb-item
+            >
+            <a-breadcrumb-item
+              ><a
+                :href="`/${product.category.slug}`"
+                class="text-[15px] font-semibold"
+                >{{ product.category.name }}</a
+              ></a-breadcrumb-item
+            >
+            <a-breadcrumb-item
+              ><span class="text-[15px] font-semibold text-[#02B6AC]">{{
+                product.name
+              }}</span></a-breadcrumb-item
+            >
+          </a-breadcrumb>
+        </div>
+        <div class="w-full flex flex-wrap gap-2 max-lg:flex-col">
+          <div class="flex-1 flex flex-col">
+            <div class="flex-1 flex flex-col my-3 border rounded-md">
+              <a-image-preview-group>
+                <div class="w-full">
+                  <a-image :src="activeImage" alt="Product Image" />
+                </div>
+                <div class="flex-wrap flex justify-evenly">
+                  <a-image
+                    v-for="item in product.gallery"
+                    :key="item.id"
+                    :src="item.path"
+                    :width="120"
+                    @click="setActiveImage(item.path)"
+                    alt="Product Image"
+                    :class="{
+                      'gallery-image ring-2 ring-[#38B6AC] scale-100 rounded-sm my-2':
+                        item.path === activeImage,
+                      'gallery-image rounded-sm border my-2':
+                        item.path !== activeImage,
+                    }"
+                  />
+                </div>
+              </a-image-preview-group>
+            </div>
+            <div class="flex flex-1 justify-evenly items-center">
+              <div class="flex flex-col justify-center items-center gap-2">
+                <img src="../assets/freeship.svg" />
+                <span class="font-medium text-sm"
+                  >Miễn phí vận chuyển toàn quốc</span
+                >
               </div>
-              <div class="flex justify-evenly gap-2 w-full">
-                <a-image
-                  v-for="item in product.gallery"
-                  :key="item.id"
-                  :src="item.path"
-                  @click="setActiveImage(item.path)"
-                  alt="Product Image"
-                  :class="{
-                    'gallery-image ring-2 ring-[#38B6AC] scale-100 rounded-sm':
-                      item.path === activeImage,
-                    'gallery-image': item.path !== activeImage,
-                  }"
-                />
+              <div class="flex flex-col justify-center items-center gap-2">
+                <img src="../assets/setup.svg" />
+                <span class="font-medium text-sm"
+                  >Miễn phí lắp đặt toàn quốc</span
+                >
               </div>
-            </a-image-preview-group>
+            </div>
           </div>
-          <div class="flex-1 max-md:w-full p-2 flex gap-2 flex-col">
+          <div class="flex-1 max-lg:w-full p-2 flex gap-2 flex-col">
             <h1 class="text-[#38B6AC] max-md:text-center text-[30px] font-bold">
               {{ product.name }}
             </h1>
-            <a-rate :value="5" class="text-[25px] max-md:text-center text-[#38B6AC]" />
-            <div class="flex items-center gap-3 max-md:justify-center">
+            <a-rate
+              :value="5"
+              class="text-[25px] max-lg:text-center text-[#38B6AC]"
+            />
+            <div class="flex items-center gap-3 max-lg:justify-center">
               <span> Chia sẻ mạng sản phẩm: </span>
               <div class="w-8 h-8 bg-blue-300"></div>
               <div class="w-8 h-8 bg-blue-300"></div>
@@ -66,7 +109,19 @@
               </div>
             </div>
           </div>
-          <div></div>
+        </div>
+        <div class="my-4">
+          <a-tabs v-model:activeKey="activeKey" size="large">
+            <a-tab-pane key="1" tab="Đặc điểm nổi bật"
+              >Content of Tab Pane 1</a-tab-pane
+            >
+            <a-tab-pane key="2" tab="Thông số sản phẩm" force-render
+              >Content of Tab Pane 2</a-tab-pane
+            >
+            <a-tab-pane key="3" tab="Đánh giá"
+              >Content of Tab Pane 3</a-tab-pane
+            >
+          </a-tabs>
         </div>
       </main>
     </section>
@@ -79,11 +134,13 @@ import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import DefaultLayout from "./DefaultLayout.vue";
 import axios from "axios";
+import { AkChevronRight } from "@kalimahapps/vue-icons";
 
 const route = useRoute();
 const product = ref(null);
 const formattedPrice = ref(null);
 const activeImage = ref(null);
+const activeKey = ref("2");
 
 onMounted(async () => {
   try {
@@ -133,6 +190,4 @@ const setActiveImage = (path) => {
   object-fit: cover; /* Đảm bảo ảnh vừa với khung mà không bị biến dạng */
   border-radius: 4px; /* Bo tròn góc (tuỳ chọn) */
 }
-
-
 </style>
