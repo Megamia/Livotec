@@ -15,41 +15,57 @@
       </a-tabs>
     </a-flex>
 
-    <a-flex v-if="haveData" class="max-w-[100%] px-[100px] py-[30px]">
+    <a-flex
+      v-if="haveData"
+      class="max-w-[100%] px-[100px] py-[30px] justify-center"
+    >
       <swiper
         :slides-per-view="Math.min(dataChil.length, 4)"
-        :spaceBetween="20"
+        :spaceBetween="30"
         :modules="modules"
         :navigation="true"
+        :breakpoints="breakpoints"
       >
         <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id">
-          <a-flex vertical class="flex-1 bg-[#F3F4F6]">
-            <div
-              class="absolute bg-gradient-to-r from-black/50 to-black/50 w-full text-white p-2"
-            >
-              <div v-html="itemChil.description" class="h-[180px] "/>
-            </div>
-            <a-flex vertical align="center" class="flex-1 py-[20px]">
-              <img
-                src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
-              />
-              <a-flex class="px-[10px] w-[100%]">
+          <a-flex vertical class="bg-[#F3F4F6] rounded-lg  pb-[20px]">
+            <a-flex vertical align="center" class="flex-1 ">
+              <div class="w-full relative pt-[20px] justify-center flex">
+                <img
+                  src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
+                />
+                <div
+                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
+                >
+                  <span class="text-[20px] text-white abc">Mới nhất</span>
+                </div>
+                <div
+                  class="absolute h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description rounded-t-lg z-20"
+                >
+                  <div
+                    v-html="itemChil.description"
+                    class="max-h-[90%] overflow-y-scroll text-left test"
+                  />
+                </div>
+              </div>
+              <a-flex class="px-[10px] w-[70%]">
                 <a-flex gap="12" vertical class="flex-1">
-                  <span class="text-[16px] font-bold">
-                    {{ itemChil.name }}
+                  <span
+                    class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer"
+                  >
+                    {{ itemChil.name ? itemChil.name : "Null" }}
                   </span>
                   <span class="text-[16px] font-bold text-[#02B6AC]">
-                    {{ itemChil.price }}
+                    {{ itemChil.price ? itemChil.price : "Null" }}
                   </span>
-                  <a-flex vertical class="gap-[10px] text-[16px] font-bold">
+                  <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
-                      class="flex-1 px-[12px] py-[10px] rounded-[9999px] text-white bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
+                      class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
                     >
                       Mua ngay
                     </button>
 
                     <button
-                      class="flex-1 font-sans px-[12px] py-[10px] rounded-[9999px] text-white bg-[#02b6ac]"
+                      class="flex-1 font-sans border-[1px] border-[#4fa8e7] px-[12px] py-[10px] rounded-full text-white bg-[#02b6ac] hover:bg-[linear-gradient(270deg,_#ccf7fb_2.05%,_#fff_100%)] hover:text-[#424242]"
                     >
                       Chi tiết
                     </button>
@@ -136,9 +152,24 @@ const fetchData = async (id) => {
 };
 
 onMounted(() => fetchData(activeKey.value));
+
+const breakpoints = {
+  0: {
+    slidesPerView: 1,
+  },
+  768: {
+    slidesPerView: 2,
+  },
+  992: {
+    slidesPerView: 3,
+  },
+  1200: {
+    slidesPerView: 4,
+  },
+};
 </script>
 
-<style scoped>
+<style>
 .a::v-deep(.ant-tabs-tab) {
   margin: 0;
   padding-inline: 0.5rem;
@@ -148,11 +179,13 @@ onMounted(() => fetchData(activeKey.value));
   font-size: 18px;
   font-weight: 500;
 }
+.test {
+  padding: 10px 20px;
+}
 
 .test ul li::before {
   content: "•";
   margin-right: 0.5rem;
-  color: black;
   position: absolute;
   left: 0;
   top: 0;
@@ -160,5 +193,22 @@ onMounted(() => fetchData(activeKey.value));
 .test ul li {
   position: relative;
   padding-left: 10px;
+  color: white;
+}
+.test::-webkit-scrollbar {
+  width: 5px;
+}
+
+.test::-webkit-scrollbar-track {
+  background: #9b9b9c;
+  border-radius: 4px;
+}
+.test::-webkit-scrollbar-thumb {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.test::-webkit-scrollbar-thumb:hover {
+  background: #f0f0f0;
 }
 </style>
