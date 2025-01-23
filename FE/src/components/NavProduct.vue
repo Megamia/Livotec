@@ -1,10 +1,14 @@
 <template>
-  <a-flex vertical align="center" class="w-[100%]">
+  <a-flex vertical align="center" class="w-full">
     <h1 class="text-[24px] font-semibold text-[#02b6ac]">
       Livotec - Công nghệ thông minh, sống khỏe mỗi ngày
     </h1>
-    <a-flex>
-      <a-tabs v-model:data="activeKey" class="a" @change="changeData">
+    <a-flex class="max-w-[100%]">
+      <a-tabs
+        v-model:data="activeKey"
+        class="nav max-w-[100%]"
+        @change="changeData"
+      >
         <a-tab-pane
           v-for="item in data"
           :key="item.id"
@@ -20,15 +24,16 @@
       class="max-w-[100%] px-[100px] py-[30px] justify-center"
     >
       <swiper
-        :slides-per-view="Math.min(dataChil.length, 4)"
+        :slidesPerView="dataChil.length > 0 ? Math.min(dataChil.length, 4) : 1"
         :spaceBetween="30"
         :modules="modules"
         :navigation="true"
         :breakpoints="breakpoints"
+        class="swiperProduct"
       >
         <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id">
-          <a-flex vertical class="bg-[#F3F4F6] rounded-lg  pb-[20px]">
-            <a-flex vertical align="center" class="flex-1 ">
+          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px]">
+            <a-flex vertical align="center" class="flex-1">
               <div class="w-full relative pt-[20px] justify-center flex">
                 <img
                   src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
@@ -36,7 +41,7 @@
                 <div
                   class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
                 >
-                  <span class="text-[20px] text-white abc">Mới nhất</span>
+                  <span class="text-[20px] text-white">Mới nhất</span>
                 </div>
                 <div
                   class="absolute h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description rounded-t-lg z-20"
@@ -73,50 +78,27 @@
                 </a-flex>
               </a-flex>
             </a-flex>
-            <!-- <div class="relative">
-              <img src="../../../../../../Downloads/429480182_1083868169326367_8227484725033197706_n.png"/>
-            </div>
-            <a-flex>
-              <div>Tên: {{ itemChil.name }}</div>
-              <div>Giá: {{ itemChil.price }}</div>
-            </a-flex> -->
           </a-flex>
         </swiper-slide>
-        <!-- <swiper-slide>1</swiper-slide>
-          <swiper-slide>2</swiper-slide>
-          <swiper-slide>3</swiper-slide>
-          <swiper-slide>4</swiper-slide>
-          <swiper-slide>5</swiper-slide> -->
       </swiper>
-
-      <!-- <a-flex v-for="itemChil in dataChil" :key="itemChil.id" class="item">
-        <a-flex vertical>
-          <div>ID: {{ itemChil.id }}</div>
-          <div>Tên: {{ itemChil.name }}</div>
-          <div>Giá: {{ itemChil.price }}</div>
-          <div v-html="itemChil.description" class="test"></div>
-        </a-flex>
-      </a-flex> -->
     </a-flex>
     <div v-else>Không có dữ liệu để hiển thị</div>
   </a-flex>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/vue";
-
 import "swiper/css";
-
 import "swiper/css/navigation";
-
 import "./NavProduct.css";
-
 import { Navigation } from "swiper";
+
 const modules = [Navigation];
 const activeKey = ref(1);
 const haveData = ref(false);
+
 const data = ref([
   { id: 1, name: "Bếp từ" },
   { id: 2, name: "Máy lọc nước" },
@@ -169,16 +151,19 @@ const breakpoints = {
 };
 </script>
 
-<style>
-.a::v-deep(.ant-tabs-tab) {
+<style scoped>
+.nav::v-deep(.ant-tabs-tab) {
   margin: 0;
   padding-inline: 0.5rem;
 }
 
-.a::v-deep(.ant-tabs-nav .ant-tabs-tab-btn) {
+.nav::v-deep(.ant-tabs-nav .ant-tabs-tab-btn) {
   font-size: 18px;
   font-weight: 500;
 }
+</style>
+
+<style>
 .test {
   padding: 10px 20px;
 }
