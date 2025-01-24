@@ -8,14 +8,16 @@ Route::group(['prefix' => 'apiProduct'], function () {
         return $product;
     });
 
-    Route::get('products/{category_id}', function ($category_id) {
-        $products = Product::where('category_id', $category_id)->get();
+    Route::get('products/{category_slug}', function ($category_slug) {
+        $products = Product::whereHas('category', function ($query) use ($category_slug) {
+            $query->where('slug', $category_slug);
+        })->get();
         return response()->json($products);
     });
 
 
-    Route::get('products/{slug}', function ($slug) {
-        $product = Product::with(['gallery', 'image', 'category'])->where('slug', $slug)->first();
+    Route::get('product/{slug}', function ($slug) {
+        $product = Product::with(['gallery', 'image', 'category', 'post'])->where('slug', $slug)->first();
         if ($product) {
             return $product;
         } else {

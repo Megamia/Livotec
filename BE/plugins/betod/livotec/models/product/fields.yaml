@@ -17,6 +17,16 @@ tabs:
                         label: 'Giá Trị'
                         span: auto
                         type: text
+secondaryTabs:
+    fields:
+        none:
+            label: ''
+            nameFrom: title
+            descriptionFrom: description
+            span: auto
+            hidden: 1
+            type: relation
+            tab: 0
 fields:
     available:
         label: 'Khả dung·'
@@ -42,7 +52,9 @@ fields:
         label: 'Danh mục'
         nameFrom: name
         descriptionFrom: description
+        emptyOption: 'Chọn danh mục ...'
         span: auto
+        cssClass: ''
         required: 0
         containerAttributes: {  }
         type: relation
@@ -68,3 +80,11 @@ fields:
             extension: auto
         span: auto
         type: fileupload
+    post:
+        label: 'Đặc điểm nổi bật'
+        nameFrom: title
+        descriptionFrom: summary
+        emptyOption: 'Chọn bài viết ...'
+        span: full
+        containerAttributes: {  }
+        type: relation

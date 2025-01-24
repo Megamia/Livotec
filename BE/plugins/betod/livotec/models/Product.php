@@ -11,6 +11,7 @@ class Product extends Model
     use \October\Rain\Database\Traits\Validation;
 
 
+
     /**
      * @var string table in the database used by the model.
      */
@@ -19,8 +20,10 @@ class Product extends Model
     protected $jsonable = ['thongso'];
     /**Relations */
     public $belongsTo = [
-        'category' => 'Betod\Livotec\Models\Category'
+        'category' => 'Betod\Livotec\Models\Category',
+        'post' => 'RainLab\Blog\Models\Post'
     ];
+
     /* image preview*/
     public $attachOne = [
         'image' => 'System\Models\File'

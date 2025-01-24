@@ -43,6 +43,11 @@ const router = createRouter({
       name: "slide",
       component: () => import("../components/HomeHeroSlideComponent.vue"),
     },
+    {
+      path: "/so-sanh-san-pham",
+      name: "CompareProducts",
+      component: () => import("../views/CompareProducts.vue"),
+    },
   ],
 });
 

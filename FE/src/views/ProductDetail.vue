@@ -102,22 +102,31 @@
               >
                 <span class="text-white text-[15px] font-medium">Mua Ngay</span>
               </div>
-              <div
+              <!-- <div
                 class="flex-1 bg-[#38B6AC] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
               >
                 <span class="text-white text-[15px] font-medium">So Sánh</span>
+              </div> -->
+              <div
+                class="flex-1 bg-[#38B6AC] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
+                @click="addToComparison(product)"
+              >
+                <span class="text-white text-[15px] font-medium">So Sánh</span>
               </div>
+              <div v-if="comparisonList.length === 1">coll</div>
             </div>
           </div>
         </div>
         <div class="my-4">
           <a-tabs v-model:activeKey="activeKey" size="large">
             <a-tab-pane key="1" tab="Đặc điểm nổi bật"
-              >Content of Tab Pane 1</a-tab-pane
-            >
+              ><ProductPosts v-if="product.post != null" :items="product.post"
+            /></a-tab-pane>
             <a-tab-pane key="2" tab="Thông số sản phẩm" force-render
-              >Content of Tab Pane 2</a-tab-pane
-            >
+              ><ProductSpecifications
+                v-if="product.thongso != null"
+                :items="product.thongso"
+            /></a-tab-pane>
             <a-tab-pane key="3" tab="Đánh giá"
               >Content of Tab Pane 3</a-tab-pane
             >
@@ -130,29 +139,32 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, inject } from "vue";
 import { useRoute } from "vue-router";
 import DefaultLayout from "./DefaultLayout.vue";
 import axios from "axios";
-import { AkChevronRight } from "@kalimahapps/vue-icons";
+import ProductSpecifications from "@/components/ProductSpecifications.vue";
+import ProductPosts from "@/components/ProductPosts.vue";
 
 const route = useRoute();
 const product = ref(null);
 const formattedPrice = ref(null);
 const activeImage = ref(null);
-const activeKey = ref("2");
+const activeKey = ref("1");
 
 onMounted(async () => {
   try {
     const { slug } = route.params;
     const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/products/${slug}`
+      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${slug}`
     );
     product.value = response.data;
     formattedPrice.value = new Intl.NumberFormat("de-DE").format(
       product.value.price
     );
-    activeImage.value = product.value.gallery[0].path;
+    if (product.value.gallery[0] != null) {
+      activeImage.value = product.value.gallery[0].path;
+    }
   } catch (error) {
     console.error("Error fetching product:", error);
   }
@@ -160,6 +172,16 @@ onMounted(async () => {
 
 const setActiveImage = (path) => {
   activeImage.value = path;
+};
+
+const comparisonList = inject("comparisonList", []);
+
+const addToComparison = (product) => {
+  if (!comparisonList.includes(product)) {
+    comparisonList.push(product);
+    console.log(comparisonList);
+    
+  }
 };
 </script>
 
