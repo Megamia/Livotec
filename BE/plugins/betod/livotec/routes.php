@@ -13,7 +13,7 @@ Route::group(['prefix' => 'apiProduct'], function () {
         return response()->json($navProducts);
     });
 
-    Route::get('products/{slug}', function ($slug) {
+    Route::get('product/{slug}', function ($slug) {
         $product = Product::with(['gallery', 'image', 'category', 'post'])->where('slug', $slug)->first();
         if ($product) {
             return $product;
