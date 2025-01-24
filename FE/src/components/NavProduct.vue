@@ -108,19 +108,18 @@ const data = ref([
 const dataChil = ref([]);
 
 const changeData = async (id) => {
-  activeKey.value = id; // Cập nhật tab hiện tại
+  activeKey.value = id; 
   await fetchData(id);
 };
 
 const fetchData = async (id) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/products/${id}`
+      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${id}`
     );
     if (response.data && response.data.length > 0) {
       dataChil.value = response.data;
       console.log(dataChil.value);
-
       haveData.value = true;
     } else {
       dataChil.value = [];

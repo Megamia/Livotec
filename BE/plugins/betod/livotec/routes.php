@@ -8,11 +8,10 @@ Route::group(['prefix' => 'apiProduct'], function () {
         return $product;
     });
 
-    Route::get('products/{category_id}', function ($category_id) {
-        $products = Product::where('category_id', $category_id)->get();
-        return response()->json($products);
+    Route::get('navProducts/{category_id}', function ($category_id) {
+        $navProducts = Product::where('category_id', $category_id)->get();
+        return response()->json($navProducts);
     });
-
 
     Route::get('products/{slug}', function ($slug) {
         $product = Product::with(['gallery', 'image', 'category'])->where('slug', $slug)->first();
