@@ -86,7 +86,7 @@
               {{ formattedPrice }}
               <span class="font-bold text-[35px] mb-1">₫</span>
             </div>
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-col gap-2">
               <div
                 class="w-full bg-[#38B6AC] py-2 flex justify-center items-center gap-2 rounded-md hover:opacity-80 cursor-pointer"
               >
@@ -97,23 +97,37 @@
                   >( 7:30 - 21:00 )</span
                 >
               </div>
-              <div
-                class="flex-1 bg-[#EF0B00] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
-              >
-                <span class="text-white text-[15px] font-medium">Mua Ngay</span>
+              <div class="relative">
+                <a-flex gap="15">
+                  <div
+                    class="flex-1 bg-[#EF0B00] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
+                  >
+                    <span class="text-white text-[15px] font-medium"
+                      >Mua Ngay</span
+                    >
+                  </div>
+                  <div
+                    class="flex-1 bg-[#38B6AC] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
+                    @click="addToComparison(product)"
+                  >
+                    <span class="text-white text-[15px] font-medium"
+                      >So Sánh</span
+                    >
+                  </div>
+                </a-flex>
+                <div
+                  v-if="compare"
+                  class="bg-[#f0fffb] absolute z-30 top-[44px] mt-[5px] pb-[5px] rounded-[5px] right-0 border-[#ededed] border-[1px] flex flex-col w-[calc(50%-10px)] items-center"
+                >
+                  <span class="font-medium"> Thêm so sánh thành công </span>
+                  <a
+                    href="/compareProducts"
+                    class="hover:bg-[#f0fffb] text-[#4bc4a3] text-[14px] leading-[16px]"
+                  >
+                    Xem so sánh sản phẩm
+                  </a>
+                </div>
               </div>
-              <!-- <div
-                class="flex-1 bg-[#38B6AC] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
-              >
-                <span class="text-white text-[15px] font-medium">So Sánh</span>
-              </div> -->
-              <div
-                class="flex-1 bg-[#38B6AC] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
-                @click="addToComparison(product)"
-              >
-                <span class="text-white text-[15px] font-medium">So Sánh</span>
-              </div>
-              <div v-if="comparisonList.length === 1">coll</div>
             </div>
           </div>
         </div>
@@ -139,18 +153,21 @@
 </template>
 
 <script setup>
-import { onMounted, ref, inject } from "vue";
-import { useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import DefaultLayout from "./DefaultLayout.vue";
 import axios from "axios";
 import ProductSpecifications from "@/components/ProductSpecifications.vue";
 import ProductPosts from "@/components/ProductPosts.vue";
+import store from "@/store/store";
 
 const route = useRoute();
+const router = useRouter();
 const product = ref(null);
 const formattedPrice = ref(null);
 const activeImage = ref(null);
 const activeKey = ref("1");
+const compare = ref(false);
 
 onMounted(async () => {
   try {
@@ -174,14 +191,27 @@ const setActiveImage = (path) => {
   activeImage.value = path;
 };
 
-const comparisonList = inject("comparisonList", []);
-
 const addToComparison = (product) => {
-  if (!comparisonList.includes(product)) {
-    comparisonList.push(product);
-    console.log(comparisonList);
-    
+  if (!product || !product.id) {
+    alert("Thêm thất bại: Sản phẩm không hợp lệ");
+    return;
   }
+
+  const currentProducts = store.getters["product/getDataStoreProducts"] || [];
+
+  const existProduct = currentProducts.some((item) => item.id === product.id);
+  if (existProduct) {
+    alert("Sản phẩm đã tồn tại trong danh sách so sánh");
+    compare.value = true;
+    return;
+  }
+
+  const updatedProducts = [...currentProducts, product];
+  store.commit("product/setDataStoreProducts", {
+    dataStoreProducts: updatedProducts,
+  });
+
+  compare.value = true;
 };
 </script>
 
