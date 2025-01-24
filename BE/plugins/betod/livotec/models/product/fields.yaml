@@ -88,3 +88,7 @@ fields:
         span: full
         containerAttributes: {  }
         type: relation
+    sold_out:
+        label: 'Đã bán'
+        span: auto
+        type: number

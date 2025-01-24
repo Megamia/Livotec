@@ -20,3 +20,8 @@ columns:
         searchable: true
         invisible: false
         sortable: true
+    sold_out:
+        label: 'Đã bán'
+        type: number
+        searchable: true
+        sortable: true
