@@ -31,7 +31,7 @@ const router = createRouter({
     {
       path: "/nav",
       name: "nav",
-      component: () => import("../components/NavProduct.vue"),
+      component: () => import("../components/NavProductComponent.vue"),
     },
     {
       path: "/menu",
@@ -44,9 +44,14 @@ const router = createRouter({
       component: () => import("../components/HomeHeroSlideComponent.vue"),
     },
     {
-      path: "/so-sanh-san-pham",
-      name: "CompareProducts",
+      path: "/compareProducts",
+      name: "compareProducts",
       component: () => import("../views/CompareProducts.vue"),
+    },
+    {
+      path: "/payment",
+      name: "payment",
+      component: () => import("../views/PaymentPage.vue"),
     },
   ],
 });

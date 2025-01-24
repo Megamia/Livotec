@@ -71,6 +71,7 @@
 
                     <button
                       class="flex-1 font-sans border-[1px] border-[#4fa8e7] px-[12px] py-[10px] rounded-full text-white bg-[#02b6ac] hover:bg-[linear-gradient(270deg,_#ccf7fb_2.05%,_#fff_100%)] hover:text-[#424242]"
+                      @click="test(itemChil.slug)"
                     >
                       Chi tiết
                     </button>
@@ -94,10 +95,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "./NavProduct.css";
 import { Navigation } from "swiper";
+import { useRouter } from "vue-router";
 
 const modules = [Navigation];
 const activeKey = ref(1);
 const haveData = ref(false);
+const router = useRouter();
 
 const data = ref([
   { id: 1, name: "Bếp từ" },
@@ -107,8 +110,12 @@ const data = ref([
 ]);
 const dataChil = ref([]);
 
+const test = (items) => {
+  router.push(`/product/${items}`);
+};
+
 const changeData = async (id) => {
-  activeKey.value = id; 
+  activeKey.value = id;
   await fetchData(id);
 };
 

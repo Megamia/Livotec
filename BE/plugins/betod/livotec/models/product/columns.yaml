@@ -25,3 +25,9 @@ columns:
         type: number
         searchable: true
         sortable: true
+    created_at:
+        label: 'Ngày tạo'
+        type: datetime
+    updated_at:
+        label: 'Ngày chỉnh sửa'
+        type: datetime
