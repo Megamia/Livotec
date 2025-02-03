@@ -9,6 +9,7 @@
     <swiper-slide>
       <img
         src="https://livotec.com/wp-content/uploads/2025/01/bep-dien-tu-livotec-banner-pc.jpg"
+        class="cursor-pointer"
       />
     </swiper-slide>
     <swiper-slide>

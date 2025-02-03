@@ -44,7 +44,7 @@
                   <span class="text-[20px] text-white">Mới nhất</span>
                 </div>
                 <div
-                  class="absolute h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description rounded-t-lg z-20"
+                  class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description rounded-t-lg z-20"
                 >
                   <div
                     v-html="itemChil.description"

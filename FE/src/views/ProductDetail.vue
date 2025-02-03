@@ -217,29 +217,29 @@ const addToComparison = (product) => {
 
 <style>
 .description ul {
-  list-style: none; /* Loại bỏ bullet mặc định */
-  padding: 0; /* Đảm bảo không có padding thừa */
+  list-style: none; 
+  padding: 0; 
 }
 
 .description ul li {
   position: relative;
-  padding-left: 1.5em; /* Tạo khoảng cách cho dấu bullet */
+  padding-left: 1.5em; 
   margin-top: 10px;
 }
 
 .description ul li::before {
-  content: "•"; /* Dấu bullet tùy chỉnh */
-  color: #38b6ac; /* Màu của dấu bullet */
-  font-size: 1.5em; /* Kích thước dấu bullet */
-  position: absolute; /* Định vị dấu bullet */
-  left: 0; /* Căn dấu bullet vào lề trái */
-  top: -5px; /* Đảm bảo dấu bullet nằm trên cùng của dòng */
+  content: "•";
+  color: #38b6ac;
+  font-size: 1.5em; 
+  position: absolute; 
+  left: 0; 
+  top: -5px; 
 }
 
 .gallery-image {
-  width: 100px; /* Chiều rộng cố định */
-  height: 100px; /* Chiều cao cố định */
-  object-fit: cover; /* Đảm bảo ảnh vừa với khung mà không bị biến dạng */
-  border-radius: 4px; /* Bo tròn góc (tuỳ chọn) */
+  width: 100px;
+  height: 100px; 
+  object-fit: cover; 
+  border-radius: 4px; 
 }
 </style>
