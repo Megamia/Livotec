@@ -9,12 +9,23 @@
       </div>
       <div class="product-comparison">
         <table>
-          <thead></thead>
+          <thead>
+            <tr>
+              <th>&nbsp;</th>
+              <th>Xóa</th>
+              <th>Xóa</th>
+            </tr>
+            <tr>
+              <th>TÊN</th>
+              <th>GIÁ</th>
+              <th>ID</th>
+            </tr>
+          </thead>
           <tbody>
-            <tr v-for="spec in specs" :key="spec.thuoc_tinh">
-              <td>{{ spec.thuoc_tinh }}</td>
-              <td>{{ getSpecValue(products[0], spec.thuoc_tinh) }}</td>
-              <td>{{ getSpecValue(products[1], spec.thuoc_tinh) }}</td>
+            <tr v-for="item in specs" :key="item.id">
+              <td>{{ item.name }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.id }}</td>
             </tr>
           </tbody>
         </table>
@@ -26,9 +37,27 @@
 <script setup>
 import DefaultLayout from "./DefaultLayout.vue";
 import { ref, onMounted } from "vue";
+import store from "@/store/store";
 
+const specs = ref([]);
 
+onMounted(() => fetchData());
+
+const fetchData = () => {
+  const dataStore = store.getters["product/getDataStoreProducts"];
+  if (dataStore && dataStore.length > 0) {
+    specs.value = dataStore;
+    console.log(specs.value);
+  }
+};
 </script>
 
 <style scoped>
+.product-comparison table {
+  border: 1px solid #dddddd;
+}
+.product-comparison th,
+.product-comparison td {
+  border: 1px solid #dddddd;
+}
 </style>
