@@ -10,8 +10,17 @@ const storeProducts = {
     clearDataStoreProducts(state) {
       state.dataStoreProducts = null;
     },
+    removeItem(state, itemId) {
+      state.dataStoreProducts = state.dataStoreProducts.filter(
+        (item) => item.id !== itemId
+      );
+    },
   },
-  actions: {},
+  actions: {
+    deleteItem({ commit }, itemId) {
+      commit("removeItem", itemId);
+    },
+  },
   getters: {
     getDataStoreProducts: (state) => state.dataStoreProducts,
   },
