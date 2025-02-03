@@ -15,17 +15,25 @@
               <th>Xóa</th>
               <th>Xóa</th>
             </tr>
-            <tr>
-              <th>TÊN</th>
-              <th>GIÁ</th>
-              <th>ID</th>
-            </tr>
           </thead>
           <tbody>
-            <tr v-for="item in specs" :key="item.id">
-              <td>{{ item.name }}</td>
-              <td>{{ item.price }}</td>
-              <td>{{ item.id }}</td>
+            <tr>
+              <td>Tên sản phẩm</td>
+              <td v-for="(item, index) in specs" :key="index">
+                {{ item.name }}
+              </td>
+            </tr>
+            <tr>
+              <td>Giá</td>
+              <td v-for="(item, index) in specs" :key="index">
+                {{ item.price }}
+              </td>
+            </tr>
+            <tr>
+              <td>Mô tả</td>
+              <td v-for="(item, index) in specs" :key="index">
+                <div v-html="item.description" class="description" />
+              </td>
             </tr>
           </tbody>
         </table>
@@ -59,5 +67,27 @@ const fetchData = () => {
 .product-comparison th,
 .product-comparison td {
   border: 1px solid #dddddd;
+}
+</style>
+
+<style>
+.description ul {
+  list-style: none;
+  padding: 0;
+}
+
+.description ul li {
+  position: relative;
+  padding-left: 1.5em;
+  margin-top: 10px;
+}
+
+.description ul li::before {
+  content: "•";
+  color: #38b6ac;
+  font-size: 1.5em;
+  position: absolute;
+  left: 0;
+  top: -5px;
 }
 </style>
