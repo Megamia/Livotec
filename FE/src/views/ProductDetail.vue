@@ -101,6 +101,7 @@
                 <a-flex gap="15">
                   <div
                     class="flex-1 bg-[#EF0B00] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
+                    @click="test"
                   >
                     <span class="text-white text-[15px] font-medium"
                       >Mua Ngay</span
@@ -191,6 +192,22 @@ const setActiveImage = (path) => {
   activeImage.value = path;
 };
 
+const test = () => {
+  const currentProducts = store.getters["product/getDataStoreProducts"] || [];
+
+  const existProduct = currentProducts.some((item) => item.id === product.id);
+  if (existProduct) {
+    alert("Sản phẩm đã tồn tại trong danh sách so sánh");
+    compare.value = true;
+    return;
+  }
+
+  const updatedProducts = [...currentProducts, product];
+  store.commit("product/setDataStoreProducts", {
+    dataStoreProducts: updatedProducts,
+  });
+};
+
 const addToComparison = (product) => {
   if (!product || !product.id) {
     alert("Thêm thất bại: Sản phẩm không hợp lệ");
@@ -217,29 +234,29 @@ const addToComparison = (product) => {
 
 <style>
 .description ul {
-  list-style: none; 
-  padding: 0; 
+  list-style: none;
+  padding: 0;
 }
 
 .description ul li {
   position: relative;
-  padding-left: 1.5em; 
+  padding-left: 1.5em;
   margin-top: 10px;
 }
 
 .description ul li::before {
   content: "•";
   color: #38b6ac;
-  font-size: 1.5em; 
-  position: absolute; 
-  left: 0; 
-  top: -5px; 
+  font-size: 1.5em;
+  position: absolute;
+  left: 0;
+  top: -5px;
 }
 
 .gallery-image {
   width: 100px;
-  height: 100px; 
-  object-fit: cover; 
-  border-radius: 4px; 
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
 }
 </style>
