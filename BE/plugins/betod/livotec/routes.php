@@ -22,3 +22,8 @@ Route::group(['prefix' => 'apiProduct'], function () {
         }
     });
 });
+
+Route::group(['prefix' => 'apiOrder'], function () {
+    Route::post('createOrder', 'Betod\Livotec\Controllers\OrderController@createOrder');
+});
+

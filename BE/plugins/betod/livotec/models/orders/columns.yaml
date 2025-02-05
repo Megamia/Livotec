@@ -1,0 +1,22 @@
+columns:
+    id:
+        label: ID
+        type: number
+        searchable: true
+        invisible: false
+        sortable: true
+    created_at:
+        label: 'Ngày tạo'
+        type: datetime
+        searchable: true
+        sortable: true
+    status_id:
+        label: 'Trạng thái'
+        type: number
+        searchable: true
+        sortable: true
+    user_id:
+        label: 'Người dùng'
+        type: number
+        searchable: true
+        sortable: true

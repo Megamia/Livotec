@@ -21,7 +21,7 @@
 
     <a-flex
       v-if="haveData"
-      class="max-w-[100%] px-[100px] py-[30px] justify-center"
+      class="max-w-[100%] w-full px-[100px] py-[30px] justify-center"
     >
       <swiper
         :slidesPerView="dataChil.length > 0 ? Math.min(dataChil.length, 4) : 1"
@@ -32,7 +32,7 @@
         class="swiperProduct"
       >
         <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id">
-          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px]">
+          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
             <a-flex vertical align="center" class="flex-1">
               <div class="w-full relative pt-[20px] justify-center flex">
                 <img
