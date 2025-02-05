@@ -101,7 +101,7 @@
                 <a-flex gap="15">
                   <div
                     class="flex-1 bg-[#EF0B00] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
-                    @click="test"
+                    @click="test(product)"
                   >
                     <span class="text-white text-[15px] font-medium"
                       >Mua Ngay</span
@@ -192,20 +192,24 @@ const setActiveImage = (path) => {
   activeImage.value = path;
 };
 
-const test = () => {
-  const currentProducts = store.getters["product/getDataStoreProducts"] || [];
+const test = (cart) => {
+  const currentCart = store.getters["product/getDataStoreCart"] || [];
 
-  const existProduct = currentProducts.some((item) => item.id === product.id);
-  if (existProduct) {
-    alert("Sản phẩm đã tồn tại trong danh sách so sánh");
-    compare.value = true;
-    return;
+  const updatedCart = currentCart.map((item) => {
+    if (item.id === cart.id) {
+      return { ...item, quantity: (item.quantity || 1) + 1 }; 
+    }
+    return item;
+  });
+
+  if (!currentCart.some((item) => item.id === cart.id)) {
+    updatedCart.push({ ...cart, quantity: 1 });
   }
 
-  const updatedProducts = [...currentProducts, product];
-  store.commit("product/setDataStoreProducts", {
-    dataStoreProducts: updatedProducts,
+  store.commit("product/setDataStoreCart", {
+    dataStoreCart: updatedCart,
   });
+  console.log(updatedCart);
 };
 
 const addToComparison = (product) => {

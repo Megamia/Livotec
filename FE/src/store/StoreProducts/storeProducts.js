@@ -48,6 +48,8 @@ const storeProducts = {
   },
   getters: {
     getDataStoreProducts: (state) => state.dataStoreProducts,
+
+    getDataStoreCart: (state) => state.dataStoreCart,
   },
 };
 
