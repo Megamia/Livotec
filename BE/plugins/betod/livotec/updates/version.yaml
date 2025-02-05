@@ -90,3 +90,12 @@ v1.0.30:
 v1.0.31:
     - 'Updated table betod_livotec_product'
     - builder_table_update_betod_livotec_product_26.php
+v1.0.32:
+    - 'Created table betod_livotec_orders'
+    - builder_table_create_betod_livotec_orders.php
+v1.0.33:
+    - 'Created table betod_livotec_order_positions'
+    - builder_table_create_betod_livotec_order_positions.php
+v1.0.34:
+    - 'Updated table betod_livotec_orders'
+    - builder_table_update_betod_livotec_orders.php

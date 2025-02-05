@@ -1,15 +1,597 @@
 <template>
-  <a-flex class="flex-1 flex-col">
-    <DefaultLayout>
-      <a-flex class="flex-1">
-        a
-      </a-flex>
-    </DefaultLayout>
-  </a-flex>
+  <DefaultLayout>
+    <div class="container mb-[3rem]">
+      <div class="w-full border-b-[1px] border-gray-300 py-3">
+        <span class="text-[#38B6AC] font-bold">Thanh toán</span>
+      </div>
+      <div>
+        <h1 class="text-3xl text-[#38B6AC] font-bold my-3">Thanh toán</h1>
+        <div class="w-full">
+          <div class="text-[14px] font-medium">
+            Have a coupon?
+            <a class="text-blue-500 font-medium"
+              >Click here to enter your code</a
+            >
+          </div>
+          <a-form
+            ref="formRef"
+            :model="formState"
+            :rules="rules"
+            layout="vertical"
+          >
+            <a-flex class="w-full gap-10">
+              <a-flex vertical class="flex-wrap w-full flex-1">
+                <h3 class="text-xl font-medium">Billing details</h3>
+                <a-form-item ref="name" name="name" class="w-full">
+                  <template #label>
+                    <span class="text-base">Họ và tên</span>
+                  </template>
+                  <a-input
+                    v-model:value="formState.name"
+                    placeholder="Nhập họ và tên"
+                  />
+                </a-form-item>
+                <a-flex class="w-full gap-8">
+                  <a-form-item ref="phone" name="phone" class="w-full">
+                    <template #label>
+                      <span class="text-base">Phone</span>
+                    </template>
+                    <a-input
+                      v-model:value="formState.phone"
+                      placeholder="Nhập số điện thoại"
+                    />
+                  </a-form-item>
+                  <a-form-item ref="email" name="email" class="w-full">
+                    <template #label>
+                      <span class="text-base">Email address</span>
+                    </template>
+                    <a-input
+                      v-model:value="formState.email"
+                      placeholder="Nhập địa chỉ email"
+                    />
+                  </a-form-item>
+                </a-flex>
+                <a-flex class="w-full gap-8">
+                  <a-form-item name="province" class="w-full">
+                    <template #label>
+                      <span class="text-base">Tỉnh/Thành phố</span>
+                    </template>
+                    <a-select
+                      v-model:value="formState.province"
+                      @change="onProvinceChange"
+                      placeholder="Chọn Tỉnh/Thành phố"
+                    >
+                      <a-select-option
+                        v-for="province in provinces"
+                        :key="province.code"
+                        :value="province.code"
+                      >
+                        {{ province.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                  <a-form-item name="district" class="w-full">
+                    <template #label>
+                      <span class="text-base">Quận/Huyện</span>
+                    </template>
+                    <a-select
+                      v-model:value="formState.district"
+                      @change="onDistrictChange"
+                      placeholder="Chọn Quận/Huyện"
+                    >
+                      <a-select-option
+                        v-for="district in districts"
+                        :key="district.code"
+                        :value="district.code"
+                      >
+                        {{ district.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-flex>
+                <a-flex class="w-full gap-8">
+                  <a-form-item name="subdistrict" class="w-full">
+                    <template #label>
+                      <span class="text-base">Xã/Phường/Thị trấn</span>
+                    </template>
+                    <a-select
+                      v-model:value="formState.subdistrict"
+                      placeholder="Chọn Xã/Phường/Thị trấn"
+                    >
+                      <a-select-option
+                        v-for="ward in wards"
+                        :key="ward.code"
+                        :value="ward.code"
+                      >
+                        {{ ward.name }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                  <a-form-item ref="address" name="address" class="w-full">
+                    <template #label>
+                      <span class="text-base">Street address</span>
+                    </template>
+                    <a-input
+                      v-model:value="formState.address"
+                      placeholder="Nhập địa chỉ cụ thể"
+                    />
+                  </a-form-item>
+                </a-flex>
+              </a-flex>
+              <a-flex vertical class="w-full flex-1">
+                <h3>
+                  <a-checkbox
+                    v-model:checked="formState.differentaddresschecked"
+                  >
+                    <span class="text-xl font-medium flex gap-2 text-center"
+                      >Ship to a different address?</span
+                    >
+                  </a-checkbox>
+                </h3>
+                <a-flex v-if="formState.differentaddresschecked" vertical>
+                  <a-flex class="w-full gap-8">
+                    <a-form-item ref="diffname" name="diffname" class="w-full">
+                      <template #label>
+                        <span class="text-base">Tên đầy đủ của người nhận</span>
+                      </template>
+                      <a-input
+                        v-model:value="formState.name"
+                        placeholder="Nhập họ và tên"
+                      />
+                    </a-form-item>
+                    <a-form-item
+                      ref="diffphone"
+                      name="diffphone"
+                      class="w-full"
+                    >
+                      <template #label>
+                        <span class="text-base"
+                          >Số điện thoại người nhận (optional)</span
+                        >
+                      </template>
+                      <a-input
+                        v-model:value="formState.phone"
+                        placeholder="Nhập số điện thoại"
+                      />
+                    </a-form-item>
+                  </a-flex>
+                  <a-flex class="w-full gap-8">
+                    <a-form-item name="diffprovince" class="w-full">
+                      <template #label>
+                        <span class="text-base">Tỉnh/Thành phố</span>
+                      </template>
+                      <a-select
+                        v-model:value="formState.diffprovince"
+                        @change="onProvinceChange"
+                        placeholder="Chọn Tỉnh/Thành phố"
+                      >
+                        <a-select-option
+                          v-for="province in diffprovinces"
+                          :key="province.code"
+                          :value="province.code"
+                        >
+                          {{ province.name }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item name="diffdistrict" class="w-full">
+                      <template #label>
+                        <span class="text-base">Quận/Huyện</span>
+                      </template>
+                      <a-select
+                        v-model:value="formState.diffdistrict"
+                        @change="onDistrictChange"
+                        placeholder="Chọn Quận/Huyện"
+                      >
+                        <a-select-option
+                          v-for="district in diffdistricts"
+                          :key="district.code"
+                          :value="district.code"
+                        >
+                          {{ district.name }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                  </a-flex>
+                  <a-flex class="w-full gap-8">
+                    <a-form-item name="diffsubdistrict" class="w-full">
+                      <template #label>
+                        <span class="text-base">Xã/Phường/Thị trấn</span>
+                      </template>
+                      <a-select
+                        v-model:value="formState.diffsubdistrict"
+                        placeholder="Chọn Xã/Phường/Thị trấn"
+                      >
+                        <a-select-option
+                          v-for="ward in diffwards"
+                          :key="ward.code"
+                          :value="ward.code"
+                        >
+                          {{ ward.name }}
+                        </a-select-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item
+                      ref="diffaddress"
+                      name="diffaddress"
+                      class="w-full"
+                    >
+                      <template #label>
+                        <span class="text-base">Street address</span>
+                      </template>
+                      <a-input
+                        v-model:value="formState.diffaddress"
+                        placeholder="Nhập địa chỉ cụ thể"
+                      />
+                    </a-form-item>
+                  </a-flex>
+                </a-flex>
+                <a-form-item name="notes">
+                  <template #label>
+                    <span class="text-base">Order notes (optional)</span>
+                  </template>
+                  <a-textarea
+                    v-model:value="formState.notes"
+                    placeholder="Notes about your order, e.g. special notes for delivery."
+                  />
+                </a-form-item>
+              </a-flex>
+            </a-flex>
+            <h3 class="text-black text-xl font-medium my-[20px]">Your order</h3>
+            <a-flex class="w-full mb-[20px]"
+              ><a-table
+                :columns="columns"
+                :data-source="data"
+                :pagination="false"
+                bordered
+                class="w-full"
+              >
+                <template #bodyCell="{ column, record }">
+                  <template v-if="column.key === 'name'">
+                    <a-flex gap="5" class="items-center">
+                      {{ record.name }} <AkXSmall />
+                      <span class="font-bold">{{ record.count }}</span>
+                    </a-flex>
+                  </template>
+                  <template v-else-if="column.key === 'subtotal'">
+                    <span class="text-[#02B6AC] text-[16px] font-bold">{{
+                      formatCurrency(record.price * record.count)
+                    }}</span>
+                  </template>
+                </template>
+                <template #summary>
+                  <a-table-summary-row>
+                    <a-table-summary-cell
+                      ><span class="font-semibold"
+                        >Subtotal</span
+                      ></a-table-summary-cell
+                    >
+                    <a-table-summary-cell>
+                      <span class="text-[#02B6AC] text-[16px] font-bold">{{
+                        formatCurrency(totals.subtotal)
+                      }}</span>
+                    </a-table-summary-cell>
+                  </a-table-summary-row>
+                  <a-table-summary-row>
+                    <a-table-summary-cell
+                      ><span class="font-semibold"
+                        >Shipping</span
+                      ></a-table-summary-cell
+                    >
+                    <a-table-summary-cell>
+                      <span class="font-semibold">Free shipping</span>
+                    </a-table-summary-cell>
+                  </a-table-summary-row>
+                  <a-table-summary-row>
+                    <a-table-summary-cell
+                      ><span class="font-semibold"
+                        >Total</span
+                      ></a-table-summary-cell
+                    >
+                    <a-table-summary-cell>
+                      <span class="text-[#02B6AC] text-[16px] font-bold">{{
+                        formatCurrency(totals.subtotal)
+                      }}</span>
+                    </a-table-summary-cell>
+                  </a-table-summary-row>
+                </template>
+              </a-table>
+            </a-flex>
+            <a-flex vertical class="w-full bg-[#E9E6ED] rounded-md">
+              <a-form-item name="paymenttype" :rules="rules.paymenttype">
+                <a-flex class="w-full p-[1em] border-b-[1px] border-[#cfc8d8]">
+                  <a-radio-group v-model:value="formState.paymenttype">
+                    <a-radio :style="radioStyle" :value="1"
+                      >Chuyển khoản ngân hàng</a-radio
+                    >
+                    <a-card
+                      v-if="formState.paymenttype === 1"
+                      class="bg-[#DCD7E3] w-full"
+                    >
+                      <p>
+                        Thực hiện thanh toán vào ngay tài khoản ngân hàng của
+                        chúng tôi. Vui lòng sử dụng Mã đơn hàng của bạn trong
+                        phần Nội dung thanh toán. Đơn hàng sẽ đươc giao sau khi
+                        tiền đã chuyển.
+                      </p>
+                    </a-card>
+                    <a-radio :style="radioStyle" :value="2"
+                      >Trả tiền mặt khi nhận hàng</a-radio
+                    >
+                    <a-card
+                      v-if="formState.paymenttype === 2"
+                      class="bg-[#DCD7E3] w-full"
+                    >
+                      <p>Trả tiền mặt khi giao hàng</p>
+                    </a-card>
+                  </a-radio-group>
+                </a-flex>
+              </a-form-item>
+              <a-flex vertical class="w-full p-[1em]">
+                <a-form-item
+                  ><p>
+                    Dữ liệu cá nhân của bạn sẽ được sử dụng để xử lý đơn đặt
+                    hàng, hỗ trợ trải nghiệm của bạn trên trang web này và cho
+                    các mục đích khác được mô tả trong phần của chúng tôi.<a
+                      class="text-blue-500"
+                      >privacy policy.</a
+                    >
+                  </p>
+                </a-form-item>
+                <a-form-item name="terms" :rules="rules.terms">
+                  <a-checkbox v-model:checked="formState.terms">
+                    I have read and agree to the website
+                    <a class="text-blue-500">terms and conditions</a>
+                    <span class="text-red-500">*</span>
+                  </a-checkbox>
+                </a-form-item>
+                <a-flex class="justify-end">
+                  <a-button type="primary" @click="onSubmit"
+                    >Place order</a-button
+                  >
+                </a-flex>
+              </a-flex>
+            </a-flex>
+          </a-form>
+        </div>
+      </div>
+    </div>
+  </DefaultLayout>
 </template>
 
 <script setup>
 import DefaultLayout from "./DefaultLayout.vue";
+import { computed, reactive, ref } from "vue";
+import axios from "axios";
+import { AkXSmall } from "@kalimahapps/vue-icons";
+
+const formRef = ref();
+const formState = reactive({
+  name: "",
+  phone: "",
+  email: "",
+  province: "",
+  district: "",
+  subdistrict: "",
+  address: "",
+  diffname: "",
+  diffphone: "",
+  diffprovince: "",
+  diffdistrict: "",
+  diffsubdistrict: "",
+  diffaddress: "",
+  notes: "",
+  terms: false,
+  paymenttype: 1,
+  differentaddresschecked: false,
+});
+
+const provinces = ref([]);
+const districts = ref([]);
+const wards = ref([]);
+const diffprovinces = ref([]);
+const diffdistricts = ref([]);
+const diffwards = ref([]);
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
+};
+
+const columns = ref([
+  {
+    key: "name",
+    title: "Product",
+    dataIndex: "name",
+  },
+  {
+    key: "subtotal",
+    title: "Subtotal",
+    dataIndex: "subtotal",
+  },
+]);
+const data = ref([
+  {
+    key: "1",
+    name: "Bếp từ đơn Livotec E-smart LIS-826",
+    price: 2000000,
+    count: 2,
+  },
+  {
+    key: "2",
+    name: "Bếp từ đơn Livotec E-smart LIS-646",
+    price: 2300000,
+    count: 1,
+  },
+]);
+
+const totals = computed(() => {
+  let subtotal = 0;
+  data.value.forEach(({ price, count }) => {
+    subtotal += price * count;
+  });
+  return {
+    subtotal,
+  };
+});
+
+const radioStyle = reactive({
+  display: "flex",
+  height: "30px",
+  lineHeight: "30px",
+});
+
+const host = "https://provinces.open-api.vn/api/";
+
+const fetchProvinces = () => {
+  axios.get(`${host}?depth=1`).then((response) => {
+    provinces.value = response.data;
+    diffprovinces.value = response.data;
+  });
+};
+
+const onProvinceChange = () => {
+  const provinceCode = formState.province;
+  const diffprovinceCode = formState.diffprovince;
+  if (provinceCode) {
+    axios.get(`${host}p/${provinceCode}?depth=2`).then((response) => {
+      districts.value = response.data.districts;
+      wards.value = [];
+    });
+  }
+  if (diffprovinceCode) {
+    axios.get(`${host}p/${diffprovinceCode}?depth=2`).then((response) => {
+      diffdistricts.value = response.data.districts;
+      diffwards.value = [];
+    });
+  }
+};
+
+const onDistrictChange = () => {
+  const districtCode = formState.district;
+  const diffdistrictCode = formState.diffdistrict;
+  if (districtCode) {
+    axios.get(`${host}d/${districtCode}?depth=2`).then((response) => {
+      wards.value = response.data.wards;
+    });
+  }
+  if (diffdistrictCode) {
+    axios.get(`${host}d/${diffdistrictCode}?depth=2`).then((response) => {
+      diffwards.value = response.data.wards;
+    });
+  }
+};
+
+const rules = {
+  name: [
+    { required: true, message: "Vui lòng nhập họ và tên", trigger: "submit" },
+  ],
+  diffname: [
+    {
+      required: true,
+      message: "Vui lòng nhập họ và tên người nhận",
+      trigger: "submit",
+    },
+  ],
+  email: [
+    {
+      required: true,
+      message: "Vui lòng nhập địa chỉ email",
+      trigger: "submit",
+    },
+  ],
+  phone: [
+    {
+      required: true,
+      message: "Vui lòng nhập số điện thoại",
+      trigger: "submit",
+    },
+    {
+      pattern: /^0\d{9,10}$/,
+      message: "Số điện thoại không hợp lệ",
+      trigger: "blur",
+    },
+  ],
+  diffphone: [
+    {
+      pattern: /^0\d{9,10}$/,
+      message: "Số điện thoại không hợp lệ",
+      trigger: "blur",
+    },
+  ],
+  province: [
+    {
+      required: true,
+      message: "Vui lòng chọn tỉnh/thành phố",
+      trigger: "submit",
+    },
+  ],
+  district: [
+    { required: true, message: "Vui lòng chọn quận/huyện", trigger: "submit" },
+  ],
+  subdistrict: [
+    {
+      required: true,
+      message: "Vui lòng chọn xã/phường/thị trấn",
+      trigger: "submit",
+    },
+  ],
+  address: [
+    {
+      required: true,
+      message: "Vui lòng nhập địa chỉ cụ thể",
+      trigger: "submit",
+    },
+  ],
+  diffprovince: [
+    {
+      required: true,
+      message: "Vui lòng chọn tỉnh/thành phố",
+      trigger: "submit",
+    },
+  ],
+  diffdistrict: [
+    { required: true, message: "Vui lòng chọn quận/huyện", trigger: "submit" },
+  ],
+  diffsubdistrict: [
+    {
+      required: true,
+      message: "Vui lòng chọn xã/phường/thị trấn",
+      trigger: "submit",
+    },
+  ],
+  diffaddress: [
+    {
+      required: true,
+      message: "Vui lòng nhập địa chỉ cụ thể",
+      trigger: "submit",
+    },
+  ],
+  terms: [
+    {
+      validator: (_, value) =>
+        value
+          ? Promise.resolve()
+          : Promise.reject("Please accept the terms and conditions."),
+      trigger: "submit", // Chỉ kiểm tra khi ấn Submit
+    },
+  ],
+};
+
+const onSubmit = () => {
+  formRef.value
+    .validate()
+    .then(() => {
+      console.log("values", formState);
+    })
+    .catch((error) => {
+      console.log("error", error);
+    });
+};
+
+fetchProvinces();
 </script>
 
 <style scoped></style>

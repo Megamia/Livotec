@@ -18,3 +18,7 @@ navigation:
                 label: Category
                 url: betod/livotec/category
                 icon: icon-tag
+            side-menu-item3:
+                label: Order
+                url: betod/livotec/order
+                icon: icon-inbox
