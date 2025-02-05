@@ -1,4 +1,5 @@
-<?php namespace Betod\Livotec\Models;
+<?php
+namespace Betod\Livotec\Models;
 
 use Model;
 
@@ -14,7 +15,9 @@ class Category extends Model
      * @var string table in the database used by the model.
      */
     public $table = 'betod_livotec_category';
-
+    public $attachOne = [
+        'image' => 'System\Models\File'
+    ];
     /**
      * @var array rules for validation.
      */

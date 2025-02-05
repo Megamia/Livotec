@@ -10,3 +10,12 @@ fields:
             field: name
             type: slug
         type: text
+    image:
+        label: Ảnh
+        mode: image
+        useCaption: true
+        thumbOptions:
+            mode: crop
+            extension: auto
+        span: full
+        type: fileupload

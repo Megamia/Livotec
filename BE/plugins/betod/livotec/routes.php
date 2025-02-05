@@ -1,6 +1,7 @@
 <?php
 
 use Betod\Livotec\Models\Product;
+use Betod\Livotec\Models\Category;
 
 Route::group(['prefix' => 'apiProduct'], function () {
     Route::get('products', function () {
@@ -25,5 +26,16 @@ Route::group(['prefix' => 'apiProduct'], function () {
 
 Route::group(['prefix' => 'apiOrder'], function () {
     Route::post('createOrder', 'Betod\Livotec\Controllers\OrderController@createOrder');
+});
+
+Route::group(['prefix' => 'apiCategory'], function () {
+    Route::get('category/{slug}', function ($slug) {
+        $category = Category::with(['image'])->where('slug', $slug)->first();
+        if ($category) {
+            return $category;
+        } else {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+    });
 });
 

@@ -5,7 +5,7 @@
     >
       <HeaderComponent />
     </a-flex>
-    <main class="flex flex-col flex-1 gap-[100px] items-center">
+    <main class="flex flex-col flex-1 gap-[100px] items-center mb-[50px]">
       <slot></slot>
     </main>
     <a-flex class="justify-center bg-[#EAEBF4] bottom-0">
