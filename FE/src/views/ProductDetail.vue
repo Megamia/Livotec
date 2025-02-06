@@ -101,7 +101,7 @@
                 <a-flex gap="15">
                   <div
                     class="flex-1 bg-[#EF0B00] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
-                    @click="test(product)"
+                    @click="handleAddToCart(product)"
                   >
                     <span class="text-white text-[15px] font-medium"
                       >Mua Ngay</span
@@ -192,7 +192,7 @@ const setActiveImage = (path) => {
   activeImage.value = path;
 };
 
-const test = (cart) => {
+const handleAddToCart = (cart) => {
   const currentCart = store.getters["product/getDataStoreCart"] || [];
 
   const updatedCart = currentCart.map((item) => {
@@ -209,7 +209,6 @@ const test = (cart) => {
   store.commit("product/setDataStoreCart", {
     dataStoreCart: updatedCart,
   });
-  console.log(updatedCart);
 };
 
 const addToComparison = (product) => {

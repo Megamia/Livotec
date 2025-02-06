@@ -25,6 +25,7 @@
                 <a-flex class="items-center">
                   <button
                     class="text-center text-2xl text-red-500 rounded-full p-[2px] hover:text-white hover:bg-red-500"
+                    @click="deleteItem(item.id)"
                   >
                     <CgClose class="text-[18px]" />
                   </button>
@@ -32,7 +33,7 @@
               </td>
               <!-- <td>{{ item.img }}</td> -->
               <td>
-                <a-flex class="justify-center">
+                <a-flex class="">
                   <img
                     src="https://livotec.com/wp-content/uploads/2024/11/Bep-tu-don-Livotec-E-smart-LIS-646-1-300x300.png"
                     class="w-[32px]"
@@ -66,15 +67,35 @@
                 </span>
               </td>
             </tr>
-            <tr class="w-[100%]">
-              <a-flex>
-                <input placeholder="coupon" class="border-[1px] border-black" />
-                <button class="text-nowrap">Apply coupon</button>
-                <button class="text-nowrap">Update cart</button>
-              </a-flex>
+            <tr>
+              <td class="text-right" colspan="6">
+                <div class="float-left">
+                  <input
+                    placeholder="Coupon code"
+                    class="border-[1px] border-black mr-1 px-[6px] py-[5px] w-[80px]"
+                  />
+                  <button
+                    class="text-nowrap rounded-[3px] font-bold text-[#515151] p-[6px] bg-[#e9e6ed]"
+                  >
+                    Apply coupon
+                  </button>
+                </div>
+                <button
+                  class="text-nowrap rounded-[3px] flex float-right h-[100%] font-bold text-[#515151] p-[6px] bg-[#e9e6ed]"
+                  @click="handleUpdateCart()"
+                >
+                  Update cart
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
+        <div
+          class="bg-[#3fb696] p-4 text-white text-center flex-1 cursor-pointer mt-[50px]"
+          @click="handlePayment"
+        >
+          <span class="text-lg font-bold">Proceed to checkout</span>
+        </div>
       </div>
       <div
         v-else
@@ -158,6 +179,36 @@ const formatPrice = (value) => {
 //       console.error("Lỗi khi xóa sản phẩm:", error);
 //     });
 // };
+const deleteItem = async (itemId) => {
+  store
+    .dispatch("product/deleteItemCart", itemId)
+    .then(() => {
+      fetchData();
+    })
+    .catch((error) => {
+      console.error("Lỗi khi xóa sản phẩm:", error);
+    });
+};
+
+const handlePayment = () => {
+  router.push("/payment");
+};
+
+const handleUpdateCart = () => {
+  const currentCart = store.getters["product/getDataStoreCart"] ;
+
+  console.log(currentCart.quantity);
+
+  // const updatedCart = currentCart.map((item) => {
+  //   if (item.id === cart.id) {
+  //     return { ...item, quantity: (item.quantity || 1) + 1 };
+  //   }
+  //   return item;
+  // });
+  // store.commit("product/setDataStoreCart", {
+  //   dataStoreCart: updatedCart,
+  // });
+};
 </script>
 
 <style scoped>
