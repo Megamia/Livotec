@@ -38,6 +38,7 @@
       <SearchComponent v-if="isOpenSearch" @close-search="showSearch" />
       <a-badge
         :count="quantityProductInCart"
+        show-zero
         :number-style="{
           backgroundColor: '#fff',
           color: 'black',
@@ -104,9 +105,6 @@ const quantityProductInCart = computed(() => {
   return store.getters["product/getDataStoreCart"].length;
 });
 const showCart = () => {
-  const a = store.getters["product/getDataStoreCart"];
-  console.log(a);
-
   router.push("/cart");
 };
 
