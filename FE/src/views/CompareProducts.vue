@@ -87,6 +87,7 @@ const fetchData = () => {
   } else {
     haveData.value = false;
   }
+  console.log("data: ", dataStore);
 };
 const deleteItem = async (itemId) => {
   store
