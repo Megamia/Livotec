@@ -90,7 +90,9 @@
               <div
                 class="w-full bg-[#38B6AC] py-2 flex justify-center items-center gap-2 rounded-md hover:opacity-80 cursor-pointer"
               >
-                <span class="text-[#FFF833] font-bold text-[18px]"
+                <span
+                  class="text-[#FFF833] font-bold text-[18px]"
+                  @click="clearStore"
                   >Gọi Đặt Mua: 1800 2298</span
                 >
                 <span class="text-white text-[15px] font-medium"
@@ -197,7 +199,7 @@ const handleAddToCart = (cart) => {
 
   const updatedCart = currentCart.map((item) => {
     if (item.id === cart.id) {
-      return { ...item, quantity: (item.quantity || 1) + 1 }; 
+      return { ...item, quantity: (item.quantity || 1) + 1 };
     }
     return item;
   });
@@ -217,7 +219,16 @@ const addToComparison = (product) => {
     return;
   }
 
-  const currentProducts = store.getters["product/getDataStoreProducts"] || [];
+  const currentProducts = store.getters["product/getDataStoreProducts"] ?? [];
+
+  const differentProduct = currentProducts.find(
+    (item) => item.category?.name !== product.category?.name
+  );
+
+  if (differentProduct) {
+    alert("Sản phẩm bạn chọn không cùng chuyên mục");
+    return;
+  }
 
   const existProduct = currentProducts.some((item) => item.id === product.id);
   if (existProduct) {
@@ -232,6 +243,18 @@ const addToComparison = (product) => {
   });
 
   compare.value = true;
+};
+
+const clearStore = () => {
+  store
+    .dispatch("product/clearDataStoreProducts")
+    .then(() => {
+      alert(`Xóa thành công.`);
+    })
+    .catch((error) => {
+      console.error("Lỗi khi xóa sản phẩm:", error);
+    });
+  clearDataStoreProducts;
 };
 </script>
 

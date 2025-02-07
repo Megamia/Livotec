@@ -56,6 +56,13 @@
                 <div v-html="item.description" class="description" />
               </td>
             </tr>
+            <tr v-for="title in allThongSoTitles" :key="title.id">
+              <th>{{ title }}</th>
+
+              <td v-for="item in specs" :key="item.id" class="text-center">
+                {{ getThongSoValue(item.thongso, title) }}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -71,7 +78,7 @@
 
 <script setup>
 import DefaultLayout from "./DefaultLayout.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import store from "@/store/store";
 
 const specs = ref([]);
@@ -99,6 +106,33 @@ const deleteItem = async (itemId) => {
     .catch((error) => {
       console.error("Lỗi khi xóa sản phẩm:", error);
     });
+};
+const allThongSoTitles = computed(() => {
+  const dataStore = store.getters["product/getDataStoreProducts"];
+  if (dataStore && dataStore.length > 0) {
+    const allTitles = new Set();
+    dataStore.forEach((item) => {
+      item.thongso.forEach((thongso) => {
+        allTitles.add(thongso.thuoc_tinh);
+      });
+    });
+    return Array.from(allTitles);
+  } else {
+    return null;
+  }
+});
+
+const getThongSoValue = (thongsoList, thuoc_tinh) => {
+  const found = thongsoList.find((t) => t.thuoc_tinh === thuoc_tinh);
+  if (found) {
+    if (found.gia_tri != "") {
+      return found.gia_tri;
+    } else {
+      return "-";
+    }
+  } else {
+    return "-";
+  }
 };
 </script>
 

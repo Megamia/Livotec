@@ -10,7 +10,7 @@ const storeProducts = {
       state.dataStoreProducts = payload.dataStoreProducts;
     },
     clearDataStoreProducts(state) {
-      state.dataStoreProducts = null;
+      state.dataStoreProducts = [];
     },
     removeItemProduct(state, itemId) {
       state.dataStoreProducts = state.dataStoreProducts.filter(
@@ -24,7 +24,7 @@ const storeProducts = {
       state.dataStoreCart = payload.dataStoreCart;
     },
     clearDataStoreCart(state) {
-      state.dataStoreCart = null;
+      state.dataStoreCart = [];
     },
     removeItemCart(state, itemId) {
       state.dataStoreCart = state.dataStoreCart.filter(
@@ -43,6 +43,10 @@ const storeProducts = {
   },
   actions: {
     //Product
+    clearDataStoreProducts({ commit }) {
+      commit("clearDataStoreProducts");
+    },
+
     deleteItemProduct({ commit }, itemId) {
       commit("removeItemProduct", itemId);
     },
