@@ -85,4 +85,8 @@ fields:
     status_id:
         label: 'Trạng thái'
         span: auto
-        type: text
+        type: dropdown
+        options:
+            0: 'Chưa giao'
+            1: 'Đang giao'
+            2: 'Đã giao'

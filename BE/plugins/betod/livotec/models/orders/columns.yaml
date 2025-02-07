@@ -12,9 +12,10 @@ columns:
         sortable: true
     status_id:
         label: 'Trạng thái'
-        type: number
+        type: partial
         searchable: true
         sortable: true
+        path: ~/plugins/betod/livotec/partials/_state_column.php
     user_id:
         label: 'Người dùng'
         type: number
