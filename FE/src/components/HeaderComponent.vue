@@ -110,7 +110,7 @@ const showCart = () => {
 
 const showMenu = () => {
   isOpenMenu.value = !isOpenMenu.value;
-  console.log(isOpenMenu.value);
+  // console.log(isOpenMenu.value);
 };
 
 const showSearch = () => {

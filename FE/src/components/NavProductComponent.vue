@@ -128,7 +128,7 @@ const fetchData = async (id) => {
     );
     if (response.data && response.data.length > 0) {
       dataChil.value = response.data;
-      console.log(dataChil.value);
+      // console.log(dataChil.value);
       haveData.value = true;
     } else {
       dataChil.value = [];

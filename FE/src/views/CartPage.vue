@@ -181,27 +181,6 @@ const handleUpdateCart = () => {
     dataStoreCart: specs.value,
   });
   changeQuantity.value = true;
-
-  // const currentCart = store.getters["product/getDataStoreCart"];
-  // store
-  //   .dispatch("product/updateItemCart", {itemId,itemQuantity}
-  //   )
-  //   .then(() => {
-  //     alert(`Sản phẩm với id ${itemId} đã bị xóa thành công.`);
-  //     fetchData();
-  //   })
-  //   .catch((error) => {
-  //     console.error("Lỗi khi xóa sản phẩm:", error);
-  //   });
-  // const updatedCart = currentCart.map((item) => {
-  //   if (item.id === cart.id) {
-  //     return { ...item, quantity: (item.quantity || 1) + 1 };
-  //   }
-  //   return item;
-  // });
-  // store.commit("product/setDataStoreCart", {
-  //   dataStoreCart: updatedCart,
-  // });
 };
 const handleChangeQuantity = () => {
   changeQuantity.value = false;

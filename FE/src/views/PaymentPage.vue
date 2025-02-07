@@ -588,7 +588,7 @@ fetchProvinces();
 
 const fetchData = () => {
   const dataStore = store.getters["product/getDataStoreCart"];
-  console.log(dataStore);
+  // console.log(dataStore);
   data.value = dataStore;
 };
 
