@@ -94,7 +94,6 @@ const fetchData = () => {
   } else {
     haveData.value = false;
   }
-  console.log("data: ", dataStore);
 };
 const deleteItem = async (itemId) => {
   store
@@ -109,29 +108,36 @@ const deleteItem = async (itemId) => {
 };
 const allThongSoTitles = computed(() => {
   const dataStore = store.getters["product/getDataStoreProducts"];
-  if (dataStore && dataStore.length > 0) {
+
+  if (dataStore && dataStore.length > 1) {
     const allTitles = new Set();
     dataStore.forEach((item) => {
-      item.thongso.forEach((thongso) => {
-        allTitles.add(thongso.thuoc_tinh);
-      });
+      if (item.thongso && item.thongso != null) {
+        item.thongso.forEach((thongso) => {
+          allTitles.add(thongso.thuoc_tinh);
+        });
+      }
     });
-    return Array.from(allTitles);
+    return [...allTitles];
   } else {
     return null;
   }
 });
 
 const getThongSoValue = (thongsoList, thuoc_tinh) => {
-  const found = thongsoList.find((t) => t.thuoc_tinh === thuoc_tinh);
-  if (found) {
-    if (found.gia_tri != "") {
-      return found.gia_tri;
+  if (thongsoList && thongsoList != null) {
+    const found = thongsoList.find((t) => t.thuoc_tinh === thuoc_tinh);
+    if (found) {
+      if (found.gia_tri != "") {
+        return found.gia_tri;
+      } else {
+        return "-";
+      }
     } else {
       return "-";
     }
   } else {
-    return "-";
+    return;
   }
 };
 </script>
