@@ -102,12 +102,17 @@
           <span class="text-lg font-bold">Proceed to checkout</span>
         </div>
       </div>
-      <div
-        v-else
-        class="flex flex-1 justify-center items-center my-[20px] border-[1px] border-[ #dddddd]"
-      >
-        <span>Không có sản phẩm nào được thêm vào giỏ hàng.</span>
-      </div>
+      <a-flex v-else vertical class="my-[20px]" gap="3">
+        <span class="font-semibold">Your cart is currently empty.</span>
+        <p>
+          <button
+            @click="handleHome"
+            class="justify-start flex bg-[#DCD7E3] px-4 py-[0.618em] rounded-[3px] font-bold text-[#515151]"
+          >
+            Return to shop
+          </button>
+        </p>
+      </a-flex>
     </div>
   </DefaultLayout>
 </template>
@@ -198,6 +203,10 @@ const handleUpdateCart = () => {
 };
 const handleChangeQuantity = () => {
   changeQuantity.value = false;
+};
+
+const handleHome = () => {
+  router.push("/");
 };
 </script>
 
