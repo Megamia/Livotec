@@ -2,7 +2,7 @@ const storeProducts = {
   namespaced: true,
   state: {
     dataStoreProducts: [],
-    dataStoreCart:[],
+    dataStoreCart: [],
   },
   mutations: {
     //Product
@@ -31,6 +31,14 @@ const storeProducts = {
         (item) => item.id !== itemId
       );
     },
+    updateItemCart(state, updatedItem) {
+      const index = state.dataStoreCart.findIndex(
+        (item) => item.id === updatedItem.id
+      );
+      if (index !== -1) {
+        state.dataStoreCart[index] = updatedItem;
+      }
+    },
     //Cart
   },
   actions: {
@@ -43,6 +51,9 @@ const storeProducts = {
     //Cart
     deleteItemCart({ commit }, itemId) {
       commit("removeItemCart", itemId);
+    },
+    updateItemCart({ commit }, updatedItem) {
+      commit("updateItemCart", updatedItem);
     },
     //Cart
   },

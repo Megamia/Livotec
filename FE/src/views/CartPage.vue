@@ -56,6 +56,7 @@
               <td>
                 <a-input-number
                   v-model:value="item.quantity"
+                  @change="handleChangeQuantity()"
                   :min="0"
                   :max="100000"
                   class="border-[#666] hover:border-[#666] rounded-none w-[60px] text-center"
@@ -80,12 +81,18 @@
                     Apply coupon
                   </button>
                 </div>
-                <button
-                  class="text-nowrap rounded-[3px] flex float-right h-[100%] font-bold text-[#515151] p-[6px] bg-[#e9e6ed]"
+                <a-button
+                  :class="[
+                    'rounded-[3px] flex float-right h-[100%] p-[6px] bg-[#e9e6ed] text-[#515151]',
+                    changeQuantity
+                      ? ''
+                      : 'buttonUpdateCart',
+                  ]"
                   @click="handleUpdateCart()"
+                  :disabled="changeQuantity"
                 >
-                  Update cart
-                </button>
+                  <span class="font-bold"> Update cart </span>
+                </a-button>
               </td>
             </tr>
           </tbody>
@@ -117,38 +124,8 @@ import { routeLocationKey, useRouter } from "vue-router";
 const router = useRouter();
 const specs = ref([]);
 const haveData = ref(false);
-const columns = [
-  {
-    name: "Id",
-    dataIndex: "",
-    key: "id",
-  },
-  {
-    title: "",
-    dataIndex: "img",
-    key: "img",
-  },
-  {
-    title: "Product",
-    dataIndex: "product",
-    key: "product",
-  },
-  {
-    title: "Price",
-    key: "price",
-    dataIndex: "price",
-  },
-  {
-    title: "Quantity",
-    key: "quantity",
-    dataIndex: "quantity",
-  },
-  {
-    title: "Subtotal",
-    key: "subtotal",
-    dataIndex: "subtotal",
-  },
-];
+const changeQuantity = ref(true);
+
 onMounted(() => fetchData());
 
 const fetchData = () => {
@@ -195,10 +172,22 @@ const handlePayment = () => {
 };
 
 const handleUpdateCart = () => {
-  const currentCart = store.getters["product/getDataStoreCart"] ;
+  store.commit("product/setDataStoreCart", {
+    dataStoreCart: specs.value,
+  });
+  changeQuantity.value = true;
 
-  console.log(currentCart.quantity);
-
+  // const currentCart = store.getters["product/getDataStoreCart"];
+  // store
+  //   .dispatch("product/updateItemCart", {itemId,itemQuantity}
+  //   )
+  //   .then(() => {
+  //     alert(`Sản phẩm với id ${itemId} đã bị xóa thành công.`);
+  //     fetchData();
+  //   })
+  //   .catch((error) => {
+  //     console.error("Lỗi khi xóa sản phẩm:", error);
+  //   });
   // const updatedCart = currentCart.map((item) => {
   //   if (item.id === cart.id) {
   //     return { ...item, quantity: (item.quantity || 1) + 1 };
@@ -208,6 +197,9 @@ const handleUpdateCart = () => {
   // store.commit("product/setDataStoreCart", {
   //   dataStoreCart: updatedCart,
   // });
+};
+const handleChangeQuantity = () => {
+  changeQuantity.value = false;
 };
 </script>
 
@@ -239,4 +231,13 @@ table tr td {
 table tbody tr td {
   margin-inline: 10px;
 }
+
+.buttonUpdateCart:hover {
+  background-color: #dcd7e3;
+  text-decoration: none;
+  background-image: none;
+  color: #515151;
+  border: 1px solid #d9d9d9;
+}
+
 </style>
