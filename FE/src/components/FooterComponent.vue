@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <a-flex class="flex-1 a" vertical>
     <a-flex
       class="flex-1 justify-between pt-[50px] pb-[30px] gap-[24px] border-b-[1px] border-[#DCDFE8]"
@@ -112,6 +113,7 @@
       </a-flex>
     </a-flex>
   </a-flex>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>

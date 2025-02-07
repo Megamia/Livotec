@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <DefaultLayout>
     <div class="container mb-[3rem]">
       <div class="w-full border-b-[1px] border-gray-300 py-3">
@@ -300,7 +301,10 @@
             <a-flex vertical class="w-full bg-[#E9E6ED] rounded-md">
               <a-form-item name="paymenttype" :rules="rules.paymenttype">
                 <a-flex class="w-full p-[1em] border-b-[1px] border-[#cfc8d8]">
-                  <a-radio-group v-model:value="formState.paymenttype" class="flex flex-1 flex-col">
+                  <a-radio-group
+                    v-model:value="formState.paymenttype"
+                    class="flex flex-1 flex-col"
+                  >
                     <a-radio :style="radioStyle" :value="1"
                       >Chuyển khoản ngân hàng</a-radio
                     >
@@ -357,6 +361,7 @@
       </div>
     </div>
   </DefaultLayout>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>

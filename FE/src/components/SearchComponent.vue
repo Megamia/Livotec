@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <a-drawer
     v-model:open="open"
     root-class-name="root-class-name"
@@ -14,6 +15,7 @@
     </template>
     <a-flex> Content </a-flex>
   </a-drawer>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>

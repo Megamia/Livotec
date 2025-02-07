@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <DefaultLayout>
     <div class="container flex flex-1 flex-col">
       <div class="w-full border-b-[1px] border-gray-300 py-3 mb-4">
@@ -115,6 +116,7 @@
       </a-flex>
     </div>
   </DefaultLayout>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>

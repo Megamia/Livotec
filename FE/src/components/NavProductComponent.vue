@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <a-flex vertical align="center" class="w-full">
     <h1 class="text-[24px] font-semibold text-[#02b6ac]">
       Livotec - Công nghệ thông minh, sống khỏe mỗi ngày
@@ -85,6 +86,7 @@
     </a-flex>
     <div v-else>Không có dữ liệu để hiển thị</div>
   </a-flex>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
