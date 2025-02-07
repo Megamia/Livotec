@@ -37,7 +37,7 @@
       <BxSearch class="icon iconHidden" @click="showSearch" />
       <SearchComponent v-if="isOpenSearch" @close-search="showSearch" />
       <a-badge
-        count="5"
+        :count="quantityProductInCart"
         :number-style="{
           backgroundColor: '#fff',
           color: 'black',
@@ -65,7 +65,7 @@
 <script setup>
 import MenuComponent from "./MenuComponent.vue";
 import SearchComponent from "./SearchComponent.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import "./header.css";
 import {
   BxSearch,
@@ -74,7 +74,10 @@ import {
   AnOutlinedUser,
   AnFilledCaretDown,
 } from "@kalimahapps/vue-icons";
+import store from "@/store/store";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const isLogin = ref(false);
 
 const handleLogout = () => {
@@ -97,9 +100,14 @@ onMounted(() => fetchData());
 
 const isOpenMenu = ref(false);
 const isOpenSearch = ref(false);
-
+const quantityProductInCart = computed(() => {
+  return store.getters["product/getDataStoreCart"].length;
+});
 const showCart = () => {
-  alert(" Làm gì có 5 nào! \n Bị lừa rồi");
+  const a = store.getters["product/getDataStoreCart"];
+  console.log(a);
+
+  router.push("/cart");
 };
 
 const showMenu = () => {

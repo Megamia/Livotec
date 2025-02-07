@@ -20,9 +20,9 @@ const store = createStore({
   },
   plugins: [
     createPersistedState({
-          key: "vuex", 
-          paths: ["product.dataStoreProducts"], 
-        }),
+      key: "vuex",
+      paths: ["product.dataStoreProducts", "product.dataStoreCart"],
+    }),
   ],
 });
 

@@ -7,10 +7,7 @@
       <div class="w-full flex justify-center items-center">
         <h1 class="text-[#38B6AC] font-bold text-3xl">SO SÁNH SẢN PHẨM</h1>
       </div>
-      <div
-        class="product-comparison p-[10px] overflow-x-auto"
-        v-if="specs.length > 0"
-      >
+      <div class="product-comparison p-[10px] overflow-x-auto" v-if="haveData">
         <table>
           <thead>
             <tr class="remove">
@@ -59,7 +56,6 @@
                 <div v-html="item.description" class="description" />
               </td>
             </tr>
-            
           </tbody>
         </table>
       </div>
@@ -79,6 +75,7 @@ import { ref, onMounted } from "vue";
 import store from "@/store/store";
 
 const specs = ref([]);
+const haveData = ref(false);
 
 onMounted(() => fetchData());
 
@@ -86,12 +83,14 @@ const fetchData = () => {
   const dataStore = store.getters["product/getDataStoreProducts"];
   if (dataStore && dataStore.length > 0) {
     specs.value = dataStore;
-    console.log(specs.value);
+    haveData.value = true;
+  } else {
+    haveData.value = false;
   }
 };
-const deleteItem = (itemId) => {
+const deleteItem = async (itemId) => {
   store
-    .dispatch("product/deleteItem", itemId)
+    .dispatch("product/deleteItemProduct", itemId)
     .then(() => {
       alert(`Sản phẩm với id ${itemId} đã bị xóa thành công.`);
       fetchData();
@@ -154,7 +153,6 @@ td:nth-child(odd) {
 .secs2 {
   width: 100%;
 }
-
 </style>
 
 <style>
@@ -177,7 +175,6 @@ td:nth-child(odd) {
   left: 10px;
   top: -5px;
 }
-
 </style>
 
 <style lang="scss">
@@ -204,5 +201,4 @@ td:nth-child(odd) {
     }
   }
 }
-
 </style>

@@ -250,12 +250,12 @@
                   <template v-if="column.key === 'name'">
                     <a-flex gap="5" class="items-center">
                       {{ record.name }} <AkXSmall />
-                      <span class="font-bold">{{ record.count }}</span>
+                      <span class="font-bold">{{ record.quantity }}</span>
                     </a-flex>
                   </template>
                   <template v-else-if="column.key === 'subtotal'">
                     <span class="text-[#02B6AC] text-[16px] font-bold">{{
-                      formatCurrency(record.price * record.count)
+                      formatCurrency(record.price * record.quantity)
                     }}</span>
                   </template>
                 </template>
@@ -300,7 +300,7 @@
             <a-flex vertical class="w-full bg-[#E9E6ED] rounded-md">
               <a-form-item name="paymenttype" :rules="rules.paymenttype">
                 <a-flex class="w-full p-[1em] border-b-[1px] border-[#cfc8d8]">
-                  <a-radio-group v-model:value="formState.paymenttype">
+                  <a-radio-group v-model:value="formState.paymenttype" class="flex flex-1 flex-col">
                     <a-radio :style="radioStyle" :value="1"
                       >Chuyển khoản ngân hàng</a-radio
                     >
@@ -361,9 +361,10 @@
 
 <script setup>
 import DefaultLayout from "./DefaultLayout.vue";
-import { computed, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import { AkXSmall } from "@kalimahapps/vue-icons";
+import store from "@/store/store";
 
 const formRef = ref();
 const formState = reactive({
@@ -412,25 +413,12 @@ const columns = ref([
     dataIndex: "subtotal",
   },
 ]);
-const data = ref([
-  {
-    key: "1",
-    name: "Bếp từ đơn Livotec E-smart LIS-826",
-    price: 2000000,
-    count: 2,
-  },
-  {
-    key: "2",
-    name: "Bếp từ đơn Livotec E-smart LIS-646",
-    price: 2300000,
-    count: 1,
-  },
-]);
+const data = ref([]);
 
 const totals = computed(() => {
   let subtotal = 0;
-  data.value.forEach(({ price, count }) => {
-    subtotal += price * count;
+  data.value.forEach(({ price, quantity }) => {
+    subtotal += price * quantity;
   });
   return {
     subtotal,
@@ -592,6 +580,14 @@ const onSubmit = () => {
 };
 
 fetchProvinces();
+
+const fetchData = () => {
+  const dataStore = store.getters["product/getDataStoreCart"];
+  console.log(dataStore);
+  data.value = dataStore;
+};
+
+onMounted(() => fetchData());
 </script>
 
 <style scoped></style>

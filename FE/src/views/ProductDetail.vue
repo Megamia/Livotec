@@ -101,6 +101,7 @@
                 <a-flex gap="15">
                   <div
                     class="flex-1 bg-[#EF0B00] py-2 flex justify-center items-center rounded-md hover:opacity-80 cursor-pointer"
+                    @click="handleAddToCart(product)"
                   >
                     <span class="text-white text-[15px] font-medium"
                       >Mua Ngay</span
@@ -191,6 +192,25 @@ const setActiveImage = (path) => {
   activeImage.value = path;
 };
 
+const handleAddToCart = (cart) => {
+  const currentCart = store.getters["product/getDataStoreCart"] || [];
+
+  const updatedCart = currentCart.map((item) => {
+    if (item.id === cart.id) {
+      return { ...item, quantity: (item.quantity || 1) + 1 }; 
+    }
+    return item;
+  });
+
+  if (!currentCart.some((item) => item.id === cart.id)) {
+    updatedCart.push({ ...cart, quantity: 1 });
+  }
+
+  store.commit("product/setDataStoreCart", {
+    dataStoreCart: updatedCart,
+  });
+};
+
 const addToComparison = (product) => {
   if (!product || !product.id) {
     alert("Thêm thất bại: Sản phẩm không hợp lệ");
@@ -217,29 +237,29 @@ const addToComparison = (product) => {
 
 <style>
 .description ul {
-  list-style: none; 
-  padding: 0; 
+  list-style: none;
+  padding: 0;
 }
 
 .description ul li {
   position: relative;
-  padding-left: 1.5em; 
+  padding-left: 1.5em;
   margin-top: 10px;
 }
 
 .description ul li::before {
   content: "•";
   color: #38b6ac;
-  font-size: 1.5em; 
-  position: absolute; 
-  left: 0; 
-  top: -5px; 
+  font-size: 1.5em;
+  position: absolute;
+  left: 0;
+  top: -5px;
 }
 
 .gallery-image {
   width: 100px;
-  height: 100px; 
-  object-fit: cover; 
-  border-radius: 4px; 
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
 }
 </style>
