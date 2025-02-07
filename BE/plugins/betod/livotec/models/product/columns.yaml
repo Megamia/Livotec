@@ -28,6 +28,15 @@ columns:
     created_at:
         label: 'Ngày tạo'
         type: datetime
+        searchable: false
+        sortable: false
     updated_at:
         label: 'Ngày chỉnh sửa'
         type: datetime
+    category_id:
+        label: 'Danh mục'
+        type: text
+        searchable: true
+        sortable: true
+        select: name
+        relation: category

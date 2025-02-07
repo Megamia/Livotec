@@ -105,3 +105,6 @@ v1.0.35:
 v1.0.36:
     - 'Updated table betod_livotec_order_positions'
     - builder_table_update_betod_livotec_order_positions.php
+v1.0.37:
+    - 'Created table betod_livotec_filter'
+    - builder_table_create_betod_livotec_filter.php

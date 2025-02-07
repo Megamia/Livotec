@@ -25,11 +25,13 @@
                   ></a-flex
                 > </a-badge
               ><a-flex
-                v-for="item in new Array(5)"
+                v-for="item in new Array(4)"
                 :key="item"
                 type="primary"
                 class="gap-1 items-center sort_item"
-                >Button</a-flex
+                >Button<AkChevronDownSmall /></a-flex
+              ><a-flex type="primary" class="gap-2 items-center sort_item"
+                ><CdTag class="text-[17px]"/>Giá</a-flex
               ></a-flex
             >
           </section>
@@ -42,7 +44,11 @@
 <script setup>
 import DefaultLayout from "./DefaultLayout.vue";
 import CategorySlideComponent from "@/components/CategorySlideComponent.vue";
-import { PhLightFunnel, AkChevronDownSmall } from "@kalimahapps/vue-icons";
+import {
+  PhLightFunnel,
+  AkChevronDownSmall,
+  CdTag,
+} from "@kalimahapps/vue-icons";
 
 import axios from "axios";
 import { ref, onMounted } from "vue";

@@ -22,3 +22,7 @@ navigation:
                 label: Order
                 url: betod/livotec/order
                 icon: icon-inbox
+            side-menu-item4:
+                label: Filter
+                url: betod/livotec/filter
+                icon: icon-filter

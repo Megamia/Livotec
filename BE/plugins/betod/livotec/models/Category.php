@@ -15,6 +15,9 @@ class Category extends Model
      * @var string table in the database used by the model.
      */
     public $table = 'betod_livotec_category';
+    public $hasMany = [
+        'filters' => ['Betod\Livotec\Models\Filter']
+    ];
     public $attachOne = [
         'image' => 'System\Models\File'
     ];

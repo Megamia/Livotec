@@ -1,0 +1,11 @@
+fields:
+    name:
+        label: 'Tên bộ lọc'
+        span: auto
+        type: text
+    category:
+        label: 'Danh mục'
+        nameFrom: name
+        descriptionFrom: description
+        span: auto
+        type: relation
