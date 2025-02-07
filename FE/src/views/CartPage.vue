@@ -2,7 +2,7 @@
   <DefaultLayout>
     <div class="container flex flex-1 flex-col">
       <div class="w-full border-b-[1px] border-gray-300 py-3 mb-4">
-        <span class="text-[#38B6AC] font-bold">So sánh sản phẩm</span>
+        <span class="text-[#38B6AC] font-bold">Giỏ hàng</span>
       </div>
       <div class="w-full flex items-center">
         <h1 class="text-[#38B6AC] font-bold text-3xl">Giỏ hàng</h1>
@@ -84,9 +84,7 @@
                 <a-button
                   :class="[
                     'rounded-[3px] flex float-right h-[100%] p-[6px] bg-[#e9e6ed] text-[#515151]',
-                    changeQuantity
-                      ? ''
-                      : 'buttonUpdateCart',
+                    changeQuantity ? '' : 'buttonUpdateCart',
                   ]"
                   @click="handleUpdateCart()"
                   :disabled="changeQuantity"
@@ -108,7 +106,7 @@
         v-else
         class="flex flex-1 justify-center items-center my-[20px] border-[1px] border-[ #dddddd]"
       >
-        <span>Không có sản phẩm nào được thêm vào bảng so sánh.</span>
+        <span>Không có sản phẩm nào được thêm vào giỏ hàng.</span>
       </div>
     </div>
   </DefaultLayout>
@@ -239,5 +237,4 @@ table tbody tr td {
   color: #515151;
   border: 1px solid #d9d9d9;
 }
-
 </style>

@@ -64,6 +64,9 @@ const router = createRouter({
       component: () => import("../views/CartPage.vue"),
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    return { top: 0, behavior: "smooth" }; 
+  },
 });
 
 export default router;
