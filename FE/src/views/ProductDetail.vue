@@ -245,16 +245,13 @@ const addToComparison = (product) => {
   compare.value = true;
 };
 
-const clearStore = () => {
-  store
-    .dispatch("product/clearDataStoreProducts")
-    .then(() => {
-      alert(`Xóa thành công.`);
-    })
-    .catch((error) => {
-      console.error("Lỗi khi xóa sản phẩm:", error);
-    });
-  clearDataStoreProducts;
+const clearStore = async () => {
+  try {
+    await store.dispatch("product/clearDataStoreProducts");
+    alert("Xóa thành công.");
+  } catch (error) {
+    console.error("Lỗi khi xóa sản phẩm:", error);
+  }
 };
 </script>
 
