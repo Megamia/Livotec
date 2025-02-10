@@ -126,9 +126,8 @@ const fetchData = async (id) => {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${id}`
     );
-    if (response.data && response.data.length > 0) {
-      dataChil.value = response.data;
-      // console.log(dataChil.value);
+    if (response.data) {
+      dataChil.value = response.data.products;
       haveData.value = true;
     } else {
       dataChil.value = [];
