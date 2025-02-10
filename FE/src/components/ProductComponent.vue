@@ -58,7 +58,7 @@
 
                     <button
                       class="flex-1 font-sans border-[1px] border-[#4fa8e7] px-[12px] py-[10px] rounded-full text-white bg-[#02b6ac] hover:bg-[linear-gradient(270deg,_#ccf7fb_2.05%,_#fff_100%)] hover:text-[#424242]"
-                      @click="test(itemChil.slug)"
+                      @click="handleProductDetail(itemChil.slug)"
                     >
                       Chi tiết
                     </button>
@@ -76,6 +76,9 @@
 <script setup>
 import axios from "axios";
 import { onMounted, ref, defineProps } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const dataChil = ref([]);
 const haveData = ref(false);
 const props = defineProps({
@@ -83,6 +86,10 @@ const props = defineProps({
 });
 const nameCategory = ref("");
 const pathImg = ref("");
+
+const handleProductDetail = (items) => {
+  router.push(`/product/${items}`);
+};
 const fetchData = async () => {
   console.log(props.categoryId);
 
