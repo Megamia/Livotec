@@ -131,7 +131,9 @@ const specs = ref([]);
 const haveData = ref(false);
 const changeQuantity = ref(true);
 
-onMounted(() => fetchData());
+onMounted(() => {
+  fetchData();
+});
 
 const fetchData = () => {
   const dataStore = store.getters["product/getDataStoreCart"];

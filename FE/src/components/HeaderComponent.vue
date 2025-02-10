@@ -84,6 +84,7 @@ const isLogin = ref(false);
 const handleLogout = () => {
   if (confirm("Chắc chắn muốn đăng xuất?")) {
     isLogin.value = false;
+    localStorage.removeItem("token");
   } else {
     return;
   }
@@ -91,13 +92,16 @@ const handleLogout = () => {
 
 const fetchData = () => {
   const token = localStorage.getItem("token");
+  
   if (token) {
     isLogin.value = true;
   } else {
     isLogin.value = false;
   }
 };
-onMounted(() => fetchData());
+onMounted(() => {
+  fetchData();
+});
 
 const isOpenMenu = ref(false);
 const isOpenSearch = ref(false);

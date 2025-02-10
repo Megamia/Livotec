@@ -1,3 +1,5 @@
+let autoClearTimeout = null;
+
 const storeProducts = {
   namespaced: true,
   state: {
@@ -53,17 +55,31 @@ const storeProducts = {
     //Product
 
     //Cart
+    clearDataStoreCart({ commit }) {
+      commit("clearDataStoreCart");
+    },
+
     deleteItemCart({ commit }, itemId) {
       commit("removeItemCart", itemId);
     },
     updateItemCart({ commit }, updatedItem) {
       commit("updateItemCart", updatedItem);
     },
+
     //Cart
+    startAutoClear({ dispatch }) {
+      if (autoClearTimeout) {
+        clearTimeout(autoClearTimeout);
+      }
+
+      autoClearTimeout = setTimeout(() => {
+        dispatch("clearDataStoreProducts");
+        dispatch("startAutoClear");
+      }, 3600000); //1h
+    },
   },
   getters: {
     getDataStoreProducts: (state) => state.dataStoreProducts,
-
     getDataStoreCart: (state) => state.dataStoreCart,
   },
 };
