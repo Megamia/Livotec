@@ -86,7 +86,7 @@
 
       <p
         class="mt-10 text-center text-sm/6 text-gray-500 cursor-pointer"
-        @click="test"
+        @click="handleNotAMember"
       >
         Not a member?
         {{ " " }}
@@ -120,10 +120,12 @@ const handleLogin = async () => {
     );
     if (response.status === 200) {
       localStorage.setItem("token", response.data.token);
+      alert("Đăng nhập thành công");
       router.push("/");
       return;
     } else {
       console.error("Login failed: ", response.message);
+      alert("Đăng nhập thất bại");
       return;
     }
   } catch (e) {
@@ -131,12 +133,7 @@ const handleLogin = async () => {
   }
 };
 
-const test = async () => {
-  try {
-    const response = await axios.get("http://127.0.0.1:8000/api/data");
-    console.log("Data fetched:", response.data);
-  } catch (error) {
-    console.error("Failed to fetch data:", error.response.data);
-  }
+const handleNotAMember = () => {
+  alert("Not a member? Thì cook!!");
 };
 </script>

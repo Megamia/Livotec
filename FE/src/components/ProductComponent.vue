@@ -20,21 +20,28 @@
                 />
                 <div
                   v-if="itemChil.sold_out >= 10"
-                  class="absolute bg-[#ffdc37] top-[20px] right-0 rounded-l-md label z-10"
+                  class="absolute bg-[#ffdc37] top-[20px] right-0 rounded-l-md z-10 bestseller"
                 >
-                  <span class="text-[20px] text-white">Bán chạy nhất</span>
+                  <span class="text-black"
+                    >Bán chạy <br />
+                    nhất</span
+                  >
                 </div>
                 <div
                   v-else
-                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
+                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10 new"
                 >
-                  <span class="text-[20px] text-white">Mới nhất</span>
+                  <span class="font-bold text-white">Mới nhất</span>
                 </div>
                 <div
                   class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description rounded-t-lg z-20"
                 >
                   <div
-                    v-html="itemChil.description"
+                    v-html="
+                      itemChil.description
+                        ? itemChil.description
+                        : 'Chưa có mô tả'
+                    "
                     class="max-h-[90%] overflow-y-scroll text-left test"
                   />
                 </div>
@@ -44,10 +51,14 @@
                   <span
                     class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer"
                   >
-                    {{ itemChil.name ? itemChil.name : "Null" }}
+                    {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
                   </span>
                   <span class="text-[16px] font-bold text-[#02B6AC]">
-                    {{ itemChil.price ? itemChil.price : "Null" }}
+                    {{
+                      itemChil.price
+                        ? formatCurrency(itemChil.price)
+                        : "Chưa có giá"
+                    }}
                   </span>
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
@@ -77,6 +88,7 @@
 import axios from "axios";
 import { onMounted, ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
+import "./ProductComponent.css";
 
 const router = useRouter();
 const dataChil = ref([]);
@@ -87,23 +99,25 @@ const props = defineProps({
 const nameCategory = ref("");
 const pathImg = ref("");
 
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
+};
+
 const handleProductDetail = (items) => {
   router.push(`/product/${items}`);
 };
 const fetchData = async () => {
-  console.log(props.categoryId);
-
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${
         props.categoryId
       }`
     );
-    console.log(response.data);
 
     if (response.data) {
-      console.log(response.data);
-
       //   dataChil.value = response.data.products?.length
       //     ? response.data.products.sort((a, b) => b.sold_out - a.sold_out)
       //     : [];
@@ -132,4 +146,30 @@ const fetchData = async () => {
 onMounted(() => fetchData());
 </script>
 
-<style scoped></style>
+<style scoped>
+.bestseller span::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-right: 10px solid #e3c849;
+  border-bottom: 10px solid transparent;
+  position: absolute;
+  bottom: -10px;
+  right: 0;
+}
+
+.bestseller span {
+  text-align: center;
+  font-size: 14px;
+  line-height: 13px;
+  font-weight: 700;
+  min-height: 38px;
+  justify-content: center;
+  display: flex;
+  padding: 7px 10px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  position: relative;
+}
+</style>

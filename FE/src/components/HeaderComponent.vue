@@ -13,23 +13,27 @@
           <BxSearch />
         </template>
       </a-input>
-      <a-flex class="text-white flex-wrap gap-x-[8px]">
+      <a-flex
+        class="text-white flex-wrap gap-x-[8px]"
+        v-for="item in dataProducts"
+        :key="item.id"
+      >
         <a-dropdown
           class="flex flex-row items-center gap-1 hover:text-white text-nowrap basis-1/7"
-          v-for="item in data"
-          :key="item.id"
+          v-for="itemChil in item"
+          :key="itemChil.id"
         >
           <a class="ant-dropdown-link" @click.prevent>
-            {{ item.name }}
-            <AnFilledCaretDown v-if="item.itemChil" />
+            {{ itemChil.category.name }}
+            <AnFilledCaretDown v-if="dataProducts.length >= 1" />
           </a>
-          <template #overlay>
+          <!-- <template #overlay>
             <a-menu v-if="item.itemChil">
               <a-menu-item v-for="itemChil in item.itemChil" :key="itemChil.id">
                 {{ itemChil.name }}
               </a-menu-item>
             </a-menu>
-          </template>
+          </template> -->
         </a-dropdown>
       </a-flex>
     </a-flex>
@@ -77,6 +81,8 @@ import {
 } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
 import { useRouter } from "vue-router";
+import axios from "axios";
+import { data } from "autoprefixer";
 
 const router = useRouter();
 const isLogin = ref(false);
@@ -92,7 +98,6 @@ const handleLogout = () => {
 
 const fetchData = () => {
   const token = localStorage.getItem("token");
-  
   if (token) {
     isLogin.value = true;
   } else {
@@ -101,7 +106,39 @@ const fetchData = () => {
 };
 onMounted(() => {
   fetchData();
+  getdata();
 });
+const dataProducts = ref({});
+
+const getdata = async () => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/products`
+    );
+    const products = response.data;
+    const groupedByCategory = {};
+    products.forEach((product) => {
+      if (!groupedByCategory[product.category.id]) {
+        groupedByCategory[product.category.id] = [];
+      }
+      groupedByCategory[product.category.id].push(product);
+    });
+
+    for (const categoryId in groupedByCategory) {
+      const productsInCategory = groupedByCategory[categoryId];
+      groupedByCategory[categoryId] = getRandomProducts(productsInCategory, 4);
+    }
+
+    dataProducts.value = groupedByCategory;
+    console.log(dataProducts.value);
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+const getRandomProducts = (array, n) => {
+  const shuffled = array.sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, n);
+};
 
 const isOpenMenu = ref(false);
 const isOpenSearch = ref(false);
@@ -114,67 +151,11 @@ const showCart = () => {
 
 const showMenu = () => {
   isOpenMenu.value = !isOpenMenu.value;
-  // console.log(isOpenMenu.value);
 };
 
 const showSearch = () => {
   isOpenSearch.value = !isOpenSearch.value;
 };
-
-const data = ref([
-  {
-    id: 1,
-    name: "Máy lọc nước",
-    itemChil: [
-      { id: 1, name: "chil1" },
-      { id: 2, name: "chil2" },
-      { id: 3, name: "chil3" },
-    ],
-  },
-  {
-    id: 2,
-    name: "Bếp từ",
-    itemChil: [
-      { id: 1, name: "chil1" },
-      { id: 2, name: "chil2" },
-      { id: 3, name: "chil3" },
-    ],
-  },
-  {
-    id: 3,
-    name: "Bình nước nóng",
-    itemChil: [
-      { id: 1, name: "chil1" },
-      { id: 2, name: "chil2" },
-      { id: 3, name: "chil3" },
-    ],
-  },
-  {
-    id: 4,
-    name: "Linh kiện lõi lọc",
-  },
-  {
-    id: 5,
-    name: "Tin tức",
-  },
-  {
-    id: 6,
-    name: "Giới thiệu",
-  },
-  {
-    id: 7,
-    name: "Bảo hành",
-  },
-  {
-    id: 8,
-    name: "Thư viện",
-    itemChil: [
-      { id: 1, name: "chil1" },
-      { id: 2, name: "chil2" },
-      { id: 3, name: "chil3" },
-    ],
-  },
-]);
 </script>
 
 <style scoped></style>

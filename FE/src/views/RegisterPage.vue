@@ -142,10 +142,14 @@ const handleRegister = async () => {
       }
     );
     if (response.status === 200) {
-      console.log("Register success");
+      alert("Đăng ký thành công");
       router.push("/login");
-    } else {
-      console.log("Register faile");
+      return;
+    } else if (response.status === 401) {
+      alert(
+        "Đăng ký thất bại: The password field must contain at least one number!!"
+      );
+      return;
     }
   } catch (e) {
     console.log("Error: ", e);

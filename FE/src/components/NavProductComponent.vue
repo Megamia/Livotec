@@ -48,7 +48,11 @@
                   class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description rounded-t-lg z-20"
                 >
                   <div
-                    v-html="itemChil.description"
+                    v-html="
+                      itemChil.description
+                        ? itemChil.description
+                        : 'Chưa có mô tả'
+                    "
                     class="max-h-[90%] overflow-y-scroll text-left test"
                   />
                 </div>
@@ -58,10 +62,14 @@
                   <span
                     class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer"
                   >
-                    {{ itemChil.name ? itemChil.name : "Null" }}
+                    {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
                   </span>
                   <span class="text-[16px] font-bold text-[#02B6AC]">
-                    {{ itemChil.price ? itemChil.price : "Null" }}
+                    {{
+                      itemChil.price
+                        ? formatCurrency(itemChil.price)
+                        : "Chưa có giá"
+                    }}
                   </span>
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
@@ -111,6 +119,13 @@ const data = ref([
   { id: 4, name: "Linh kiện, Lõi lọc" },
 ]);
 const dataChil = ref([]);
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
+};
 
 const handleProductDetail = (items) => {
   router.push(`/product/${items}`);
