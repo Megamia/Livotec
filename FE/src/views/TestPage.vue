@@ -32,7 +32,7 @@ const fetchData = async () => {
       `${import.meta.env.VITE_APP_URL_API}/products`
     );
     data.value = response.data;
-    console.log(response.data);
+    // console.log(response.data);
   } catch (e) {
     console.log("Error: ", e);
   }

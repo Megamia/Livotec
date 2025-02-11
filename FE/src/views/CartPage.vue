@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <DefaultLayout>
     <div class="container flex flex-1 flex-col">
       <div class="w-full border-b-[1px] border-gray-300 py-3 mb-4">
@@ -115,6 +116,7 @@
       </a-flex>
     </div>
   </DefaultLayout>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
@@ -129,7 +131,9 @@ const specs = ref([]);
 const haveData = ref(false);
 const changeQuantity = ref(true);
 
-onMounted(() => fetchData());
+onMounted(() => {
+  fetchData();
+});
 
 const fetchData = () => {
   const dataStore = store.getters["product/getDataStoreCart"];
@@ -179,27 +183,6 @@ const handleUpdateCart = () => {
     dataStoreCart: specs.value,
   });
   changeQuantity.value = true;
-
-  // const currentCart = store.getters["product/getDataStoreCart"];
-  // store
-  //   .dispatch("product/updateItemCart", {itemId,itemQuantity}
-  //   )
-  //   .then(() => {
-  //     alert(`Sản phẩm với id ${itemId} đã bị xóa thành công.`);
-  //     fetchData();
-  //   })
-  //   .catch((error) => {
-  //     console.error("Lỗi khi xóa sản phẩm:", error);
-  //   });
-  // const updatedCart = currentCart.map((item) => {
-  //   if (item.id === cart.id) {
-  //     return { ...item, quantity: (item.quantity || 1) + 1 };
-  //   }
-  //   return item;
-  // });
-  // store.commit("product/setDataStoreCart", {
-  //   dataStoreCart: updatedCart,
-  // });
 };
 const handleChangeQuantity = () => {
   changeQuantity.value = false;

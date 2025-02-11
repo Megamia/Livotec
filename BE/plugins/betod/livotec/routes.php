@@ -10,8 +10,14 @@ Route::group(['prefix' => 'apiProduct'], function () {
     });
 
     Route::get('navProducts/{category_id}', function ($category_id) {
+        $category = Category::with(['image'])->find($category_id);
+
         $navProducts = Product::where('category_id', $category_id)->get();
-        return response()->json($navProducts);
+
+        return response()->json([
+            'category' => $category,
+            'products' => $navProducts
+        ]);
     });
 
     Route::get('product/{slug}', function ($slug) {
@@ -38,4 +44,3 @@ Route::group(['prefix' => 'apiCategory'], function () {
         }
     });
 });
-

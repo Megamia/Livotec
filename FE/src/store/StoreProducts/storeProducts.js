@@ -1,3 +1,5 @@
+let autoClearTimeout = null;
+
 const storeProducts = {
   namespaced: true,
   state: {
@@ -10,7 +12,7 @@ const storeProducts = {
       state.dataStoreProducts = payload.dataStoreProducts;
     },
     clearDataStoreProducts(state) {
-      state.dataStoreProducts = null;
+      state.dataStoreProducts = [];
     },
     removeItemProduct(state, itemId) {
       state.dataStoreProducts = state.dataStoreProducts.filter(
@@ -24,7 +26,7 @@ const storeProducts = {
       state.dataStoreCart = payload.dataStoreCart;
     },
     clearDataStoreCart(state) {
-      state.dataStoreCart = null;
+      state.dataStoreCart = [];
     },
     removeItemCart(state, itemId) {
       state.dataStoreCart = state.dataStoreCart.filter(
@@ -43,23 +45,41 @@ const storeProducts = {
   },
   actions: {
     //Product
+    clearDataStoreProducts({ commit }) {
+      commit("clearDataStoreProducts");
+    },
+
     deleteItemProduct({ commit }, itemId) {
       commit("removeItemProduct", itemId);
     },
     //Product
 
     //Cart
+    clearDataStoreCart({ commit }) {
+      commit("clearDataStoreCart");
+    },
+
     deleteItemCart({ commit }, itemId) {
       commit("removeItemCart", itemId);
     },
     updateItemCart({ commit }, updatedItem) {
       commit("updateItemCart", updatedItem);
     },
+
     //Cart
+    startAutoClear({ dispatch }) {
+      if (autoClearTimeout) {
+        clearTimeout(autoClearTimeout);
+      }
+
+      autoClearTimeout = setTimeout(() => {
+        dispatch("clearDataStoreProducts");
+        dispatch("startAutoClear");
+      }, 3600000); //1h
+    },
   },
   getters: {
     getDataStoreProducts: (state) => state.dataStoreProducts,
-
     getDataStoreCart: (state) => state.dataStoreCart,
   },
 };

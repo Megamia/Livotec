@@ -1,38 +1,17 @@
 <template>
-  <!-- eslint-disable vue/no-v-model-argument -->
-  <a-flex vertical align="center" class="w-full">
-    <h1 class="text-[24px] font-semibold text-[#02b6ac]">
-      Livotec - Công nghệ thông minh, sống khỏe mỗi ngày
-    </h1>
-    <a-flex class="max-w-[100%]">
-      <a-tabs
-        v-model:data="activeKey"
-        class="nav max-w-[100%]"
-        @change="changeData"
+  <a-flex vertical class="px-[100px]">
+    <img :src="pathImg" class="w-[100%] bg-red-500 mb-5" />
+    <a-flex justify="center" vertical class="gap-[40px]">
+      <span
+        class="text-[28px] text-[#02b6ac] font-bold uppercase text-center"
+        >{{ nameCategory }}</span
       >
-        <a-tab-pane
-          v-for="item in data"
-          :key="item.id"
-          :tab="item.name"
-          class="flex gap-[10px]"
+      <a-flex horizontal>
+        <a-flex
+          v-for="itemChil in dataChil.slice(0, 4)"
+          :key="itemChil.id"
+          class="mx-[10px]"
         >
-        </a-tab-pane>
-      </a-tabs>
-    </a-flex>
-
-    <a-flex
-      v-if="haveData"
-      class="max-w-[100%] w-full px-[100px] py-[30px] justify-center"
-    >
-      <swiper
-        :slidesPerView="dataChil.length > 0 ? Math.min(dataChil.length, 4) : 1"
-        :spaceBetween="30"
-        :modules="modules"
-        :navigation="true"
-        :breakpoints="breakpoints"
-        class="swiperProduct"
-      >
-        <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id">
           <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
             <a-flex vertical align="center" class="flex-1">
               <div class="w-full relative pt-[20px] justify-center flex">
@@ -40,9 +19,19 @@
                   src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
                 />
                 <div
-                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
+                  v-if="itemChil.sold_out >= 10"
+                  class="absolute bg-[#ffdc37] top-[20px] right-0 rounded-l-md z-10 bestseller"
                 >
-                  <span class="text-[20px] text-white">Mới nhất</span>
+                  <span class="text-black"
+                    >Bán chạy <br />
+                    nhất</span
+                  >
+                </div>
+                <div
+                  v-else
+                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10 new"
+                >
+                  <span class="font-bold text-white">Mới nhất</span>
                 </div>
                 <div
                   class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description rounded-t-lg z-20"
@@ -57,7 +46,7 @@
                   />
                 </div>
               </div>
-              <a-flex class="px-[10px] w-[70%]">
+              <a-flex class="px-[10px] w-[70%] text-center">
                 <a-flex gap="12" vertical class="flex-1">
                   <span
                     class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer"
@@ -89,36 +78,26 @@
               </a-flex>
             </a-flex>
           </a-flex>
-        </swiper-slide>
-      </swiper>
+        </a-flex>
+      </a-flex>
     </a-flex>
-    <div v-else>Không có dữ liệu để hiển thị</div>
   </a-flex>
-  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
 import axios from "axios";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
-import "swiper/css/navigation";
-import "./NavProduct.css";
-import { Navigation } from "swiper";
+import { onMounted, ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
+import "./ProductComponent.css";
 
-const modules = [Navigation];
-const activeKey = ref(1);
-const haveData = ref(false);
 const router = useRouter();
-
-const data = ref([
-  { id: 1, name: "Bếp từ" },
-  { id: 2, name: "Máy lọc nước" },
-  { id: 3, name: "Bình nước nóng" },
-  { id: 4, name: "Linh kiện, Lõi lọc" },
-]);
 const dataChil = ref([]);
+const haveData = ref(false);
+const props = defineProps({
+  categoryId: [String, Number],
+});
+const nameCategory = ref("");
+const pathImg = ref("");
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("vi-VN", {
@@ -130,19 +109,28 @@ const formatCurrency = (value) => {
 const handleProductDetail = (items) => {
   router.push(`/product/${items}`);
 };
-
-const changeData = async (id) => {
-  activeKey.value = id;
-  await fetchData(id);
-};
-
-const fetchData = async (id) => {
+const fetchData = async () => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${id}`
+      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${
+        props.categoryId
+      }`
     );
+
     if (response.data) {
-      dataChil.value = response.data.products;
+      //   dataChil.value = response.data.products?.length
+      //     ? response.data.products.sort((a, b) => b.sold_out - a.sold_out)
+      //     : [];
+
+      //   dataChil.value = response.data.products?.length
+      // ? response.data.products : [];
+
+      dataChil.value = response.data.products?.length
+        ? response.data.products.sort(() => 0.5 - Math.random()).slice(0, 4)
+        : [];
+
+      nameCategory.value = response.data.category.name;
+      pathImg.value = response.data.category.image?.path;
       haveData.value = true;
     } else {
       dataChil.value = [];
@@ -155,67 +143,33 @@ const fetchData = async (id) => {
   }
 };
 
-onMounted(() => fetchData(activeKey.value));
-
-const breakpoints = {
-  0: {
-    slidesPerView: 1,
-  },
-  768: {
-    slidesPerView: 2,
-  },
-  992: {
-    slidesPerView: 3,
-  },
-  1200: {
-    slidesPerView: 4,
-  },
-};
+onMounted(() => fetchData());
 </script>
 
 <style scoped>
-.nav::v-deep(.ant-tabs-tab) {
-  margin: 0;
-  padding-inline: 0.5rem;
-}
-
-.nav::v-deep(.ant-tabs-nav .ant-tabs-tab-btn) {
-  font-size: 18px;
-  font-weight: 500;
-}
-</style>
-
-<style>
-.test {
-  padding: 10px 20px;
-}
-
-.test ul li::before {
-  content: "•";
-  margin-right: 0.5rem;
+.bestseller span::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border-right: 10px solid #e3c849;
+  border-bottom: 10px solid transparent;
   position: absolute;
-  left: 0;
-  top: 0;
+  bottom: -10px;
+  right: 0;
 }
-.test ul li {
+
+.bestseller span {
+  text-align: center;
+  font-size: 14px;
+  line-height: 13px;
+  font-weight: 700;
+  min-height: 38px;
+  justify-content: center;
+  display: flex;
+  padding: 7px 10px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
   position: relative;
-  padding-left: 10px;
-  color: white;
-}
-.test::-webkit-scrollbar {
-  width: 5px;
-}
-
-.test::-webkit-scrollbar-track {
-  background: #9b9b9c;
-  border-radius: 4px;
-}
-.test::-webkit-scrollbar-thumb {
-  background: #f0f0f0;
-  border-radius: 4px;
-}
-
-.test::-webkit-scrollbar-thumb:hover {
-  background: #f0f0f0;
 }
 </style>
