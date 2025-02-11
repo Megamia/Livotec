@@ -77,32 +77,79 @@
                   </template>
                 </a-dropdown>
               </div>
-              <a-dropdown :trigger="['click']" arrow>
-                <a
-                  @click.prevent
-                  type="primary"
-                  class="gap-2 items-center sort_item flex"
-                >
-                  <CdTag class="text-[17px]" />Giá
-                </a>
-                <template #overlay>
-                  <a-menu>
-                    <a-flex class="flex-wrap">
-                      <a-menu-item key="0">
-                        <a href="http://www.alipay.com/">1st menu item</a>
-                      </a-menu-item>
-                      <a-menu-item key="1">
-                        <a href="http://www.taobao.com/">2nd menu item</a>
-                      </a-menu-item>
-                      <a-menu-divider />
-                      <a-menu-item key="3">3rd menu item</a-menu-item>
+              <div key="price">
+                <a-dropdown :trigger="['click']" arrow>
+                  <a
+                    @click.prevent
+                    type="primary"
+                    class="gap-2 items-center sort_item flex"
+                  >
+                    <CdTag class="text-[17px]" />Giá
+                  </a>
+                  <template #overlay>
+                    <a-flex vertical class="gap-2 p-0">
+                      <a-menu>
+                        <a-flex class="flex-wrap gap-4">
+                          <a-menu-item
+                            v-for="item in price"
+                            :key="item.label"
+                            @click="selectOption(price, item.label)"
+                            class="border"
+                          >
+                            {{ item.label }}
+                          </a-menu-item>
+                        </a-flex>
+                      </a-menu>
+                      <a-flex
+                        class="w-full gap-3 py-2 px-6 bg-white z-10 justify-center"
+                        ><a-button
+                          class="text-red-500 border-red-500 px-8"
+                          @click="clearOption(price)"
+                        >
+                          <span class="font-bold">Bỏ chọn</span> </a-button
+                        ><a-button class="text-white px-5 bg-[#02b6ac]">
+                          <span class="font-bold">Xem kết quả</span>
+                        </a-button></a-flex
+                      >
                     </a-flex>
-                  </a-menu>
-                </template>
-              </a-dropdown>
+                  </template>
+                </a-dropdown>
+              </div>
             </a-flex>
           </section>
         </a-flex>
+        <a-flex class="justify-between items-center mb-4">
+          <a-flex
+            ><span
+              >Hiển thị tất cả {{ productCurrentData.length }} kết quả</span
+            ></a-flex
+          >
+          <a-flex
+            ><a-select
+              ref="select"
+              v-model:value="value1"
+              style="width: 250px"
+              :options="options1"
+              @focus="focus"
+              @change="handleChange"
+            ></a-select>
+          </a-flex>
+        </a-flex>
+        <a-flex horizontal class="flex-wrap gap-8 justify-center"
+          ><ProductItemComponent
+            v-for="product in productCurrentData"
+            :key="product.id"
+            :product="product" /><ProductItemComponent
+            v-for="product in productCurrentData"
+            :key="product.id"
+            :product="product" /><ProductItemComponent
+            v-for="product in productCurrentData"
+            :key="product.id"
+            :product="product" /><ProductItemComponent
+            v-for="product in productCurrentData"
+            :key="product.id"
+            :product="product"
+        /></a-flex>
       </a-flex>
     </section>
   </DefaultLayout>
@@ -111,6 +158,7 @@
 <script setup>
 import DefaultLayout from "./DefaultLayout.vue";
 import CategorySlideComponent from "@/components/CategorySlideComponent.vue";
+import ProductItemComponent from "@/components/ProductItemComponent.vue";
 import {
   PhLightFunnel,
   AkChevronDownSmall,
@@ -131,6 +179,11 @@ const selectOption = (filterId, label) => {
   console.log(selectedFilter);
 };
 
+const rangeOption = (filterId, min, max) =>{
+  selectedFilter[filterId] = [min,max];
+  console.log(selectedFilter);
+}
+
 const clearOption = (filterId) => {
   delete selectedFilter[filterId]; // Xóa bộ lọc đã chọn
   console.log("Cleared:", selectedFilter);
@@ -144,10 +197,65 @@ onMounted(async () => {
     );
     category.value = response.data;
     productCurrentData.value = category.value.products;
+    console.log("Danh sách: ", productCurrentData.value);
   } catch (error) {
     console.error("Error fetching category:", error);
   }
 });
+
+const price = ref([
+  {
+    label: "Dưới 5 triệu",
+    min: "",
+    max: 5000000,
+  },
+  {
+    label: "Từ 5 - 7 triệu",
+    min: 5000000,
+    max: 7000000,
+  },
+  {
+    label: "Từ 7 - 10 triệu",
+    min: 7000000,
+    max: 10000000,
+  },
+  {
+    label: "Trên 10 triệu",
+    min: 10000000,
+    max: "",
+  },
+]);
+
+const value1 = ref("default");
+const options1 = ref([
+  {
+    value: "best-sale",
+    label: "Bán chạy nhất",
+  },
+  {
+    value: "best-rate",
+    label: "Thứ tự theo điểm đánh giá",
+  },
+  {
+    value: "default",
+    label: "Thứ tự mặc định",
+  },
+  {
+    value: "min-max",
+    label: "Thứ tự theo giá: thấp đến cao",
+  },
+  {
+    value: "max-min",
+    label: "Thứ tự theo giá: cao đến thấp",
+  },
+]);
+
+const focus = () => {
+  console.log("focus");
+};
+const handleChange = (value) => {
+  console.log(`selected ${value}`);
+};
 </script>
 
 <style scoped>
