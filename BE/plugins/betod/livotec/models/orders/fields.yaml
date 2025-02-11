@@ -84,9 +84,19 @@ fields:
         type: number
     status_id:
         label: 'Trạng thái'
+        options:
+            - 'Chưa giao'
+            - 'Đang giao'
+            - 'Đã giao'
+        showSearch: true
         span: auto
         type: dropdown
+    'property[paymenttype]':
+        label: 'Kiểu thanh toán'
         options:
-            0: 'Chưa giao'
-            1: 'Đang giao'
-            2: 'Đã giao'
+            1: 'Chuyển khoản'
+            2: 'Tiền mặt'
+        showSearch: true
+        span: auto
+        disabled: 1
+        type: dropdown

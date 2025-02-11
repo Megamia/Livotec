@@ -30,7 +30,7 @@ Route::group(['prefix' => 'apiOrder'], function () {
 
 Route::group(['prefix' => 'apiCategory'], function () {
     Route::get('category/{slug}', function ($slug) {
-        $category = Category::with(['image', 'filters'])->where('slug', $slug)->first();
+        $category = Category::with(['image', 'filters', 'products'])->where('slug', $slug)->first();
         if ($category) {
             return $category;
         } else {

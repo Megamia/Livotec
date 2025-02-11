@@ -21,3 +21,9 @@ columns:
         type: number
         searchable: true
         sortable: true
+    'property[paymenttype]':
+        label: 'Kiểu thanh toán'
+        type: partial
+        searchable: true
+        sortable: true
+        path: ~/plugins/betod/livotec/partials/_paymenttype_column.php

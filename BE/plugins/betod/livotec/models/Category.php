@@ -16,7 +16,8 @@ class Category extends Model
      */
     public $table = 'betod_livotec_category';
     public $hasMany = [
-        'filters' => ['Betod\Livotec\Models\Filter']
+        'filters' => ['Betod\Livotec\Models\Filter'],
+        'products' => ['Betod\Livotec\Models\Product']
     ];
     public $attachOne = [
         'image' => 'System\Models\File'

@@ -1,4 +1,5 @@
-<?php namespace Betod\Livotec\Models;
+<?php
+namespace Betod\Livotec\Models;
 
 use Model;
 
@@ -19,6 +20,9 @@ class Filter extends Model
         'category' => ['Betod\Livotec\Models\Category', 'key' => 'category_id']
     ];
 
+    protected $jsonable = [
+        'options'
+    ];
     /**
      * @var array rules for validation.
      */
