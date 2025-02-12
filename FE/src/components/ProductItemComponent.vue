@@ -66,7 +66,7 @@ import "./NavProduct.css";
 const router = useRouter();
 const props = defineProps({
   product: {
-    type: Array,
+    type: Object,
     required: true,
   },
 });
