@@ -8,14 +8,14 @@ onMounted(() => {
   const tokenTimestamp = localStorage.getItem("tokenTimestamp");
   const currentTime = Date.now();
 
-  if (tokenTimestamp && currentTime - tokenTimestamp >= 100000) {
+  if (tokenTimestamp && currentTime - tokenTimestamp >= 3600000) {
     localStorage.removeItem("token");
     localStorage.removeItem("tokenTimestamp");
   } else {
     timeoutId = setTimeout(() => {
       localStorage.removeItem("token");
       localStorage.removeItem("tokenTimestamp");
-    }, 100000 - (currentTime - tokenTimestamp || 0));
+    }, 3600000 - (currentTime - tokenTimestamp || 0));
   }
 
   if (!tokenTimestamp) {

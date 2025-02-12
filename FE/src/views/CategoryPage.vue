@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <DefaultLayout>
     <section class="container w-full flex flex-col gap-[30px]">
       <CategorySlideComponent :path="category?.image?.path" />
@@ -52,7 +53,10 @@
                     <a-flex vertical class="gap-2 p-0">
                       <a-menu>
                         <a-flex class="flex-wrap gap-2 max-w-[400px]">
-                          <div v-for="item in filter.options">
+                          <div
+                            v-for="(item, index) in filter.options"
+                            :key="index"
+                          >
                             <a-menu-item
                               v-if="filter.type === 'radiobutton'"
                               :key="item.label"
@@ -183,6 +187,7 @@
       </a-flex>
     </section>
   </DefaultLayout>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
@@ -215,7 +220,7 @@ const rangeOption = (filterId, label, min, max) => {
 };
 
 const clearOption = (filterId) => {
-  delete selectedFilter[filterId]; // Xóa bộ lọc đã chọn
+  delete selectedFilter[filterId]; 
   console.log("Cleared:", selectedFilter);
 };
 
