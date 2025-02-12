@@ -18,11 +18,11 @@
           class="flex-wrap gap-2"
         >
           <a-flex
-            v-for="(label, filterId) in selectedFilter"
+            v-for="(item, filterId) in selectedFilter"
             :key="filterId"
             class="p-1 px-3 bg-[#FDC400] rounded-md mb-[15px]"
           >
-            <span class="font-normal">{{ label }}</span>
+            <span class="font-normal">{{ item[0] }}</span>
           </a-flex>
         </a-flex>
         <a-flex class="mb-4">
@@ -51,25 +51,45 @@
                   <template #overlay>
                     <a-flex vertical class="gap-2 p-0">
                       <a-menu>
-                        <a-flex class="flex-wrap gap-4">
-                          <a-menu-item
-                            v-for="item in filter.options"
-                            :key="item.label"
-                            @click="selectOption(filter.id, item.label)"
-                            class="border"
-                          >
-                            {{ item.label }}
-                          </a-menu-item>
+                        <a-flex class="flex-wrap gap-2 max-w-[400px]">
+                          <div v-for="item in filter.options">
+                            <a-menu-item
+                              v-if="filter.type === 'radiobutton'"
+                              :key="item.label"
+                              @click="selectOption(filter.name, item.label)"
+                              class="border"
+                            >
+                              {{ item.label }}
+                            </a-menu-item>
+                            <a-menu-item
+                              v-if="filter.type === 'range'"
+                              :key="item.label"
+                              @click="
+                                rangeOption(
+                                  filter.name,
+                                  item.label,
+                                  item.min,
+                                  item.max
+                                )
+                              "
+                              class="border"
+                            >
+                              {{ item.label }}
+                            </a-menu-item>
+                          </div>
                         </a-flex>
                       </a-menu>
                       <a-flex
                         class="w-full gap-3 py-2 px-6 bg-white z-10 justify-center"
                         ><a-button
                           class="text-red-500 border-red-500 px-8"
-                          @click="clearOption(filter.id)"
+                          @click="clearOption(filter.name)"
                         >
                           <span class="font-bold">Bỏ chọn</span> </a-button
-                        ><a-button class="text-white px-5 bg-[#02b6ac]">
+                        ><a-button
+                          class="text-white px-5 bg-[#02b6ac]"
+                          @click="applyFilter"
+                        >
                           <span class="font-bold">Xem kết quả</span>
                         </a-button></a-flex
                       >
@@ -89,11 +109,18 @@
                   <template #overlay>
                     <a-flex vertical class="gap-2 p-0">
                       <a-menu>
-                        <a-flex class="flex-wrap gap-4">
+                        <a-flex class="flex-wrap gap-2 max-w-[335px]">
                           <a-menu-item
                             v-for="item in price"
                             :key="item.label"
-                            @click="selectOption(price, item.label)"
+                            @click="
+                              rangeOption(
+                                'price',
+                                item.label,
+                                item.min,
+                                item.max
+                              )
+                            "
                             class="border"
                           >
                             {{ item.label }}
@@ -104,10 +131,13 @@
                         class="w-full gap-3 py-2 px-6 bg-white z-10 justify-center"
                         ><a-button
                           class="text-red-500 border-red-500 px-8"
-                          @click="clearOption(price)"
+                          @click="clearOption('price')"
                         >
                           <span class="font-bold">Bỏ chọn</span> </a-button
-                        ><a-button class="text-white px-5 bg-[#02b6ac]">
+                        ><a-button
+                          class="text-white px-5 bg-[#02b6ac]"
+                          @click="applyFilter"
+                        >
                           <span class="font-bold">Xem kết quả</span>
                         </a-button></a-flex
                       >
@@ -175,18 +205,66 @@ const selectedFilter = reactive({});
 const productCurrentData = ref("");
 
 const selectOption = (filterId, label) => {
-  selectedFilter[filterId] = label;
+  selectedFilter[filterId] = [label];
   console.log(selectedFilter);
 };
 
-const rangeOption = (filterId, min, max) =>{
-  selectedFilter[filterId] = [min,max];
+const rangeOption = (filterId, label, min, max) => {
+  selectedFilter[filterId] = [label, min, max];
   console.log(selectedFilter);
-}
+};
 
 const clearOption = (filterId) => {
   delete selectedFilter[filterId]; // Xóa bộ lọc đã chọn
   console.log("Cleared:", selectedFilter);
+};
+
+const applyFilter = () => {
+  if (Object.keys(selectedFilter).length === 0) {
+    productCurrentData.value = category.value.products;
+    return;
+  }
+
+  productCurrentData.value = category.value.products.filter((product) => {
+    return Object.keys(selectedFilter).every((filterId) => {
+      const filterValue = selectedFilter[filterId];
+
+      if (filterId === "price") {
+        // Lọc theo giá
+        const productValue = product[filterId];
+        const [label, min, max] = filterValue;
+        return (
+          (min === "" || productValue >= parseInt(min)) &&
+          (max === "" || productValue <= parseInt(max))
+        );
+      } else {
+        // Lọc theo thuộc tính trong thongso
+        const thongsoItem = product.thongso?.find(
+          (item) => item.thuoc_tinh === filterId
+        );
+        if (!thongsoItem) return false;
+
+        if (Array.isArray(filterValue) && filterValue.length === 3) {
+          // Nếu là lọc theo khoảng giá trị (range)
+          const [label, min, max] = filterValue;
+          const productValue = parseInt(
+            thongsoItem.gia_tri.replace(/[^0-9]/g, "") || 0
+          );
+          return (
+            (min === "" || productValue >= parseInt(min)) &&
+            (max === "" || productValue <= parseInt(max))
+          );
+        } else if (Array.isArray(filterValue) && filterValue.length === 1) {
+          // Nếu là lọc theo giá trị đơn
+          return thongsoItem.gia_tri === filterValue[0];
+        }
+
+        return true; // Trường hợp không xác định, giữ lại sản phẩm
+      }
+    });
+  });
+
+  console.log("Filtered Products:", productCurrentData.value);
 };
 
 onMounted(async () => {
@@ -207,21 +285,21 @@ const price = ref([
   {
     label: "Dưới 5 triệu",
     min: "",
-    max: 5000000,
+    max: "5000000",
   },
   {
     label: "Từ 5 - 7 triệu",
-    min: 5000000,
-    max: 7000000,
+    min: "5000000",
+    max: "7000000",
   },
   {
     label: "Từ 7 - 10 triệu",
-    min: 7000000,
-    max: 10000000,
+    min: "7000000",
+    max: "10000000",
   },
   {
     label: "Trên 10 triệu",
-    min: 10000000,
+    min: "10000000",
     max: "",
   },
 ]);
@@ -255,6 +333,36 @@ const focus = () => {
 };
 const handleChange = (value) => {
   console.log(`selected ${value}`);
+  sortProducts(value); // Gọi hàm sắp xếp sản phẩm
+};
+
+const sortProducts = (order) => {
+  switch (order) {
+    case "min-max":
+      productCurrentData.value.sort((a, b) => a.price - b.price);
+      break;
+    case "max-min":
+      productCurrentData.value.sort((a, b) => b.price - a.price);
+      break;
+    case "best-sale":
+      // Sắp xếp theo số lượng bán (giả sử có trường `sold_out`)
+      productCurrentData.value.sort(
+        (a, b) => (b.sold_out || 0) - (a.sold_out || 0)
+      );
+      break;
+    case "best-rate":
+      // Giả sử có trường `rating` cho điểm đánh giá
+      productCurrentData.value.sort(
+        (a, b) => (b.rating || 0) - (a.rating || 0)
+      );
+      break;
+    default:
+      // Sắp xếp mặc định (có thể sắp xếp theo `created_at` hoặc trả về danh sách gốc)
+      productCurrentData.value.sort(
+        (a, b) => new Date(a.created_at) - new Date(b.created_at)
+      );
+      break;
+  }
 };
 </script>
 
