@@ -66,20 +66,21 @@
                   <a-menu-item
                     v-for="itemChil in item.products"
                     :key="itemChil.id"
-                    @click="handleChangeToProductDetail(itemChil.slug)"
                   >
-                    <img
-                      :src="
-                        itemChil.image?.path ||
-                        'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
-                      "
-                      class="w-[110px] h-[100px]"
-                    />
-                    <span
-                      class="justify-center flex flex-1 mt-[10px] uppercase font-semibold text-[14px] hover:text-[#51c9a9]"
-                    >
-                      {{ itemChil.name }}
-                    </span>
+                    <a :href="`/product/${itemChil.slug}`">
+                      <img
+                        :src="
+                          itemChil.image?.path ||
+                          'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
+                        "
+                        class="w-[110px] h-[100px]"
+                      />
+                      <span
+                        class="justify-center flex flex-1 mt-[10px] uppercase font-semibold text-[14px] hover:text-[#51c9a9]"
+                      >
+                        {{ itemChil.name }}
+                      </span>
+                    </a>
                   </a-menu-item>
                 </a-flex>
               </a-flex>
@@ -138,6 +139,11 @@ import axios from "axios";
 const router = useRouter();
 const isLogin = ref(false);
 const searchInputHover = ref(false);
+
+const test = (value) => {
+  console.log(value);
+  router.push(`/product/${value}`);
+};
 
 const handleLogout = () => {
   if (confirm("Chắc chắn muốn đăng xuất?")) {
@@ -225,10 +231,6 @@ const showMenu = () => {
 
 const showSearch = () => {
   isOpenSearch.value = !isOpenSearch.value;
-};
-
-const handleChangeToProductDetail = (value) => {
-  router.push(`/product/${value}`);
 };
 
 const searchInput = ref("");
