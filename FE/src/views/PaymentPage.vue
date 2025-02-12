@@ -58,7 +58,7 @@
                       <span class="text-base">Tỉnh/Thành phố</span>
                     </template>
                     <a-select
-                      v-model:value="formState.province"
+                      v-model:value="LocateState.province"
                       @change="onProvinceChange"
                       placeholder="Chọn Tỉnh/Thành phố"
                     >
@@ -76,7 +76,7 @@
                       <span class="text-base">Quận/Huyện</span>
                     </template>
                     <a-select
-                      v-model:value="formState.district"
+                      v-model:value="LocateState.district"
                       @change="onDistrictChange"
                       placeholder="Chọn Quận/Huyện"
                     >
@@ -96,7 +96,7 @@
                       <span class="text-base">Xã/Phường/Thị trấn</span>
                     </template>
                     <a-select
-                      v-model:value="formState.subdistrict"
+                      v-model:value="LocateState.subdistrict"
                       placeholder="Chọn Xã/Phường/Thị trấn"
                     >
                       <a-select-option
@@ -136,7 +136,7 @@
                         <span class="text-base">Tên đầy đủ của người nhận</span>
                       </template>
                       <a-input
-                        v-model:value="formState.name"
+                        v-model:value="formState.diffname"
                         placeholder="Nhập họ và tên"
                       />
                     </a-form-item>
@@ -151,7 +151,7 @@
                         >
                       </template>
                       <a-input
-                        v-model:value="formState.phone"
+                        v-model:value="formState.diffphone"
                         placeholder="Nhập số điện thoại"
                       />
                     </a-form-item>
@@ -162,7 +162,7 @@
                         <span class="text-base">Tỉnh/Thành phố</span>
                       </template>
                       <a-select
-                        v-model:value="formState.diffprovince"
+                        v-model:value="LocateState.diffprovince"
                         @change="onProvinceChange"
                         placeholder="Chọn Tỉnh/Thành phố"
                       >
@@ -180,7 +180,7 @@
                         <span class="text-base">Quận/Huyện</span>
                       </template>
                       <a-select
-                        v-model:value="formState.diffdistrict"
+                        v-model:value="LocateState.diffdistrict"
                         @change="onDistrictChange"
                         placeholder="Chọn Quận/Huyện"
                       >
@@ -200,7 +200,7 @@
                         <span class="text-base">Xã/Phường/Thị trấn</span>
                       </template>
                       <a-select
-                        v-model:value="formState.diffsubdistrict"
+                        v-model:value="LocateState.diffsubdistrict"
                         placeholder="Chọn Xã/Phường/Thị trấn"
                       >
                         <a-select-option
@@ -366,13 +366,14 @@
 
 <script setup>
 import DefaultLayout from "./DefaultLayout.vue";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import axios from "axios";
 import { AkXSmall } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
 
 const formRef = ref();
 const formState = reactive({
+  user_id: null,
   name: "",
   phone: "",
   email: "",
@@ -390,6 +391,15 @@ const formState = reactive({
   terms: false,
   paymenttype: 1,
   differentaddresschecked: false,
+});
+
+const LocateState = reactive({
+  province: "",
+  district: "",
+  subdistrict: "",
+  diffprovince: "",
+  diffdistrict: "",
+  diffsubdistrict: "",
 });
 
 const provinces = ref([]);
@@ -438,44 +448,127 @@ const radioStyle = reactive({
 
 const host = "https://provinces.open-api.vn/api/";
 
-const fetchProvinces = () => {
-  axios.get(`${host}?depth=1`).then((response) => {
+const fetchProvinces = async () => {
+  try {
+    const response = await axios.get(`${host}?depth=1`);
     provinces.value = response.data;
     diffprovinces.value = response.data;
-  });
+  } catch (error) {
+    console.error("Failed to fetch provinces:", error);
+  }
 };
 
-const onProvinceChange = () => {
-  const provinceCode = formState.province;
-  const diffprovinceCode = formState.diffprovince;
-  if (provinceCode) {
-    axios.get(`${host}p/${provinceCode}?depth=2`).then((response) => {
+const onProvinceChange = async () => {
+  const provinceCode = LocateState.province;
+  const diffprovinceCode = LocateState.diffprovince;
+
+  try {
+    if (provinceCode) {
+      const response = await axios.get(`${host}p/${provinceCode}?depth=2`);
       districts.value = response.data.districts;
-      wards.value = [];
-    });
-  }
-  if (diffprovinceCode) {
-    axios.get(`${host}p/${diffprovinceCode}?depth=2`).then((response) => {
+      wards.value = []; // Reset wards khi thay đổi tỉnh
+    }
+
+    if (diffprovinceCode) {
+      const response = await axios.get(`${host}p/${diffprovinceCode}?depth=2`);
       diffdistricts.value = response.data.districts;
-      diffwards.value = [];
-    });
+      diffwards.value = []; // Reset diffwards khi thay đổi tỉnh
+    }
+  } catch (error) {
+    console.error("Failed to fetch districts:", error);
   }
 };
 
-const onDistrictChange = () => {
-  const districtCode = formState.district;
-  const diffdistrictCode = formState.diffdistrict;
-  if (districtCode) {
-    axios.get(`${host}d/${districtCode}?depth=2`).then((response) => {
+const onDistrictChange = async () => {
+  const districtCode = LocateState.district;
+  const diffdistrictCode = LocateState.diffdistrict;
+
+  try {
+    if (districtCode) {
+      const response = await axios.get(`${host}d/${districtCode}?depth=2`);
       wards.value = response.data.wards;
-    });
-  }
-  if (diffdistrictCode) {
-    axios.get(`${host}d/${diffdistrictCode}?depth=2`).then((response) => {
+    }
+
+    if (diffdistrictCode) {
+      const response = await axios.get(`${host}d/${diffdistrictCode}?depth=2`);
       diffwards.value = response.data.wards;
-    });
+    }
+  } catch (error) {
+    console.error("Failed to fetch wards:", error);
   }
 };
+
+watch(
+  () => LocateState.province,
+  (newProvinceCode) => {
+    const selectedProvince = provinces.value.find(
+      (p) => p.code === newProvinceCode
+    );
+    if (selectedProvince) {
+      formState.province = selectedProvince.name;
+    }
+  }
+);
+
+watch(
+  () => LocateState.district,
+  (newDistrictCode) => {
+    const selectedDistrict = districts.value.find(
+      (d) => d.code === newDistrictCode
+    );
+    if (selectedDistrict) {
+      formState.district = selectedDistrict.name;
+    }
+  }
+);
+
+watch(
+  () => LocateState.subdistrict,
+  (newSubdistrictCode) => {
+    const selectedSubdistrict = wards.value.find(
+      (w) => w.code === newSubdistrictCode
+    );
+    if (selectedSubdistrict) {
+      formState.subdistrict = selectedSubdistrict.name;
+    }
+  }
+);
+
+watch(
+  () => LocateState.diffprovince,
+  (newDiffProvinceCode) => {
+    const selectedDiffProvince = provinces.value.find(
+      (p) => p.code === newDiffProvinceCode
+    );
+    formState.diffprovince = selectedDiffProvince
+      ? selectedDiffProvince.name
+      : "";
+  }
+);
+
+watch(
+  () => LocateState.diffdistrict,
+  (newDiffDistrictCode) => {
+    const selectedDiffDistrict = diffdistricts.value.find(
+      (d) => d.code === newDiffDistrictCode
+    );
+    formState.diffdistrict = selectedDiffDistrict
+      ? selectedDiffDistrict.name
+      : "";
+  }
+);
+
+watch(
+  () => LocateState.diffsubdistrict,
+  (newDiffSubdistrictCode) => {
+    const selectedDiffSubdistrict = diffwards.value.find(
+      (w) => w.code === newDiffSubdistrictCode
+    );
+    formState.diffsubdistrict = selectedDiffSubdistrict
+      ? selectedDiffSubdistrict.name
+      : "";
+  }
+);
 
 const rules = {
   name: [
@@ -573,15 +666,18 @@ const rules = {
   ],
 };
 
-const onSubmit = () => {
-  formRef.value
-    .validate()
-    .then(() => {
-      console.log("values", formState);
-    })
-    .catch((error) => {
-      console.log("error", error);
-    });
+const onSubmit = async () => {
+  console.log(formState);
+  
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
+      formState
+    );
+    console.log("Order created successfully:", response.data);
+  } catch (error) {
+    console.error("Failed to create order:", error);
+  }
 };
 
 fetchProvinces();

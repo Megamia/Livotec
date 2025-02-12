@@ -11,7 +11,7 @@ class OrderController extends Controller
     {
         // Validate dữ liệu đầu vào
         $validatedData = $request->validate([
-            'user_id' => 'required|integer',
+            'user_id' => 'nullable|integer',
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|max:255',
