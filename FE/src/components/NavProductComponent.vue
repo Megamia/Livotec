@@ -58,9 +58,9 @@
                 </div>
               </div>
               <a-flex class="px-[10px] w-[70%]">
-                <a-flex gap="12" vertical class="flex-1">
+                <a-flex gap="12" vertical class="flex-1 max-w-[100%]">
                   <span
-                    class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer"
+                    class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] text-ellipsis overflow-hidden whitespace-nowrap cursor-pointer"
                   >
                     {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
                   </span>
@@ -112,12 +112,20 @@ const activeKey = ref(1);
 const haveData = ref(false);
 const router = useRouter();
 
-const data = ref([
-  { id: 1, name: "Bếp từ" },
-  { id: 2, name: "Máy lọc nước" },
-  { id: 3, name: "Bình nước nóng" },
-  { id: 4, name: "Linh kiện, Lõi lọc" },
-]);
+const data = ref([]);
+
+const fetchDataCategory = async () => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
+    );
+    data.value = response.data.data1;
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+onMounted(() => fetchDataCategory());
 const dataChil = ref([]);
 
 const formatCurrency = (value) => {
@@ -185,7 +193,7 @@ const breakpoints = {
 }
 </style>
 
-<style >
+<style>
 .test {
   padding: 10px 20px;
 }
