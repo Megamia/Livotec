@@ -53,7 +53,10 @@
                     <a-flex vertical class="gap-2 p-0">
                       <a-menu>
                         <a-flex class="flex-wrap gap-2 max-w-[400px]">
-                          <div v-for="item in filter.options">
+                          <div
+                            v-for="(item, index) in filter.options"
+                            :key="index"
+                          >
                             <a-menu-item
                               v-if="filter.type === 'radiobutton'"
                               :key="item.label"
@@ -211,18 +214,13 @@ const selectOption = (filterId, label) => {
   console.log(selectedFilter);
 };
 
-<<<<<<< HEAD
-const rangeOption = (filterId, min, max) => {
-  selectedFilter[filterId] = [min, max];
-=======
 const rangeOption = (filterId, label, min, max) => {
   selectedFilter[filterId] = [label, min, max];
->>>>>>> 0e5b5b1c16f4175479311f7cb589b5ca53e82442
   console.log(selectedFilter);
 };
 
 const clearOption = (filterId) => {
-  delete selectedFilter[filterId]; // Xóa bộ lọc đã chọn
+  delete selectedFilter[filterId]; 
   console.log("Cleared:", selectedFilter);
 };
 
