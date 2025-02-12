@@ -112,12 +112,20 @@ const activeKey = ref(1);
 const haveData = ref(false);
 const router = useRouter();
 
-const data = ref([
-  { id: 1, name: "Bếp từ" },
-  { id: 2, name: "Máy lọc nước" },
-  { id: 3, name: "Bình nước nóng" },
-  { id: 4, name: "Linh kiện, Lõi lọc" },
-]);
+const data = ref([]);
+
+const fetchDataCategory = async () => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
+    );
+    data.value = response.data.data1;
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+onMounted(() => fetchDataCategory());
 const dataChil = ref([]);
 
 const formatCurrency = (value) => {
