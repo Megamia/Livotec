@@ -2,7 +2,10 @@
   <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-[300px]">
     <a-flex vertical align="center" class="flex-1">
       <div class="w-full relative pt-[20px] justify-center flex">
-        <img :src="product.image.path" />
+        <img
+          :src="product.image?.path || 'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'"
+          alt="Product Image"
+        />
         <div
           v-if="product.sold_out >= 10"
           class="absolute bg-[#ffdc37] top-[20px] right-0 rounded-l-md z-10 bestseller"

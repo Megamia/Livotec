@@ -32,64 +32,64 @@
         :breakpoints="breakpoints"
         class="swiperProduct"
       >
-        <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id">
-          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
-            <a-flex vertical align="center" class="flex-1">
-              <div class="w-full relative pt-[20px] justify-center flex">
-                <img
-                  src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
-                />
-                <div
-                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
-                >
-                  <span class="text-[20px] text-white">Mới nhất</span>
-                </div>
-                <div
-                  class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description-nav rounded-t-lg z-20"
-                >
-                  <div
-                    v-html="
-                      itemChil.description
-                        ? itemChil.description
-                        : 'Chưa có mô tả'
-                    "
-                    class="max-h-[90%] overflow-y-scroll text-left test"
+          <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id" class="w-[350px]">
+            <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
+              <a-flex vertical align="center" class="flex-1">
+                <div class="w-full relative pt-[20px] justify-center flex">
+                  <img
+                    src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
                   />
-                </div>
-              </div>
-              <a-flex class="px-[10px] w-[70%]">
-                <a-flex gap="12" vertical class="flex-1">
-                  <span
-                    class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer"
+                  <div
+                    class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
                   >
-                    {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
-                  </span>
-                  <span class="text-[16px] font-bold text-[#02B6AC]">
-                    {{
-                      itemChil.price
-                        ? formatCurrency(itemChil.price)
-                        : "Chưa có giá"
-                    }}
-                  </span>
-                  <a-flex vertical class="gap-[10px] text-[16px]">
-                    <button
-                      class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
+                    <span class="text-[20px] text-white">Mới nhất</span>
+                  </div>
+                  <div
+                    class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description-nav rounded-t-lg z-20"
+                  >
+                    <div
+                      v-html="
+                        itemChil.description
+                          ? itemChil.description
+                          : 'Chưa có mô tả'
+                      "
+                      class="max-h-[90%] overflow-y-scroll text-left test"
+                    />
+                  </div>
+                </div>
+                <a-flex class="px-[10px] w-[70%]">
+                  <a-flex gap="12" vertical class="flex-1">
+                    <span
+                      class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer"
                     >
-                      Mua ngay
-                    </button>
+                      {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
+                    </span>
+                    <span class="text-[16px] font-bold text-[#02B6AC]">
+                      {{
+                        itemChil.price
+                          ? formatCurrency(itemChil.price)
+                          : "Chưa có giá"
+                      }}
+                    </span>
+                    <a-flex vertical class="gap-[10px] text-[16px]">
+                      <button
+                        class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
+                      >
+                        Mua ngay
+                      </button>
 
-                    <button
-                      class="flex-1 font-sans border-[1px] border-[#4fa8e7] px-[12px] py-[10px] rounded-full text-white bg-[#02b6ac] hover:bg-[linear-gradient(270deg,_#ccf7fb_2.05%,_#fff_100%)] hover:text-[#424242]"
-                      @click="handleProductDetail(itemChil.slug)"
-                    >
-                      Chi tiết
-                    </button>
+                      <button
+                        class="flex-1 font-sans border-[1px] border-[#4fa8e7] px-[12px] py-[10px] rounded-full text-white bg-[#02b6ac] hover:bg-[linear-gradient(270deg,_#ccf7fb_2.05%,_#fff_100%)] hover:text-[#424242]"
+                        @click="handleProductDetail(itemChil.slug)"
+                      >
+                        Chi tiết
+                      </button>
+                    </a-flex>
                   </a-flex>
                 </a-flex>
               </a-flex>
             </a-flex>
-          </a-flex>
-        </swiper-slide>
+          </swiper-slide>
       </swiper>
     </a-flex>
     <div v-else>Không có dữ liệu để hiển thị</div>
@@ -185,7 +185,7 @@ const breakpoints = {
 }
 </style>
 
-<style >
+<style>
 .test {
   padding: 10px 20px;
 }
