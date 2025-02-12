@@ -12,12 +12,12 @@
   align-items: center;
 }
 
-.description {
+.description-nav {
   opacity: 0;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.description:hover {
+.description-nav:hover {
   opacity: 1;
 }
 

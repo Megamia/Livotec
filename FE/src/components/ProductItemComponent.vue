@@ -19,7 +19,7 @@
           <span class="font-bold text-white">Mới nhất</span>
         </div>
         <div
-          class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description rounded-t-lg z-20"
+          class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description description-nav rounded-t-lg z-20"
         >
           <div
             v-html="product.description ? product.description : 'Chưa có mô tả'"
@@ -66,7 +66,7 @@ import "./NavProduct.css";
 const router = useRouter();
 const props = defineProps({
   product: {
-    type: Array,
+    type: Object,
     required: true,
   },
 });
