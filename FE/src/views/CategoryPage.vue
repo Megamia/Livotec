@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <DefaultLayout>
     <section class="container w-full flex flex-col gap-[30px]">
       <CategorySlideComponent :path="category?.image?.path" />
@@ -153,6 +154,7 @@
       </a-flex>
     </section>
   </DefaultLayout>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
@@ -179,10 +181,10 @@ const selectOption = (filterId, label) => {
   console.log(selectedFilter);
 };
 
-const rangeOption = (filterId, min, max) =>{
-  selectedFilter[filterId] = [min,max];
+const rangeOption = (filterId, min, max) => {
+  selectedFilter[filterId] = [min, max];
   console.log(selectedFilter);
-}
+};
 
 const clearOption = (filterId) => {
   delete selectedFilter[filterId]; // Xóa bộ lọc đã chọn

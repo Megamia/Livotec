@@ -1,27 +1,48 @@
 import { createStore } from "vuex";
 import storeProducts from "./StoreProducts/storeProducts";
 import createPersistedState from "vuex-persistedstate";
+import CryptoJS from "crypto-js";
+
+const SECRET_KEY = "your-secret-key"; 
+
+const encryptData = (data) => {
+  try {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), SECRET_KEY).toString();
+  } catch (error) {
+    console.error("Encryption error:", error);
+    return null;
+  }
+};
+
+const decryptData = (cipherText) => {
+  try {
+    const bytes = CryptoJS.AES.decrypt(cipherText, SECRET_KEY);
+    return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+  } catch (error) {
+    console.error("Decryption error:", error);
+    return null;
+  }
+};
 
 const store = createStore({
   modules: {
     product: storeProducts,
-    // user: storeDataUser,
-    // address: storeDataAddress,
-    // product: storeDataProduct,
-    // voucher: storeDataVoucher,
-  },
-  mutations: {
-    // clearAllData(state) {
-    //   store.commit("user/clearDataUser");
-    //   store.commit("address/clearDataAddress");
-    //   store.commit("product/clearDataProduct");
-    //   store.commit("voucher/code/clearDataVoucherCode");
-    // },
   },
   plugins: [
     createPersistedState({
       key: "vuex",
-      paths: ["product.dataStoreProducts", "product.dataStoreCart"],
+      paths: ["product.dataStoreProducts", "product.dataStoreCart"], 
+      storage: {
+        getItem: (key) => {
+          const data = localStorage.getItem(key);
+          return data ? decryptData(data) : null;
+        },
+        setItem: (key, value) => {
+          const encryptedData = encryptData(value);
+          localStorage.setItem(key, encryptedData);
+        },
+        removeItem: (key) => localStorage.removeItem(key),
+      },
     }),
   ],
 });
