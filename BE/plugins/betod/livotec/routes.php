@@ -43,4 +43,12 @@ Route::group(['prefix' => 'apiCategory'], function () {
             return response()->json(['message' => 'Category not found'], 404);
         }
     });
+    Route::get('allCategory', function () {
+            $data = Category::all();
+            if ($data) {
+                return response()->json(['data1' => $data, 'status' => 1]);
+            } else {
+                return response()->json(['data1' => 'No data', 'status' => 0]);
+            }
+        });
 });

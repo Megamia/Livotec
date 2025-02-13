@@ -1,20 +1,20 @@
 <template>
-  <a-flex vertical class="px-[100px]">
+  <a-flex vertical class="px-[100px] max-w-[100%]">
     <img :src="pathImg" class="w-[100%] bg-red-500 mb-5" />
-    <a-flex justify="center" vertical class="gap-[40px]">
+    <a-flex justify="center" vertical class="gap-[40px] justify-between max-w-[100%] ">
       <span
         class="text-[28px] text-[#02b6ac] font-bold uppercase text-center"
         >{{ nameCategory }}</span
       >
-      <a-flex horizontal>
+      <a-flex horizontal  class="max-w-[100%] overflow-hidden">
         <a-flex
           v-for="itemChil in dataChil.slice(0, 4)"
           :key="itemChil.id"
-          class="mx-[10px] min-w-[200px]" 
+          class="mx-[10px] max-w-[100%] min-w-[100px] "
         >
-          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full ">
-            <a-flex vertical align="center" class="flex-1 ">
-              <div class="w-full relative pt-[20px] justify-center flex ">
+          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
+            <a-flex vertical align="center" class="flex-1">
+              <div class="w-full relative pt-[20px] justify-center flex">
                 <img
                   src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
                 />
