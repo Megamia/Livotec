@@ -262,8 +262,8 @@ const login = async () => {
         withCredentials: true,
       }
     );
-    const userId = response.data.user.id;
-    Cookies.set("user_id", userId, { expires: 1 });
+    const firstName = response.data.user.first_name;
+    Cookies.set("user", firstName, { expires: 1 });
 
     console.log("Login successful:", response.data);
     alert("Login successful!");

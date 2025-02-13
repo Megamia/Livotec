@@ -67,16 +67,16 @@
                     v-for="itemChil in item.products"
                     :key="itemChil.id"
                   >
-                    <a :href="`/product/${itemChil.slug}`"
-                    class="hover:bg-[#F5F5F5] flex flex-col gap-1"
-                    
+                    <a
+                      :href="`/product/${itemChil.slug}`"
+                      class="hover:bg-[#F5F5F5] flex flex-col gap-1"
                     >
                       <img
                         :src="
                           itemChil.image?.path ||
                           'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
                         "
-                        class=" w-[110px] h-[110px]"
+                        class="w-[110px] h-[110px]"
                       />
                       <span
                         class="mt-[10px] max-w-[110px] text-center text-ellipsis overflow-hidden whitespace-nowrap uppercase font-semibold text-[14px] hover:text-[#51c9a9]"
@@ -138,6 +138,7 @@ import {
 import store from "@/store/store";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const router = useRouter();
 const isLogin = ref(false);
@@ -148,12 +149,27 @@ const test = (value) => {
   router.push(`/product/${value}`);
 };
 
-const handleLogout = () => {
-  if (confirm("Chắc chắn muốn đăng xuất?")) {
-    isLogin.value = false;
-    localStorage.removeItem("token");
-  } else {
-    return;
+const handleLogout = async () => {
+  try {
+    if (confirm("Chắc chắn muốn đăng xuất?")) {
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_URL_API}/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+      Cookies.remove("user");
+      console.log(Cookies.get('user'));
+      isLogin.value = false;
+    } else {
+      return;
+    }
+  } catch (error) {
+    // Xử lý khi xảy ra lỗi
+    console.error("Logout failed:", error.response?.data || error.message);
+    alert("Logout failed! Please check your credentials.");
   }
 };
 
@@ -205,7 +221,26 @@ const getdata = async () => {
   }
 };
 
-const token = computed(() => localStorage.getItem("token"));
+// const checkToken = async () => {
+//   try {
+//     const response = await axios.post(
+//       `${import.meta.env.VITE_APP_URL_API}/check-token`,
+//       {},
+//       {
+//         withCredentials: true,
+//       }
+//     );
+
+//     console.log(response.data);
+//     return { valid: true, message: response.data.message };
+//   } catch (error) {
+//     console.error(error.response.data.message);
+//     return { valid: false, message: error.response.data.message };
+//   }
+// };
+
+const token = computed(() => Cookies.get("user"));
+console.log(token);
 
 watchEffect(() => {
   isLogin.value = !!token.value;
@@ -215,6 +250,7 @@ const fetchData = () => {
   isLogin.value = !!token.value;
 };
 onMounted(() => {
+  // checkToken();
   fetchData();
   getdata();
 });
