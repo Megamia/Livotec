@@ -52,13 +52,13 @@
             </div>
             <div class="flex flex-1 justify-evenly items-center">
               <div class="flex flex-col justify-center items-center gap-2">
-                <img src="../assets/freeship.svg" />
+                <img src="../assets/freeship.svg" class="h-[60px]"/>
                 <span class="font-medium text-sm"
                   >Miễn phí vận chuyển toàn quốc</span
                 >
               </div>
               <div class="flex flex-col justify-center items-center gap-2">
-                <img src="../assets/setup.svg" />
+                <img src="../assets/setup.svg" class="h-[60px]"/>
                 <span class="font-medium text-sm"
                   >Miễn phí lắp đặt toàn quốc</span
                 >

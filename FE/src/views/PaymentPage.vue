@@ -667,16 +667,26 @@ const rules = {
 };
 
 const onSubmit = async () => {
-  console.log(formState);
-  
   try {
+    // Validate form
+    await formRef.value.validate();
+
+    // Gửi request tạo đơn hàng
     const response = await axios.post(
       `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
       formState
     );
+
     console.log("Order created successfully:", response.data);
+    alert("Order created successfully");
   } catch (error) {
-    console.error("Failed to create order:", error);
+    if (error.errors) {
+      // Lỗi form validation
+      console.error("Form validation failed:", error.errors);
+    } else {
+      // Lỗi từ request API hoặc lỗi khác
+      console.error("Failed to create order:", error);
+    }
   }
 };
 
