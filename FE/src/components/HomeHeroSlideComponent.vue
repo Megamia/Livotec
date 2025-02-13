@@ -9,21 +9,30 @@
     <swiper-slide>
       <img
         src="https://livotec.com/wp-content/uploads/2025/01/bep-dien-tu-livotec-banner-pc.jpg"
-        class="cursor-pointer"
       />
     </swiper-slide>
     <swiper-slide>
       <img
-        src="https://livotec.com/wp-content/uploads/2024/12/CoverTet2025-Livotec-CTKM-PC.jpg"
+        src="https://livotec.com/wp-content/uploads/2025/02/banner-quat-dieu-hoa-livotec.jpg"
       />
     </swiper-slide>
-    <swiper-slide>Slide 2</swiper-slide>
-    <swiper-slide>Slide 3</swiper-slide>
-    <swiper-slide>Slide 4</swiper-slide>
-    <swiper-slide>Slide 5</swiper-slide>
-    <swiper-slide>Slide 6</swiper-slide>
-    <swiper-slide>Slide 7</swiper-slide>
-    <swiper-slide>Slide 8</swiper-slide>
+    <swiper-slide>
+      <img
+        src="https://livotec.com/wp-content/uploads/2025/02/KV-May-loc-nuoc-Livotec.jpg"
+      /> </swiper-slide
+    ><swiper-slide>
+      <img
+        src="https://livotec.com/wp-content/uploads/2025/02/KV-Binh-tam-nuoc-nong-Livotec.jpg"
+      /> </swiper-slide
+    ><swiper-slide>
+      <img
+        src="https://livotec.com/wp-content/uploads/2024/08/QCVN-Livotec-PC.jpg"
+      /> </swiper-slide
+    ><swiper-slide>
+      <img
+        src="https://livotec.com/wp-content/uploads/2024/05/Bao-hanh-livotec-PC.jpg.webp"
+      />
+    </swiper-slide>
   </swiper>
 </template>
 
@@ -58,5 +67,9 @@ const modules = [Pagination];
 .mySlide::v-deep(.swiper-pagination-bullet-active),
 .mySlide::v-deep(.swiper-pagination-bullet):hover {
   background-color: #5893ed;
+}
+
+.mySlide img {
+  cursor: pointer;
 }
 </style>

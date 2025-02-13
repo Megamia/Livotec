@@ -28,8 +28,9 @@
         :slidesPerView="dataChil.length > 0 ? Math.min(dataChil.length, 4) : 1"
         :spaceBetween="30"
         :modules="modules"
-        :navigation="true"
+        :loop="false"
         :breakpoints="breakpoints"
+        :navigation="true"
         class="swiperProduct"
       >
         <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id">
@@ -103,7 +104,7 @@ import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/navigation";
-import "./NavProduct.css";
+import "./NavProductComponent.css";
 import { Navigation } from "swiper";
 import { useRouter } from "vue-router";
 
@@ -120,7 +121,7 @@ const fetchDataCategory = async () => {
       `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
     );
     data.value = response.data.data1;
-    console.log(data.value);
+    // console.log(data.value);
   } catch (e) {
     console.log("Error: ", e);
   }
@@ -170,10 +171,10 @@ const breakpoints = {
   0: {
     slidesPerView: 1,
   },
-  768: {
+  580: {
     slidesPerView: 2,
   },
-  992: {
+  876: {
     slidesPerView: 3,
   },
   1200: {
@@ -186,6 +187,7 @@ const breakpoints = {
 .nav::v-deep(.ant-tabs-tab) {
   margin: 0;
   padding-inline: 0.5rem;
+  padding-inline: 16px;
 }
 
 .nav::v-deep(.ant-tabs-nav .ant-tabs-tab-btn) {
