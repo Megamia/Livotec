@@ -31,7 +31,7 @@
                   v-else
                   class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10 new"
                 >
-                  <span class="font-bold text-white">Mới nhất.</span>
+                  <span class="font-bold text-white">Mới nhất</span>
                 </div>
                 <div
                   class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description-nav rounded-t-lg z-20"
