@@ -21,7 +21,7 @@
     </a-flex>
 
     <a-flex
-      v-if="haveData"
+      v-if="haveData && dataChil.length > 0"
       class="max-w-[100%] w-full px-[100px] py-[30px] justify-center"
     >
       <swiper
@@ -57,8 +57,8 @@
                   />
                 </div>
               </div>
-              <a-flex class="px-[10px] w-[70%] max-w-[200px]" >
-                <a-flex gap="12" vertical class="flex-1 max-w-[100%] ">
+              <a-flex class="px-[10px] w-[70%] max-w-[200px]">
+                <a-flex gap="12" vertical class="flex-1 max-w-[100%]">
                   <span
                     class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] text-ellipsis overflow-hidden whitespace-nowrap cursor-pointer"
                   >
@@ -120,6 +120,7 @@ const fetchDataCategory = async () => {
       `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
     );
     data.value = response.data.data1;
+    console.log(data.value);
   } catch (e) {
     console.log("Error: ", e);
   }

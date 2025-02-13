@@ -12,6 +12,10 @@
   align-items: center;
 }
 
+.swiper-slide {
+  min-width: 200px;
+}
+
 .description-nav {
   opacity: 0;
   transition: opacity 0.3s ease, visibility 0.3s ease;
