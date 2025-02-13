@@ -67,16 +67,19 @@
                     v-for="itemChil in item.products"
                     :key="itemChil.id"
                   >
-                    <a :href="`/product/${itemChil.slug}`">
+                    <a :href="`/product/${itemChil.slug}`"
+                    class="hover:bg-[#F5F5F5] flex flex-col gap-1"
+                    
+                    >
                       <img
                         :src="
                           itemChil.image?.path ||
                           'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
                         "
-                        class="w-[110px] h-[100px]"
+                        class=" w-[110px] h-[110px]"
                       />
                       <span
-                        class="justify-center flex flex-1 mt-[10px] uppercase font-semibold text-[14px] hover:text-[#51c9a9]"
+                        class="mt-[10px] max-w-[110px] text-center text-ellipsis overflow-hidden whitespace-nowrap uppercase font-semibold text-[14px] hover:text-[#51c9a9]"
                       >
                         {{ itemChil.name }}
                       </span>

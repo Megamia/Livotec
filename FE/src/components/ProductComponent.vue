@@ -10,11 +10,11 @@
         <a-flex
           v-for="itemChil in dataChil.slice(0, 4)"
           :key="itemChil.id"
-          class="mx-[10px]"
+          class="mx-[10px] min-w-[200px]" 
         >
-          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
-            <a-flex vertical align="center" class="flex-1">
-              <div class="w-full relative pt-[20px] justify-center flex">
+          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full ">
+            <a-flex vertical align="center" class="flex-1 ">
+              <div class="w-full relative pt-[20px] justify-center flex ">
                 <img
                   src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
                 />
@@ -47,9 +47,9 @@
                 </div>
               </div>
               <a-flex class="px-[10px] w-[70%] text-center max-w-[200px]">
-                <a-flex gap="12" vertical class="flex-1 max-w-[100%]">
+                <a-flex gap="12" vertical class="flex-1 w-[100%]">
                   <span
-                    class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
+                    class="text-[16px] font-bold max-w-[100%] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
                   >
                     {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
                   </span>
