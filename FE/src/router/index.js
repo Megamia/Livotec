@@ -58,6 +58,11 @@ const router = createRouter({
       name: "cart",
       component: () => import("../views/CartPage.vue"),
     },
+    {
+      path: "/guaranteeHome",
+      name: "guaranteeHome",
+      component: () => import("../views/GuaranteeHomePage.vue"),
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     return { top: 0, behavior: "smooth" }; 

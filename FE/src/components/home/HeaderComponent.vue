@@ -124,8 +124,8 @@
 </template>
 
 <script setup>
-import MenuComponent from "./MenuComponent.vue";
-import SearchComponent from "./SearchComponent.vue";
+import MenuComponent from "../MenuComponent.vue";
+import SearchComponent from "../SearchComponent.vue";
 import { ref, onMounted, computed, watchEffect } from "vue";
 import "./header.css";
 import {
