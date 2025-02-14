@@ -69,7 +69,7 @@
                   >
                     <a
                       :href="`/product/${itemChil.slug}`"
-                      class="hover:bg-[#F5F5F5] flex flex-col gap-1"
+                      class="hover:bg-[#F5F5F5] flex flex-col gap-1 relative"
                     >
                       <img
                         :src="
@@ -79,7 +79,7 @@
                         class="w-[110px] h-[110px]"
                       />
                       <span
-                        class="mt-[10px] max-w-[110px] text-center text-ellipsis overflow-hidden whitespace-nowrap uppercase font-semibold text-[14px] hover:text-[#51c9a9]"
+                        class="text-black relative z-10 mt-[10px] max-w-[110px] text-center text-ellipsis overflow-hidden whitespace-nowrap uppercase font-semibold text-[14px] hover:text-[#51c9a9]"
                       >
                         {{ itemChil.name }}
                       </span>
@@ -144,11 +144,6 @@ const router = useRouter();
 const isLogin = ref(false);
 const searchInputHover = ref(false);
 
-const test = (value) => {
-  console.log(value);
-  router.push(`/product/${value}`);
-};
-
 const handleLogout = async () => {
   try {
     if (confirm("Chắc chắn muốn đăng xuất?")) {
@@ -161,7 +156,7 @@ const handleLogout = async () => {
       );
       console.log(response.data);
       Cookies.remove("user");
-      console.log(Cookies.get('user'));
+      console.log(Cookies.get("user"));
       isLogin.value = false;
     } else {
       return;
@@ -240,7 +235,6 @@ const getdata = async () => {
 // };
 
 const token = computed(() => Cookies.get("user"));
-console.log(token);
 
 watchEffect(() => {
   isLogin.value = !!token.value;
@@ -320,7 +314,6 @@ const data1 = ref([
 
 const handleChangeToProductDetails = (value) => {
   alert("Chưa có data để đổi trang");
-  // console.log(value);
 };
 </script>
 

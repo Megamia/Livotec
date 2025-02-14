@@ -22,76 +22,93 @@
 
     <a-flex
       v-if="haveData && dataChil.length > 0"
-      class="max-w-[100%] w-full px-[100px] py-[30px] justify-center"
+      class="max-w-[100%] w-full px-[100px] py-[30px] justify-center relative"
     >
+      <button
+        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] left-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
+        @click="prevSlide"
+      >
+        <BsArrowLeft class="font-black" />
+      </button>
       <swiper
         :slidesPerView="dataChil.length > 0 ? Math.min(dataChil.length, 4) : 1"
         :spaceBetween="30"
         :modules="modules"
-        :loop="false"
+        :loop="true"
+        @swiper="onSwiper"
         :breakpoints="breakpoints"
-        :navigation="true"
+        :navigation="false"
         class="swiperProduct"
       >
-          <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id" class="w-[350px]">
-            <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
-              <a-flex vertical align="center" class="flex-1">
-                <div class="w-full relative pt-[20px] justify-center flex">
-                  <img
-                    src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
-                  />
-                  <div
-                    class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
-                  >
-                    <span class="text-[20px] text-white">Mới nhất</span>
-                  </div>
-                  <div
-                    class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description-nav rounded-t-lg z-20"
-                  >
-                    <div
-                      v-html="
-                        itemChil.description
-                          ? itemChil.description
-                          : 'Chưa có mô tả'
-                      "
-                      class="max-h-[90%] overflow-y-scroll text-left test"
-                    />
-                  </div>
+        <swiper-slide
+          v-for="itemChil in dataChil"
+          :key="itemChil.id"
+          class="w-[350px]"
+        >
+          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
+            <a-flex vertical align="center" class="flex-1">
+              <div class="w-full relative pt-[20px] justify-center flex">
+                <img
+                  src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
+                />
+                <div
+                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
+                >
+                  <span class="text-[20px] text-white">Mới nhất</span>
                 </div>
-                <a-flex class="px-[10px] w-[70%]">
-                  <a-flex gap="12" vertical class="flex-1 max-w-[100%]">
-                    <span
-                      class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
+                <div
+                  class="absolute cursor-pointer h-[100%] top-0 w-[100%] bg-gradient-to-r from-black/50 to-black/50 text-white p-2 description-nav rounded-t-lg z-20"
+                >
+                  <div
+                    v-html="
+                      itemChil.description
+                        ? itemChil.description
+                        : 'Chưa có mô tả'
+                    "
+                    class="max-h-[90%] overflow-y-scroll text-left test"
+                  />
+                </div>
+              </div>
+              <a-flex class="px-[10px] w-[70%]">
+                <a-flex gap="12" vertical class="flex-1 max-w-[100%]">
+                  <span
+                    class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
+                  >
+                    {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
+                  </span>
+                  <span class="text-[16px] font-bold text-[#02B6AC]">
+                    {{
+                      itemChil.price
+                        ? formatCurrency(itemChil.price)
+                        : "Chưa có giá"
+                    }}
+                  </span>
+                  <a-flex vertical class="gap-[10px] text-[16px]">
+                    <button
+                      class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
                     >
-                      {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
-                    </span>
-                    <span class="text-[16px] font-bold text-[#02B6AC]">
-                      {{
-                        itemChil.price
-                          ? formatCurrency(itemChil.price)
-                          : "Chưa có giá"
-                      }}
-                    </span>
-                    <a-flex vertical class="gap-[10px] text-[16px]">
-                      <button
-                        class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
-                      >
-                        Mua ngay
-                      </button>
+                      Mua ngay
+                    </button>
 
-                      <button
-                        class="flex-1 font-sans border-[1px] border-[#4fa8e7] px-[12px] py-[10px] rounded-full text-white bg-[#02b6ac] hover:bg-[linear-gradient(270deg,_#ccf7fb_2.05%,_#fff_100%)] hover:text-[#424242]"
-                        @click="handleProductDetail(itemChil.slug)"
-                      >
-                        Chi tiết
-                      </button>
-                    </a-flex>
+                    <button
+                      class="flex-1 font-sans border-[1px] border-[#4fa8e7] px-[12px] py-[10px] rounded-full text-white bg-[#02b6ac] hover:bg-[linear-gradient(270deg,_#ccf7fb_2.05%,_#fff_100%)] hover:text-[#424242]"
+                      @click="handleProductDetail(itemChil.slug)"
+                    >
+                      Chi tiết
+                    </button>
                   </a-flex>
                 </a-flex>
               </a-flex>
             </a-flex>
-          </swiper-slide>
+          </a-flex>
+        </swiper-slide>
       </swiper>
+      <button
+        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] right-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
+        @click="nextSlide"
+      >
+        <BsArrowRight class="font-black" />
+      </button>
     </a-flex>
     <div v-else>Không có dữ liệu để hiển thị</div>
   </a-flex>
@@ -107,6 +124,7 @@ import "swiper/css/navigation";
 import "./NavProductComponent.css";
 import { Navigation } from "swiper";
 import { useRouter } from "vue-router";
+import { BsArrowLeft, BsArrowRight } from "@kalimahapps/vue-icons";
 
 const modules = [Navigation];
 const activeKey = ref(1);
@@ -163,6 +181,20 @@ const fetchData = async (id) => {
     dataChil.value = [];
     haveData.value = false;
   }
+};
+
+const swiperInstance = ref(null);
+
+const onSwiper = (swiper) => {
+  swiperInstance.value = swiper;
+};
+
+const prevSlide = () => {
+  if (swiperInstance.value) swiperInstance.value.slidePrev();
+};
+
+const nextSlide = () => {
+  if (swiperInstance.value) swiperInstance.value.slideNext();
 };
 
 onMounted(() => fetchData(activeKey.value));
