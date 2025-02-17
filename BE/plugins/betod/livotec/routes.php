@@ -9,19 +9,22 @@ Route::group(['prefix' => 'apiProduct'], function () {
         return $product;
     });
 
-    Route::get('navProducts/{category_id}', function ($category_id) {
-        $category = Category::with(['image'])->find($category_id);
+    Route::get('navProducts/{slug}', function ($slug) {
+        $category = Category::where('slug', $slug)->first();
 
-        $navProducts = Product::where('category_id', $category_id)->get();
+        $categoryIds = $category->getAllChildrenAndSelf()->pluck('id');
+        $products = Product::with('image')
+            ->whereIn('category_id', $categoryIds)
+            ->get();
 
         return response()->json([
             'category' => $category,
-            'products' => $navProducts
+            'products' => $products,
         ]);
     });
 
     Route::get('product/{slug}', function ($slug) {
-        $product = Product::with(['gallery', 'image', 'category', 'post'])->where('slug', $slug)->first();
+        $product = Product::with(['gallery', 'image', 'category.parent', 'post'])->where('slug', $slug)->first();
         if ($product) {
             return $product;
         } else {
@@ -35,20 +38,51 @@ Route::group(['prefix' => 'apiOrder'], function () {
 });
 
 Route::group(['prefix' => 'apiCategory'], function () {
-    Route::get('category/{slug}', function ($slug) {
-        $category = Category::with(['image', 'filters', 'products.image'])->where('slug', $slug)->first();
-        if ($category) {
-            return $category;
-        } else {
+    Route::get('category/{slug1}/{slug2?}', function ($slug1, $slug2 = null) {
+        // Truy vấn category cha theo slug1
+        $category = Category::where('slug', $slug1)->first();
+
+        if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
-    });
-    Route::get('allCategory', function () {
-            $data = Category::all();
-            if ($data) {
-                return response()->json(['data1' => $data, 'status' => 1]);
-            } else {
-                return response()->json(['data1' => 'No data', 'status' => 0]);
+
+        // Nếu có slug2, tìm category con theo slug2
+        if ($slug2) {
+            $subCategory = $category->children()->where('slug', $slug2)->first();
+
+            if (!$subCategory) {
+                return response()->json(['message' => 'Sub-category not found'], 404);
             }
-        });
+
+            // Chỉ lấy sản phẩm của category con
+            $products = Product::with('image')
+                ->where('category_id', $subCategory->id)
+                ->get();
+
+            return response()->json([
+                'category' => $subCategory,
+                'products' => $products,
+            ]);
+        }
+
+        // Nếu không có slug2, lấy sản phẩm của category cha và các category con
+        $categoryIds = $category->getAllChildrenAndSelf()->pluck('id');
+        $products = Product::with('image')
+            ->whereIn('category_id', $categoryIds)
+            ->get();
+
+        return response()->json([
+            'category' => $category,
+            'products' => $products,
+        ]);
+    });
+
+    Route::get('allCategory', function () {
+        $data = Category::all();
+        if ($data) {
+            return response()->json(['data1' => $data, 'status' => 1]);
+        } else {
+            return response()->json(['data1' => 'No data', 'status' => 0]);
+        }
+    });
 });

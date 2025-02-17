@@ -126,3 +126,12 @@ v1.0.42:
 v1.0.43:
     - 'Updated table betod_livotec_filter'
     - builder_table_update_betod_livotec_filter_6.php
+v1.0.44:
+    - 'Updated table betod_livotec_category'
+    - builder_table_update_betod_livotec_category.php
+v1.0.45:
+    - 'Updated table betod_livotec_category'
+    - builder_table_update_betod_livotec_category_2.php
+v1.0.46:
+    - 'Updated table betod_livotec_category'
+    - builder_table_update_betod_livotec_category_3.php

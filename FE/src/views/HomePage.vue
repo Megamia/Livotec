@@ -3,8 +3,8 @@
     <DefaultLayout>
       <HomeHeroSlideComponent />
       <NavProductComponent />
-      <ProductComponent :categoryId="1" />
-      <ProductComponent :categoryId="2" />
+      <ProductComponent :categorySlug="'may-loc-nuoc'" />
+      <ProductComponent :categorySlug="'gia-dung-bep'" />
     </DefaultLayout>
   </a-flex>
 </template>

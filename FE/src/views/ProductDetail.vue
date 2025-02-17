@@ -11,9 +11,16 @@
                 >Trang chủ</a
               ></a-breadcrumb-item
             >
+            <a-breadcrumb-item v-if="product.category.parent"
+              ><a
+                :href="`/category/${product.category.parent?.slug}`"
+                class="text-[15px] font-semibold"
+                >{{ product.category.parent?.name }}</a
+              ></a-breadcrumb-item
+            >
             <a-breadcrumb-item
               ><a
-                :href="`/${product.category.slug}`"
+                :href="`/category/${product.category.parent?.slug}/${product.category.slug}`"
                 class="text-[15px] font-semibold"
                 >{{ product.category.name }}</a
               ></a-breadcrumb-item
@@ -52,13 +59,13 @@
             </div>
             <div class="flex flex-1 justify-evenly items-center">
               <div class="flex flex-col justify-center items-center gap-2">
-                <img src="../assets/freeship.svg" class="h-[60px]"/>
+                <img src="../assets/freeship.svg" class="h-[60px]" />
                 <span class="font-medium text-sm"
                   >Miễn phí vận chuyển toàn quốc</span
                 >
               </div>
               <div class="flex flex-col justify-center items-center gap-2">
-                <img src="../assets/setup.svg" class="h-[60px]"/>
+                <img src="../assets/setup.svg" class="h-[60px]" />
                 <span class="font-medium text-sm"
                   >Miễn phí lắp đặt toàn quốc</span
                 >

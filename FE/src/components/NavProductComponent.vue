@@ -12,7 +12,7 @@
       >
         <a-tab-pane
           v-for="item in data"
-          :key="item.id"
+          :key="item.slug"
           :tab="item.name"
           class="flex gap-[10px]"
         >
@@ -109,7 +109,7 @@ import { Navigation } from "swiper";
 import { useRouter } from "vue-router";
 
 const modules = [Navigation];
-const activeKey = ref(1);
+const activeKey = ref('may-loc-nuoc');
 const haveData = ref(false);
 const router = useRouter();
 
@@ -141,15 +141,15 @@ const handleProductDetail = (items) => {
   router.push(`/product/${items}`);
 };
 
-const changeData = async (id) => {
-  activeKey.value = id;
-  await fetchData(id);
+const changeData = async (slug) => {
+  activeKey.value = slug;
+  await fetchData(slug);
 };
 
-const fetchData = async (id) => {
+const fetchData = async (slug) => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${id}`
+      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${slug}`
     );
     if (response.data) {
       dataChil.value = response.data.products;

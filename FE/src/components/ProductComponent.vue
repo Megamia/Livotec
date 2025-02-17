@@ -94,7 +94,7 @@ const router = useRouter();
 const dataChil = ref([]);
 const haveData = ref(false);
 const props = defineProps({
-  categoryId: [String, Number],
+  categorySlug: [String, String],
 });
 const nameCategory = ref("");
 const pathImg = ref("");
@@ -113,7 +113,7 @@ const fetchData = async () => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${
-        props.categoryId
+        props.categorySlug
       }`
     );
 
@@ -129,8 +129,8 @@ const fetchData = async () => {
         ? response.data.products.sort(() => 0.5 - Math.random()).slice(0, 4)
         : [];
 
-      nameCategory.value = response.data.category.name;
-      pathImg.value = response.data.category.image?.path;
+      nameCategory.value = response.data.category?.name;
+      pathImg.value = response.data.category?.image?.path;
       haveData.value = true;
     } else {
       dataChil.value = [];
