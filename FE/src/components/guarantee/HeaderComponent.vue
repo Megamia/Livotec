@@ -43,6 +43,7 @@
 
 <script setup>
 import { ref } from "vue";
+import "./header.css";
 
 const liActive = ref("1");
 

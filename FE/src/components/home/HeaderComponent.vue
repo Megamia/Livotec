@@ -50,7 +50,7 @@
           :key="index"
           class="flex flex-row items-center gap-1 hover:text-white text-nowrap basis-1/7"
         >
-          <a class="ant-dropdown-link" @click.prevent>
+          <a class="ant-dropdown-link" :href="`/${item.category.slug}`">
             {{ item.category.name }}
             <AnFilledCaretDown v-if="item.products.length >= 1" />
           </a>
@@ -126,7 +126,7 @@
 <script setup>
 import MenuComponent from "../MenuComponent.vue";
 import SearchComponent from "../SearchComponent.vue";
-import { ref, onMounted, computed, watchEffect } from "vue";
+import { ref, onMounted, computed, watchEffect, watch } from "vue";
 import "./header.css";
 import {
   BxSearch,
@@ -136,11 +136,12 @@ import {
   AnFilledCaretDown,
 } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 import Cookies from "js-cookie";
 
 const router = useRouter();
+const route = useRoute();
 const isLogin = ref(false);
 const searchInputHover = ref(false);
 
@@ -167,6 +168,17 @@ const handleLogout = async () => {
     alert("Logout failed! Please check your credentials.");
   }
 };
+
+const test = (value) => {
+  console.log("value: ", value);
+  router.replace({ path: `/product/${value.products[0].slug}` });
+};
+watch(
+  () => route.fullPath,
+  () => {
+    getdata(); // Gọi lại API khi đường dẫn thay đổi
+  }
+);
 
 const data = ref({});
 
@@ -195,7 +207,11 @@ const getdata = async () => {
     const anotherData = [
       { id: ++maxId, category: { name: "Tin tức" }, products: [] },
       { id: ++maxId, category: { name: "Giới thiệu" }, products: [] },
-      { id: ++maxId, category: { name: "Bảo hành" }, products: [] },
+      {
+        id: ++maxId,
+        category: { name: "Bảo hành", slug: "guaranteeHome" },
+        products: [],
+      },
       { id: ++maxId, category: { name: "Thư viện" }, products: [] },
     ];
 
