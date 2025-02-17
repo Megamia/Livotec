@@ -1,6 +1,6 @@
 <template>
   <swiper
-    class="mySlide max-w-[100%]"
+    class="mySlide max-w-[100%] w-full"
   >
     <swiper-slide>
       <img

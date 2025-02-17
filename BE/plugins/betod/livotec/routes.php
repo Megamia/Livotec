@@ -40,7 +40,7 @@ Route::group(['prefix' => 'apiOrder'], function () {
 Route::group(['prefix' => 'apiCategory'], function () {
     Route::get('category/{slug1}/{slug2?}', function ($slug1, $slug2 = null) {
         // Truy vấn category cha theo slug1
-        $category = Category::where('slug', $slug1)->first();
+        $category = Category::with('image', 'filters')->where('slug', $slug1)->first();
 
         if (!$category) {
             return response()->json(['message' => 'Category not found'], 404);
@@ -48,7 +48,7 @@ Route::group(['prefix' => 'apiCategory'], function () {
 
         // Nếu có slug2, tìm category con theo slug2
         if ($slug2) {
-            $subCategory = $category->children()->where('slug', $slug2)->first();
+            $subCategory = $category->children()->with('image', 'filters')->where('slug', $slug2)->first();
 
             if (!$subCategory) {
                 return response()->json(['message' => 'Sub-category not found'], 404);

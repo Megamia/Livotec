@@ -19,7 +19,7 @@ const router = createRouter({
       component: () => import("../views/ProductDetail.vue"),
     },
     {
-      path: "/category/:slug",
+      path: "/category/:slug1/:slug2?",
       name: "category",
       component: () => import("../views/CategoryPage.vue"),
     },

@@ -30,10 +30,10 @@
           ></div>
         </div>
       </div>
-      <a-flex class="px-[10px] w-[70%] text-center">
+      <a-flex class="px-[10px] w-[70%] h-full text-center">
         <a-flex gap="12" vertical class="flex-1">
           <span
-            class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer"
+            class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer line-clamp-2"
           >
             {{ product.name ? product.name : "Chưa có tên" }}
           </span>
@@ -64,7 +64,7 @@
 import { defineProps } from "vue";
 import { useRouter } from "vue-router";
 import "./ProductComponent.css";
-import "./NavProduct.css";
+import "./NavProductComponent.css"; 
 
 const router = useRouter();
 const props = defineProps({

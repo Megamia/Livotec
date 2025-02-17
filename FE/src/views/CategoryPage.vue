@@ -2,14 +2,14 @@
   <!-- eslint-disable vue/no-v-model-argument -->
   <DefaultLayout>
     <section class="container w-full flex flex-col gap-[30px]">
-      <CategorySlideComponent :path="category?.image?.path" />
+      <CategorySlideComponent :path="category?.category?.image?.path" />
       <a-flex vertical class="w-full">
         <a-flex
           class="mb-[1rem] border-t-[1px] border-b-[1px] border-[#dbe0f0] bg-[#f6f9ff] gap-[24px] w-full"
         >
           <a-flex class="p-[18px] px-[15px] border-b border-b-[#02b6ac]">
             <h1 class="text-[16px] font-bold text-[#02b6ac]">
-              {{ category.name }}
+              {{ category?.category?.name }}
             </h1>
           </a-flex>
         </a-flex>
@@ -40,7 +40,7 @@
                   ></a-flex
                 >
               </a-badge>
-              <div v-for="filter in category.filters" :key="filter.id">
+              <div v-for="filter in category?.category?.filters" :key="filter.id">
                 <a-dropdown :trigger="['click']" arrow>
                   <a
                     @click.prevent
@@ -220,7 +220,7 @@ const rangeOption = (filterId, label, min, max) => {
 };
 
 const clearOption = (filterId) => {
-  delete selectedFilter[filterId]; 
+  delete selectedFilter[filterId];
   console.log("Cleared:", selectedFilter);
 };
 
@@ -274,11 +274,11 @@ const applyFilter = () => {
 
 onMounted(async () => {
   try {
-    const { slug } = route.params;
+    const { slug1, slug2 } = route.params;
     const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/category/${slug}`
+      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/category/${slug1}/${slug2}`
     );
-    category.value = response.data;
+    category.value = response.data;    
     productCurrentData.value = category.value.products;
     console.log("Danh sách: ", productCurrentData.value);
   } catch (error) {
