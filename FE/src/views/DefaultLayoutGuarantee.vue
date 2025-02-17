@@ -5,7 +5,7 @@
     >
       <HeaderComponent />
     </a-flex>
-    <main class="flex flex-col flex-1 gap-[100px] items-center mb-[50px]">
+    <main class="flex flex-col flex-1 items-center mb-[50px]">
       <slot></slot>
     </main>
     <a-flex class="justify-center bg-[#EAEBF4] bottom-0">
@@ -15,8 +15,8 @@
 </template>
 
 <script setup>
-import FooterComponent from "@/components/home/FooterComponent.vue";
-import HeaderComponent from "@/components/home/HeaderComponent.vue";
+import FooterComponent from "@/components/guarantee/FooterComponent.vue";
+import HeaderComponent from "@/components/guarantee/HeaderComponent.vue";
 </script>
 
 <style>
