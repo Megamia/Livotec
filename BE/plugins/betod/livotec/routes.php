@@ -2,6 +2,7 @@
 
 use Betod\Livotec\Models\Product;
 use Betod\Livotec\Models\Category;
+use Betod\Livotec\Controllers\PayPalController;
 
 Route::group(['prefix' => 'apiProduct'], function () {
     Route::get('products', function () {
@@ -85,4 +86,12 @@ Route::group(['prefix' => 'apiCategory'], function () {
             return response()->json(['data1' => 'No data', 'status' => 0]);
         }
     });
+});
+
+Route::group(['prefix' => 'apiPaypal'], function () {
+    // Route để tạo đơn hàng
+    Route::post('createOrder', [PayPalController::class, 'createOrder']);
+
+    // Route để xác nhận thanh toán
+    Route::post('captureOrder', [PayPalController::class, 'captureOrder']);
 });

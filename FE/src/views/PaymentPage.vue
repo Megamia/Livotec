@@ -353,6 +353,11 @@
                   <a-button type="primary" @click="onSubmit"
                     >Place order</a-button
                   >
+                  <PayPalButton
+                    v-if="PayPalButtonRef"
+                    :amount="totals.subtotal"
+                    @payment-success="handlePaymentSuccess"
+                  />
                 </a-flex>
               </a-flex>
             </a-flex>
@@ -370,6 +375,9 @@ import { computed, onMounted, reactive, ref, watch } from "vue";
 import axios from "axios";
 import { AkXSmall } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
+import PayPalButton from "@/components/paypal/PayPalButton.vue";
+
+const PayPalButtonRef = ref(false);
 
 const formRef = ref();
 const formState = reactive({
@@ -670,15 +678,18 @@ const onSubmit = async () => {
   try {
     // Validate form
     await formRef.value.validate();
-
-    // Gửi request tạo đơn hàng
-    const response = await axios.post(
-      `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
-      formState
-    );
-
-    console.log("Order created successfully:", response.data);
-    alert("Order created successfully");
+    if (formState.paymenttype == 1) {
+      PayPalButtonRef.value = true;
+    }
+    if (formState.paymenttype == 2) {
+      PayPalButtonRef.value = false;
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
+        formState
+      );
+      console.log("Order created successfully:", response.data);
+      alert("Order created successfully");
+    }
   } catch (error) {
     if (error.errors) {
       // Lỗi form validation
@@ -690,12 +701,28 @@ const onSubmit = async () => {
   }
 };
 
+const handlePaymentSuccess = async (orderID) => {
+  try {
+    // Gửi request API thêm đơn hàng vào cơ sở dữ liệu khi thanh toán thành công
+    const response = await axios.post(
+      `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
+      formState
+    );
+    
+    console.log("Order created successfully:", response.data);
+    alert("Order created successfully");
+  } catch (error) {
+    console.error("Error adding order to database:", error);
+  }
+};
+
 fetchProvinces();
 
 const fetchData = () => {
   const dataStore = store.getters["product/getDataStoreCart"];
   // console.log(dataStore);
   data.value = dataStore;
+  console.log(totals.value.subtotal);
 };
 
 onMounted(() => fetchData());
