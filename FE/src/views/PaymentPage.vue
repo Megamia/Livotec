@@ -595,6 +595,11 @@ const rules = {
       message: "Vui lòng nhập địa chỉ email",
       trigger: "submit",
     },
+    {
+      pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      message: "Địa chỉ email không hợp lệ",
+      trigger: "submit",
+    },
   ],
   phone: [
     {
@@ -708,8 +713,9 @@ const handlePaymentSuccess = async (orderID) => {
       `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
       formState
     );
-    
+
     console.log("Order created successfully:", response.data);
+    store.dispatch("product/clearDataStoreCart");
     alert("Order created successfully");
   } catch (error) {
     console.error("Error adding order to database:", error);
@@ -720,9 +726,7 @@ fetchProvinces();
 
 const fetchData = () => {
   const dataStore = store.getters["product/getDataStoreCart"];
-  // console.log(dataStore);
   data.value = dataStore;
-  console.log(totals.value.subtotal);
 };
 
 onMounted(() => fetchData());

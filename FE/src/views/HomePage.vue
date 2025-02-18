@@ -4,7 +4,7 @@
       <HomeHeroSlideComponent />
       <NavProductComponent />
       <ProductComponent :categorySlug="'may-loc-nuoc'" />
-      <ProductComponent :categorySlug="'gia-dung-bep'" />
+      <ProductComponent :categorySlug="'bep-tu'" />
     </DefaultLayout>
   </a-flex>
 </template>

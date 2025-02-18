@@ -98,9 +98,7 @@
               <div
                 class="w-full bg-[#38B6AC] py-2 flex justify-center items-center gap-2 rounded-md hover:opacity-80 cursor-pointer"
               >
-                <span
-                  class="text-[#FFF833] font-bold text-[18px]"
-                  @click="clearStore"
+                <span class="text-[#FFF833] font-bold text-[18px]"
                   >Gọi Đặt Mua: 1800 2298</span
                 >
                 <span class="text-white text-[15px] font-medium"
@@ -252,15 +250,6 @@ const addToComparison = (product) => {
   });
 
   compare.value = true;
-};
-
-const clearStore = async () => {
-  try {
-    await store.dispatch("product/clearDataStoreProducts");
-    alert("Xóa thành công.");
-  } catch (error) {
-    console.error("Lỗi khi xóa sản phẩm:", error);
-  }
 };
 </script>
 

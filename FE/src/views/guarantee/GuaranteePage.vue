@@ -176,7 +176,7 @@
         </a-flex>
       </a-flex>
     </a-flex>
-    <a-flex class="contentDiv justify-center">
+    <a-flex class=" justify-center mb-0">
       <a-flex class="a flex-1 justify-between">
         <a-flex class="max-w-[33%] text-[12px] text-black">
           <span
@@ -187,10 +187,10 @@
             Điện thoại: 1800 2298</span
           >
         </a-flex>
-        <a-flex vertical class="">
-          <a-flex style="flex-basis: calc(100% - 105px)" class="bg-[red]">
-            <span>Kết nối với chúng tôi</span>
-            <a-flex class="flex-1 justify-between">
+        <a-flex vertical class=" gap-[30px]  w-[300px]">
+          <a-flex style="flex-basis: calc(100% - 105px)" class="">
+            <span class="flex-1">Kết nối với chúng tôi</span>
+            <a-flex class="basis-[105px] justify-between ">
               <img
                 src="https://baohanh.livotec.com/assetsUpdate/images/icons/fb.png"
                 alt=""
@@ -209,9 +209,9 @@
               />
             </a-flex>
           </a-flex>
-          <a-flex style="flex-basis: calc(100% - 105px)" class="bg-[red]">
-            <span> Tải app karofi </span>
-            <a-flex vertical class="flex-1 justify-between">
+          <a-flex style="flex-basis: calc(100% - 105px)" class="">
+            <span class="flex-1"> Tải app karofi </span>
+            <a-flex vertical class="basis-[105px] justify-between gap-[10px]">
               <img
                 src="https://baohanh.livotec.com/assetsUpdate/images/icons/appstore.png"
                 alt=""
