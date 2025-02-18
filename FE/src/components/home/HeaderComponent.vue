@@ -155,9 +155,7 @@ const handleLogout = async () => {
           withCredentials: true,
         }
       );
-      console.log(response.data);
       Cookies.remove("user");
-      console.log(Cookies.get("user"));
       isLogin.value = false;
     } else {
       return;
