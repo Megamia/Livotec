@@ -264,12 +264,9 @@ const login = async () => {
     );
     const firstName = response.data.user.first_name;
     Cookies.set("user", firstName, { expires: 1 });
-
-    console.log("Login successful:", response.data);
     alert("Login successful!");
     router.push("/");
   } catch (error) {
-    // Xử lý khi xảy ra lỗi
     console.error("Login failed:", error.response?.data || error.message);
     alert("Login failed! Please check your credentials.");
   }
@@ -281,8 +278,8 @@ const signup = async () => {
       `${import.meta.env.VITE_APP_URL_API}/signup`,
       dataForm.value
     );
-    console.log("Sign up successful:", response.data);
     alert("Sign up successful!");
+    toggleForm();
   } catch (error) {
     console.error("Sign up failed:", error.response?.data || error.message);
     let errorMessage = "Sign up failed! Please check your credentials.";
@@ -298,12 +295,4 @@ const signup = async () => {
   }
 };
 </script>
-<style scoped>
-/* * {
-    height: 100%;
-    background-color: white;
-  }
-  body {
-    height: 100%;
-  } */
-</style>
+<style scoped></style>

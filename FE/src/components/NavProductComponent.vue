@@ -11,7 +11,7 @@
         @change="changeData"
       >
         <a-tab-pane
-          v-for="item in data"
+          v-for="item in validateCategory"
           :key="item.slug"
           :tab="item.name"
           class="flex gap-[10px]"
@@ -130,15 +130,13 @@ const activeKey = ref("may-loc-nuoc");
 const haveData = ref(false);
 const router = useRouter();
 
-const data = ref([]);
-
 const fetchDataCategory = async () => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
     );
     data.value = response.data.data1;
-    console.log("data: ", data.value);
+    filterData(data.value);
   } catch (e) {
     console.log("Error: ", e);
   }
@@ -163,6 +161,8 @@ const changeData = async (slug) => {
   await fetchData(slug);
 };
 
+const data = ref([]);
+
 const fetchData = async (slug) => {
   try {
     const response = await axios.get(
@@ -170,8 +170,6 @@ const fetchData = async (slug) => {
     );
     if (response.data) {
       dataChil.value = response.data.products;
-      console.log("dataChil: ", dataChil.value.length);
-
       haveData.value = true;
     } else {
       dataChil.value = [];
@@ -181,6 +179,28 @@ const fetchData = async (slug) => {
     console.error("Error fetching data:", e);
     dataChil.value = [];
     haveData.value = false;
+  }
+};
+
+const validateCategory = ref([]);
+const slugsToFilter = ["bep-tu", "may-loc-nuoc", "linh-kien-loi-loc"];
+
+const categoryOrder = {
+  "bep-tu": 1,
+  "may-loc-nuoc": 2,
+  "linh-kien-loi-loc": 3,
+};
+
+const filterData = (data) => {
+  validateCategory.value = data
+    .filter((item) => slugsToFilter.includes(item.slug))
+    .map((item) => ({
+      ...item,
+      order: categoryOrder[item.slug] || 0,
+    }))
+    .sort((a, b) => a.order - b.order);
+  if (validateCategory.value.length <= 0) {
+    console.log("Không có data");
   }
 };
 
