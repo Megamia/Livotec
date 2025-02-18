@@ -259,7 +259,7 @@ const login = async () => {
         password: dataForm.value.password,
       },
       {
-        withCredentials: true,
+        withCredentials: true,  
       }
     );
     const firstName = response.data.user.first_name;
