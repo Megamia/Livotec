@@ -48,7 +48,11 @@
             <a-flex vertical align="center" class="flex-1">
               <div class="w-full relative pt-[20px] justify-center flex">
                 <img
-                  src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
+                  :src="
+                    itemChil.image?.path ||
+                    'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
+                  "
+                  class="w-[300px] h-[300px]  justify-center items-center"
                 />
                 <div
                   class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
