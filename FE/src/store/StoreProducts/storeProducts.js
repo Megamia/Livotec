@@ -26,7 +26,7 @@ const storeProducts = {
       state.dataStoreCart = payload.dataStoreCart;
     },
     clearDataStoreCart(state) {
-      state.dataStoreCart = [];
+      state.dataStoreCart.splice(0, state.dataStoreCart.length);
     },
     removeItemCart(state, itemId) {
       state.dataStoreCart = state.dataStoreCart.filter(
@@ -57,6 +57,7 @@ const storeProducts = {
     //Cart
     clearDataStoreCart({ commit }) {
       commit("clearDataStoreCart");
+      return Promise.resolve();
     },
 
     deleteItemCart({ commit }, itemId) {

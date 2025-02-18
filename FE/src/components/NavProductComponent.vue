@@ -34,7 +34,6 @@
         :slidesPerView="dataChil.length > 0 ? Math.min(dataChil.length, 4) : 1"
         :spaceBetween="30"
         :modules="modules"
-        :loop="true"
         @swiper="onSwiper"
         :breakpoints="breakpoints"
         :navigation="false"
@@ -127,7 +126,7 @@ import { useRouter } from "vue-router";
 import { BsArrowLeft, BsArrowRight } from "@kalimahapps/vue-icons";
 
 const modules = [Navigation];
-const activeKey = ref('may-loc-nuoc');
+const activeKey = ref("may-loc-nuoc");
 const haveData = ref(false);
 const router = useRouter();
 
@@ -139,7 +138,7 @@ const fetchDataCategory = async () => {
       `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
     );
     data.value = response.data.data1;
-    // console.log(data.value);
+    console.log("data: ", data.value);
   } catch (e) {
     console.log("Error: ", e);
   }
@@ -171,6 +170,8 @@ const fetchData = async (slug) => {
     );
     if (response.data) {
       dataChil.value = response.data.products;
+      console.log("dataChil: ", dataChil.value.length);
+
       haveData.value = true;
     } else {
       dataChil.value = [];
