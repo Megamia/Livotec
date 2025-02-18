@@ -11,10 +11,10 @@ Route::group(['prefix' => 'apiProduct'], function () {
     });
 
     Route::get('navProducts/{slug}', function ($slug) {
-        $category = Category::where('slug', $slug)->first();
+        $category = Category::with(['children'])->where('slug', $slug)->first();
 
         $categoryIds = $category->getAllChildrenAndSelf()->pluck('id');
-        $products = Product::with('image')
+        $products = Product::with(['image', 'category'])
             ->whereIn('category_id', $categoryIds)
             ->get();
 
