@@ -20,10 +20,15 @@
             >
             <a-breadcrumb-item
               ><a
-                :href="`/category/${product.category.parent?.slug}/${product.category.slug}`"
+                :href="
+                  product.category.parent?.slug
+                    ? `/category/${product.category.parent.slug}/${product.category.slug}`
+                    : `/category/${product.category.slug}`
+                "
                 class="text-[15px] font-semibold"
-                >{{ product.category.name }}</a
-              ></a-breadcrumb-item
+              >
+                {{ product.category.name }}
+              </a></a-breadcrumb-item
             >
             <a-breadcrumb-item
               ><span class="text-[15px] font-semibold text-[#02B6AC]">{{
