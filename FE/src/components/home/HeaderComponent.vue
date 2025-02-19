@@ -203,7 +203,11 @@ const getdata = async () => {
     });
 
     const anotherData = [
-      { id: ++maxId, category: { name: "Tin tức" }, products: [] },
+      {
+        id: ++maxId,
+        category: { name: "Tin tức", slug: "news" },
+        products: [],
+      },
       { id: ++maxId, category: { name: "Giới thiệu" }, products: [] },
       {
         id: ++maxId,

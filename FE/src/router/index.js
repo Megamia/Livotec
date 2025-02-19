@@ -63,9 +63,19 @@ const router = createRouter({
       name: "guaranteeHome",
       component: () => import("../views/GuaranteeHomePage.vue"),
     },
+    {
+      path: "/news",
+      name: "news",
+      component: () => import("../views/newsPage/NewsPage.vue"),
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: () => import("../views/aboutPage/AboutPage.vue"),
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
-    return { top: 0, behavior: "smooth" }; 
+    return { top: 0, behavior: "smooth" };
   },
 });
 
