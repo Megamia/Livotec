@@ -32,7 +32,11 @@
             <a-flex vertical align="center" class="flex-1">
               <div class="w-full relative pt-[20px] justify-center flex">
                 <img
-                  src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
+                  class="w-[300px] h-[300px]"
+                  :src="
+                    itemChil.image?.path ||
+                    'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
+                  "
                 />
                 <div
                   v-if="itemChil.sold_out >= 10"
