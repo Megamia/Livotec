@@ -25,6 +25,7 @@
       class="max-w-[100%] w-full px-[100px] py-[30px] justify-center relative"
     >
       <button
+        v-if="dataChil.length > 4"
         class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] left-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
         @click="prevSlide"
       >
@@ -46,13 +47,13 @@
         >
           <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
             <a-flex vertical align="center" class="flex-1">
-              <div class="w-full relative pt-[20px] justify-center flex">
+              <div class="w-full relative py-[20px] justify-center flex">
                 <img
                   :src="
                     itemChil.image?.path ||
                     'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
                   "
-                  class="w-[300px] h-[300px]  justify-center items-center"
+                  class=" w-[300px] h-[300px] justify-center items-center"
                 />
                 <div
                   class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
@@ -89,6 +90,7 @@
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
                       class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
+                      @click="handleProductDetail(itemChil.slug)"
                     >
                       Mua ngay
                     </button>
@@ -107,6 +109,7 @@
         </swiper-slide>
       </swiper>
       <button
+        v-if="dataChil.length > 4"
         class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] right-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
         @click="nextSlide"
       >

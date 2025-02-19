@@ -12,7 +12,7 @@
       <a-input
         placeholder="Chúng tôi có thể giúp bạn tìm kiếm?"
         @mouseup="searchInputHover = true"
-        @mousedown="searchInputHover = false"
+        @mouseleave="searchInputHover = false"
         v-model:value="searchInput"
       >
         <template #suffix>

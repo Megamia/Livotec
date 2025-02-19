@@ -67,6 +67,7 @@
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
                       class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
+                      @click="handleProductDetail(itemChil.slug)"
                     >
                       Mua ngay
                     </button>
