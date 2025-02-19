@@ -51,9 +51,9 @@
                 <img
                   :src="
                     itemChil.image?.path ||
-                    'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
+                    'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
                   "
-                  class=" w-[300px] h-[300px] justify-center items-center"
+                  class="justify-center items-center w-[300px] h-[300px] max-w-full max-h-full object-cover"
                 />
                 <div
                   class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"

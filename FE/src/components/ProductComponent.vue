@@ -6,10 +6,22 @@
       vertical
       class="gap-[40px] justify-between max-w-[100%]"
     >
-      <span
-        class="text-[28px] text-[#02b6ac] font-bold uppercase text-center"
-        >{{ nameCategory }}</span
-      >
+      <a-flex vertical>
+        <span
+          class="text-[28px] text-[#02b6ac] font-bold uppercase text-center"
+          >{{ nameCategory }}</span
+        >
+        <a-flex class="max-w-[100%] justify-center">
+          <a-tabs class="nav max-w-[100%]" @change="changeData"
+            ><a-tab-pane
+              v-for="item in categoryChil"
+              :key="item.slug"
+              :tab="item.name"
+              class="flex gap-[10px]"
+            ></a-tab-pane
+          ></a-tabs>
+        </a-flex>
+      </a-flex>
       <a-flex horizontal class="max-w-[100%] overflow-hidden">
         <a-flex
           v-for="itemChil in dataChil.slice(0, 4)"
@@ -20,7 +32,11 @@
             <a-flex vertical align="center" class="flex-1">
               <div class="w-full relative pt-[20px] justify-center flex">
                 <img
-                  src="https://livotec.com/wp-content/uploads/2024/11/bep-tu-don-livotec-826-300x300.png"
+                  class="w-[300px] h-[300px]"
+                  :src="
+                    itemChil.image?.path ||
+                    'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
+                  "
                 />
                 <div
                   v-if="itemChil.sold_out >= 10"
@@ -97,6 +113,8 @@ import "./ProductComponent.css";
 
 const router = useRouter();
 const dataChil = ref([]);
+const categoryChil = ref([]);
+const productData = ref([]);
 const haveData = ref(false);
 const props = defineProps({
   categorySlug: [String, String],
@@ -109,6 +127,16 @@ const formatCurrency = (value) => {
     style: "currency",
     currency: "VND",
   }).format(value);
+};
+
+const changeData = (slug) => {
+  fillterData(slug);
+};
+
+const fillterData = (slug) => {
+  dataChil.value = productData.value.filter(
+    (product) => product.category.slug === slug
+  );
 };
 
 const handleProductDetail = (items) => {
@@ -130,13 +158,12 @@ const fetchData = async () => {
       //   dataChil.value = response.data.products?.length
       // ? response.data.products : [];
 
-      dataChil.value = response.data.products?.length
-        ? response.data.products.sort(() => 0.5 - Math.random()).slice(0, 4)
-        : [];
-
+      productData.value = response.data.products;
+      categoryChil.value = response.data.category.children;
       nameCategory.value = response.data.category?.name;
       pathImg.value = response.data.category?.image?.path;
       haveData.value = true;
+      fillterData(categoryChil.value[0].slug);
     } else {
       dataChil.value = [];
       haveData.value = false;
@@ -152,6 +179,16 @@ onMounted(() => fetchData());
 </script>
 
 <style scoped>
+.nav::v-deep(.ant-tabs-tab) {
+  margin: 0;
+  padding-inline: 0.5rem;
+  padding-inline: 16px;
+}
+
+.nav::v-deep(.ant-tabs-nav .ant-tabs-tab-btn) {
+  font-size: 18px;
+  font-weight: 500;
+}
 .bestseller span::after {
   content: "";
   display: block;
