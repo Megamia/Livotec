@@ -1,27 +1,48 @@
 <template>
   <DefaultLayoutGuarantee>
     <a-flex>
-      <a-flex vertical class="p-[30px] gap-[10px]">
-        <a-flex vertical>
-          <a-flex>
-            {{ post.title }}
+      <a-flex> </a-flex>
+
+      <a-flex>
+        <a-flex vertical class="px-[125px] p-[30px] gap-[10px]">
+          <a-flex vertical class="border-b-[1px] border-[#ededed]">
+            <a-flex>
+              <span
+                class="text-[31px] text-[#02b6ac] mb-[10px] font-semibold leading-[35px]"
+              >
+                {{ post.title }}
+              </span>
+            </a-flex>
+            <a-flex class="gap-[10px] mb-[15px]">
+              <a-flex class="mr-[20px]">
+                <span class="text-[15px] text-[#776677]">
+                  Tác giả: {{ post.user?.first_name }}
+                </span>
+              </a-flex>
+              <a-flex class="gap-[5px] mr-[20px] text-[15px] text-[#776677]">
+                Chuyên mục:
+                <span
+                  v-for="item in post.categories"
+                  :key="item.id"
+                  class="text-[#0d6efd]"
+                >
+                  {{ item.name }},
+                </span>
+              </a-flex>
+              <a-flex>
+                <span class="text-[15px] text-[#776677]">
+                  Ngày đăng: {{ formatDate(post.published_at) }}
+                </span>
+              </a-flex>
+            </a-flex>
           </a-flex>
-          <a-flex gap="10">
-            <a-flex>Tác giả: {{ post.user?.first_name }}</a-flex>
-            <a-flex gap="5"
-              >Chuyên mục:<span v-for="item in post.categories" :key="item.id"
-                >{{ item.name }},</span
-              ></a-flex
-            >
-            <a-flex>Ngày đăng: {{ post.published_at }}</a-flex>
-          </a-flex>
+          <div v-html="post.content_html" class="a"></div>
         </a-flex>
-        <div v-html="post.content_html" class="a"></div>
-      </a-flex>
-      <a-flex class="w-[600px] h-[100vh]">
-        <img
-          src="https://livotec.com/wp-content/uploads/2024/05/Bao-hanh_livotec-Mobile.jpg.webp"
-        />
+        <a-flex class="w-[600px] h-[100vh]">
+          <img
+            src="https://livotec.com/wp-content/uploads/2024/05/Bao-hanh_livotec-Mobile.jpg.webp"
+          />
+        </a-flex>
       </a-flex>
     </a-flex>
   </DefaultLayoutGuarantee>
@@ -31,24 +52,29 @@
 import { onMounted, ref } from "vue";
 import DefaultLayoutGuarantee from "../views/DefaultLayoutGuarantee.vue";
 import axios from "axios";
+import { useRoute } from "vue-router";
+import dayjs from "dayjs";
 
 const post = ref("");
-
+const route = useRoute();
+const slug = route.params.slug;
 onMounted(() => {
   fetchData();
 });
 const fetchData = async () => {
   try {
     const response = await axios.get(
-      `${
-        import.meta.env.VITE_APP_URL_API_POST
-      }/post/bep-tu-giai-phap-nau-nuong-hien-dai-cho-can-bep-gia-dinh`
+      `${import.meta.env.VITE_APP_URL_API_POST}/post/${slug}`
     );
     post.value = response.data;
     console.log(post.value);
   } catch (e) {
     console.log(e);
   }
+};
+
+const formatDate = (date) => {
+  return date ? dayjs(date).format("DD/MM/YYYY") : "";
 };
 </script>
 

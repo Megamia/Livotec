@@ -1,6 +1,6 @@
 <template>
   <DefaultLayout>
-    <a-flex class="w-[100%] px-[20px] py-[15px] gap-[30px] a">
+    <!-- <a-flex class="w-[100%] px-[20px] py-[15px] gap-[30px] a">
       <a-flex vertical class="flex-1 gap-[15px]">
         <a-flex class="fledx-1 border-b-[1px] pb-[15px] border-[#dbe0f0]">
           <span class="text-[18px] text-[#38b6ac] font-medium">Tin tức</span>
@@ -9,7 +9,8 @@
           <h1 class="text-[28px] font-bold text-[#38b6ac]">Tin nổi bật</h1>
         </a-flex>
       </a-flex>
-    </a-flex>
+    </a-flex> -->
+    <ItemLatestNews :categories="'kien-thuc'"/>
   </DefaultLayout>
 </template>
 
@@ -18,6 +19,7 @@ import { onMounted } from "vue";
 import DefaultLayout from "../DefaultLayout.vue";
 import "./news.css";
 import axios from "axios";
+import ItemLatestNews from "./latestNews/ItemLatestNews.vue";
 
 // onMounted(() => {
 //   fetchData();

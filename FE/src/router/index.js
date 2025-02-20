@@ -23,11 +23,11 @@ const router = createRouter({
       name: "category",
       component: () => import("../views/CategoryPage.vue"),
     },
-    {
-      path: "/test",
-      name: "test",
-      component: () => import("../views/TestPage.vue"),
-    },
+    // {
+    //   path: "/test",
+    //   name: "test",
+    //   component: () => import("../views/TestPage.vue"),
+    // },
     {
       path: "/nav",
       name: "nav",
@@ -67,6 +67,11 @@ const router = createRouter({
       path: "/news",
       name: "news",
       component: () => import("../views/newsPage/NewsPage.vue"),
+    },
+    {
+      path: "/detailNews/:slug",
+      name: "detailNews",
+      component: () => import("../views/TestPage.vue"),
     },
     {
       path: "/about",

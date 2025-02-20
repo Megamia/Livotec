@@ -208,7 +208,11 @@ const getdata = async () => {
         category: { name: "Tin tức", slug: "news" },
         products: [],
       },
-      { id: ++maxId, category: { name: "Giới thiệu" }, products: [] },
+      {
+        id: ++maxId,
+        category: { name: "Giới thiệu", slug: "about" },
+        products: [],
+      },
       {
         id: ++maxId,
         category: { name: "Bảo hành", slug: "guaranteeHome" },

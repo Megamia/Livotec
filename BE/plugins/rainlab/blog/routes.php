@@ -7,8 +7,13 @@ Route::group(['prefix' => 'apiPost'], function () {
         $post = Post::with(['categories', 'user'])->where('slug', $slug)->first();
         return $post;
     });
-    Route::get('hotNews/{categories}', function ($categories) {
-        $hotNews = Post::with(['categories'])->where('categories', $categories)->first();
-        return $hotNews;
+    Route::get('hotNews/{slugCategory}', function ($slugCategory) {
+        $hotNews = Post::with('categories')
+            ->whereHas('categories', function ($query) use ($slugCategory) {
+                $query->where('slug', $slugCategory);
+            })
+            ->get();
+
+        return response()->json($hotNews);
     });
 });
