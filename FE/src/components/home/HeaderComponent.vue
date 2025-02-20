@@ -11,8 +11,9 @@
     <a-flex class="w-[460px] hidden-mobie" vertical>
       <a-input
         placeholder="Chúng tôi có thể giúp bạn tìm kiếm?"
-        @mouseup="searchInputHover = true"
-        @mouseleave="searchInputHover = false"
+        @mouseenter="searchInputHover = true"
+        @focus="searchInputHover = true"
+        @blur="searchInputHover = false"
         v-model:value="searchInput"
       >
         <template #suffix>
@@ -21,6 +22,7 @@
       </a-input>
       <a-flex
         v-if="searchInputHover"
+        @mouseenter="searchInputHover = true"
         class="max-h-[400px] overflow-hidden overflow-y-scroll rounded-[30px] w-[66%] absolute bg-white top-[50px] z-40 p-[20px]"
       >
         <a-flex v-if="filteredData.length" vertical>

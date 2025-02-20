@@ -158,12 +158,18 @@ const fetchData = async () => {
       //   dataChil.value = response.data.products?.length
       // ? response.data.products : [];
 
-      productData.value = response.data.products;
-      categoryChil.value = response.data.category.children;
+      productData.value = response.data.products
+        ? response.data.products
+        : "No data";
+      categoryChil.value = response.data.category?.children;
       nameCategory.value = response.data.category?.name;
       pathImg.value = response.data.category?.image?.path;
       haveData.value = true;
-      fillterData(categoryChil.value[0].slug);
+      //UPDATE
+      if (categoryChil.value.length > 0) {
+        fillterData(categoryChil.value[0].slug);
+      }
+      //UPDATE
     } else {
       dataChil.value = [];
       haveData.value = false;
