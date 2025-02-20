@@ -71,7 +71,7 @@ const router = createRouter({
     {
       path: "/detailNews/:slug",
       name: "detailNews",
-      component: () => import("../views/TestPage.vue"),
+      component: () => import("../views/newsPage/detail/ItemNewDetail.vue"),
     },
     {
       path: "/about",
