@@ -112,9 +112,9 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+  max-width: 100%; 
 }
 
-/* Nội dung bài viết */
 .contentHtmlSpan3Text {
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -122,5 +122,6 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
+  max-width: 100%;
 }
 </style>

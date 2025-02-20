@@ -42,7 +42,13 @@
             <div class="flex-1 flex flex-col my-3 border rounded-md">
               <a-image-preview-group>
                 <div class="w-full">
-                  <a-image :src="activeImage" alt="Product Image" />
+                  <a-image
+                    :src="
+                      activeImage ||
+                      'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
+                    "
+                    alt="Product Image"
+                  />
                 </div>
                 <div class="flex-wrap flex justify-evenly">
                   <a-image
@@ -81,15 +87,35 @@
             <h1 class="text-[#38B6AC] max-md:text-center text-[30px] font-bold">
               {{ product.name }}
             </h1>
-            <a-rate
-              :value="5"
-              class="text-[25px] max-lg:text-center text-[#38B6AC]"
-            />
+            <a-flex class="items-center gap-[10px]">
+              <a-rate
+                :value="5"
+                class="text-[25px] max-lg:text-center text-[#38B6AC]"
+              />
+              <span class="text-[#a2a2a2] mt-[5px] text-[15px]"
+                >(?? đánh giá)</span
+              >
+            </a-flex>
             <div class="flex items-center gap-3 max-lg:justify-center">
               <span> Chia sẻ mạng sản phẩm: </span>
-              <div class="w-8 h-8 bg-blue-300"></div>
-              <div class="w-8 h-8 bg-blue-300"></div>
-              <div class="w-8 h-8 bg-blue-300"></div>
+              <div class="items-center justify-center flex">
+                <img
+                  src="https://livotec.com/wp-content/themes/livotec/icon/fb.svg"
+                  class="w-8 h-8"
+                />
+              </div>
+              <div class="items-center justify-center flex">
+                <img
+                  src="https://livotec.com/wp-content/themes/livotec/icon/in.svg"
+                  class="w-8 h-8"
+                />
+              </div>
+              <div class="items-center justify-center flex">
+                <img
+                  src="https://livotec.com/wp-content/themes/livotec/icon/zalo.svg"
+                  class="w-8 h-8"
+                />
+              </div>
             </div>
             <div class="border-spacing-1 border-gray-400 border mx-10"></div>
             <div v-html="product.description" class="description"></div>
@@ -175,6 +201,7 @@ import axios from "axios";
 import ProductSpecifications from "@/components/ProductSpecifications.vue";
 import ProductPosts from "@/components/ProductPosts.vue";
 import store from "@/store/store";
+import { BxFacebookSquare } from "@kalimahapps/vue-icons";
 
 const route = useRoute();
 const router = useRouter();
