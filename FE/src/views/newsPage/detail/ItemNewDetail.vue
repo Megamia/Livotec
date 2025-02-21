@@ -1,7 +1,9 @@
 <template>
-  <!-- <DefaultLayoutGuarantee> -->
-  <a-flex>
-    <!-- <a-flex>
+  <DefaultLayoutGuarantee>
+    <a-flex>
+      <a-flex> </a-flex>
+
+      <a-flex>
         <a-flex vertical class="flex-1 px-[125px] p-[30px] gap-[10px]">
           <a-flex vertical class="border-b-[1px] border-[#ededed]">
             <a-flex>
@@ -41,43 +43,43 @@
             src="https://livotec.com/wp-content/uploads/2024/05/Bao-hanh_livotec-Mobile.jpg.webp"
           />
         </a-flex>
-      </a-flex> -->
-  </a-flex>
-  <!-- </DefaultLayoutGuarantee> -->
+      </a-flex>
+    </a-flex>
+  </DefaultLayoutGuarantee>
 </template>
 
 <script setup>
-// import { onMounted, ref } from "vue";
-// import DefaultLayoutGuarantee from "../views/DefaultLayoutGuarantee.vue";
-// import axios from "axios";
-// import { useRoute } from "vue-router";
-// import dayjs from "dayjs";
+import { onMounted, ref } from "vue";
+import DefaultLayoutGuarantee from "@/views/DefaultLayoutGuarantee.vue";
+import axios from "axios";
+import { useRoute } from "vue-router";
+import dayjs from "dayjs";
 
-// const post = ref("");
-// const route = useRoute();
-// const slug = route.params.slug;
-// onMounted(() => {
-//   fetchData();
-// });
-// const fetchData = async () => {
-//   try {
-//     const response = await axios.get(
-//       `${import.meta.env.VITE_APP_URL_API_POST}/post/${slug}`
-//     );
-//     post.value = response.data;
-//     console.log(post.value);
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
+const post = ref("");
+const route = useRoute();
+const slug = route.params.slug;
+onMounted(() => {
+  fetchData();
+});
+const fetchData = async () => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_APP_URL_API_POST}/post/${slug}`
+    );
+    post.value = response.data;
+    console.log(post.value);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-// const formatDate = (date) => {
-//   return date ? dayjs(date).format("DD/MM/YYYY") : "";
-// };
+const formatDate = (date) => {
+  return date ? dayjs(date).format("DD/MM/YYYY") : "";
+};
 </script>
 
 <style scoped>
-/* .a::v-deep(a) {
+.a::v-deep(a) {
   color: #33cccc;
   font-size: 12pt;
 }
@@ -95,5 +97,5 @@
   font-weight: 500;
   line-height: 26px;
   margin-bottom: 20px;
-} */
+}
 </style>

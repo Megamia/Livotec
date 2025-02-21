@@ -83,6 +83,7 @@
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
                       class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
+                      @click="handleProductDetail(itemChil.slug)"
                     >
                       Mua ngay
                     </button>
@@ -157,12 +158,18 @@ const fetchData = async () => {
       //   dataChil.value = response.data.products?.length
       // ? response.data.products : [];
 
-      productData.value = response.data.products;
-      categoryChil.value = response.data.category.children;
+      productData.value = response.data.products
+        ? response.data.products
+        : "No data";
+      categoryChil.value = response.data.category?.children;
       nameCategory.value = response.data.category?.name;
       pathImg.value = response.data.category?.image?.path;
       haveData.value = true;
-      fillterData(categoryChil.value[0].slug);
+      //UPDATE
+      if (categoryChil.value.length > 0) {
+        fillterData(categoryChil.value[0].slug);
+      }
+      //UPDATE
     } else {
       dataChil.value = [];
       haveData.value = false;

@@ -23,11 +23,11 @@ const router = createRouter({
       name: "category",
       component: () => import("../views/CategoryPage.vue"),
     },
-    {
-      path: "/test",
-      name: "test",
-      component: () => import("../views/TestPage.vue"),
-    },
+    // {
+    //   path: "/test",
+    //   name: "test",
+    //   component: () => import("../views/TestPage.vue"),
+    // },
     {
       path: "/nav",
       name: "nav",
@@ -63,9 +63,29 @@ const router = createRouter({
       name: "guaranteeHome",
       component: () => import("../views/GuaranteeHomePage.vue"),
     },
+    {
+      path: "/news",
+      name: "news",
+      component: () => import("../views/newsPage/NewsPage.vue"),
+    },
+    {
+      path: "/detailNews/:slug",
+      name: "detailNews",
+      component: () => import("../views/newsPage/detail/ItemNewDetail.vue"),
+    },
+    {
+      path: "/itemNavNew",
+      name: "itemNavNew",
+      component: () => import("../views/newsPage/navNews/ItemNavNews.vue"),
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: () => import("../views/aboutPage/AboutPage.vue"),
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
-    return { top: 0, behavior: "smooth" }; 
+    return { top: 0, behavior: "smooth" };
   },
 });
 
