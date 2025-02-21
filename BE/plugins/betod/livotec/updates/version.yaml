@@ -135,3 +135,15 @@ v1.0.45:
 v1.0.46:
     - 'Updated table betod_livotec_category'
     - builder_table_update_betod_livotec_category_3.php
+v1.0.47:
+    - 'Updated table betod_livotec_orders'
+    - builder_table_update_betod_livotec_order.php
+v1.0.48:
+    - 'Updated table betod_livotec_order'
+    - builder_table_update_betod_livotec_orders_3.php
+v1.0.49:
+    - 'Updated table betod_livotec_order_positions'
+    - builder_table_update_betod_livotec_order_positions_2.php
+v1.0.50:
+    - 'Updated table betod_livotec_order_positions'
+    - builder_table_update_betod_livotec_order_positions_3.php

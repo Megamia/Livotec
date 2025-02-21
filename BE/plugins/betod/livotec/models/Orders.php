@@ -21,6 +21,10 @@ class Orders extends Model
         'property',
     ];
 
+    public $hasMany = [
+        'orderdetail' => ['Betod\Livotec\Models\OrderDetail', 'key' => 'order_id'],
+    ];
+
     public function getStateLabelAttribute()
     {
         $statuses = [
@@ -31,6 +35,18 @@ class Orders extends Model
 
         return $statuses[$this->state_id] ?? 'Không xác định';
     }
+
+    public function getOrderdetailAttribute()
+    {
+        return $this->orderdetail->map(function ($detail) {
+            return [
+                'id' => $detail->id,
+                'product_id' => $detail->product_id,
+                'quantity' => $detail->quantity,
+            ];
+        })->toArray();
+    }
+
     /**
      * @var array rules for validation.
      */

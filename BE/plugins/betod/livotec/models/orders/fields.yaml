@@ -71,6 +71,24 @@ tabs:
             span: auto
             type: text
             tab: 'Shipping address'
+        orderdetail:
+            label: 'Danh sách sản phẩm'
+            searching: 1
+            span: full
+            disabled: 0
+            readOnly: 1
+            type: datatable
+            columns:
+                id:
+                    type: string
+                    title: ID
+                order_id:
+                    type: string
+                    title: 'Order ID'
+                product_id:
+                    type: string
+                    title: 'Product ID'
+            tab: 'Sản phẩm'
 fields:
     id:
         label: Id
