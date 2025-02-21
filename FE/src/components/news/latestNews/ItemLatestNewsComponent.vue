@@ -76,18 +76,15 @@ const slugsToFilter = ["kien-thuc", "tin-tuc"];
 const activeKey = ref(slugsToFilter[0]);
 
 const fetchData = async (value) => {
-  console.log("1: ", value);
 
   if (!value || value == undefined) {
     value = activeKey.value;
-    console.log("2:", value);
   }
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_POST}/hotNews/${value}`
     );
     data.value = response.data;
-    console.log("data: ", data.value);
   } catch (e) {
     console.log(e);
   }
