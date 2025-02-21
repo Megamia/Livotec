@@ -1,50 +1,62 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
-  <a-flex vertical class="w-full justify-center items-center gap-[50px]">
-    <a-flex class="flex-1 flex-wrap gap-[20px]">
-      <a-flex
-        v-for="item in paginatedData"
-        :key="item.id"
-        class="w-[100%] max-w-[400px]"
-      >
-        <a-flex vertical class="w-full px-[10px]">
-          <img
-            :src="item.image_url || defaultImage"
-            class="w-[100%] h-[270px] object-cover"
-          />
-          <a-flex vertical class="w-[100%] p-[15px] gap-[10px] bg-[#ededed]">
-            <a-flex class="text-[#6d6d6d] items-center gap-[3px]">
-              <AkClock /> {{ formatDate(item.published_at) }}
-            </a-flex>
+  <a-flex vertical class="flex-1 justify-center items-center">
+    <a-flex class="py-5 mb-1">
+      <span class="text-[28px] text-[#02b6ac] font-medium"> Tin mới nhất </span>
+    </a-flex>
+    <a-flex
+      class="w-[1086px] justify-center mb-[20px] border-b-[1px] border-[#dee2e6] tabList"
+    >
+      <a-tabs v-model:activeKey="activeKey" @change="changeData" type="card">
+        <a-tab-pane v-for="item in dataTab" :key="item.slug" :tab="item.name" />
+      </a-tabs>
+    </a-flex>
+    <a-flex vertical class="w-full justify-center items-center gap-[50px]">
+      <a-flex class="flex-1 flex-wrap justify-center gap-[20px]">
+        <a-flex
+          v-for="item in paginatedData"
+          :key="item.id"
+          class="w-[100%] max-w-[350px]"
+        >
+          <a-flex vertical class="w-full">
+            <img
+              :src="item.image_url || defaultImage"
+              class="w-[100%] h-[270px] object-cover"
+            />
+            <a-flex vertical class="w-[100%] p-[15px] gap-[10px] bg-[#ededed]">
+              <a-flex class="text-[#6d6d6d] items-center gap-[3px]">
+                <AkClock /> {{ formatDate(item.published_at) }}
+              </a-flex>
 
-            <span
-              class="contentHtmlSpan2Text text-black font-normal leading-[23px] min-h-[50px]"
-            >
-              {{ item.title }}
-            </span>
-            <span
-              class="contentHtmlSpan3Text text-[16px] text-black font-normal"
-            >
-              {{ truncateText(item.content_html) }}
-            </span>
-            <a
-              :href="`/detailNews/${item.slug}`"
-              class="text-[#0d6efd] hover:bg-[#ededed] hover:text-[#02B6AC]"
-            >
-              Đọc tiếp</a
-            >
+              <span
+                class="contentHtmlSpan2Text text-black font-normal leading-[23px] min-h-[50px]"
+              >
+                {{ item.title }}
+              </span>
+              <span
+                class="contentHtmlSpan3Text text-[16px] text-black font-normal"
+              >
+                {{ truncateText(item.content_html) }}
+              </span>
+              <a
+                :href="`/detailNews/${item.slug}`"
+                class="text-[#0d6efd] hover:bg-[#ededed] hover:text-[#02B6AC]"
+              >
+                Đọc tiếp</a
+              >
+            </a-flex>
           </a-flex>
         </a-flex>
       </a-flex>
-    </a-flex>
 
-    <a-pagination
-      v-model:current="currentPage"
-      :total="data.length"
-      :page-size="pageSize"
-      @change="onPageChange"
-      show-less-items
-    />
+      <a-pagination
+        v-model:current="currentPage"
+        :total="data.length"
+        :page-size="pageSize"
+        @change="onPageChange"
+        show-less-items
+      />
+    </a-flex>
   </a-flex>
   <!-- eslint-disable vue/no-v-model-argument -->
 </template>
@@ -54,22 +66,28 @@ import dayjs from "dayjs";
 import { ref, computed, onMounted } from "vue";
 import { AkClock } from "@kalimahapps/vue-icons";
 
-const props = defineProps({
-  categories: String,
-});
-
 const data = ref([]);
 const currentPage = ref(1);
 const pageSize = 6;
 const defaultImage =
   "https://livotec.com/wp-content/uploads/2024/11/Binh-tam-nong-lanh-%E2%80%93-Giai-phap-hoan-hao-cho-ngoi-nha-hien-dai.jpg";
 
-const fetchData = async () => {
+const slugsToFilter = ["kien-thuc", "tin-tuc"];
+const activeKey = ref(slugsToFilter[0]);
+
+const fetchData = async (value) => {
+  console.log("1: ", value);
+
+  if (!value || value == undefined) {
+    value = activeKey.value;
+    console.log("2:", value);
+  }
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_POST}/hotNews/${props.categories}`
+      `${import.meta.env.VITE_APP_URL_API_POST}/hotNews/${value}`
     );
     data.value = response.data;
+    console.log("data: ", data.value);
   } catch (e) {
     console.log(e);
   }
@@ -100,8 +118,46 @@ const onPageChange = (page) => {
 };
 
 onMounted(() => {
+  fetchDataTabItem();
   fetchData();
 });
+
+const dataTab = ref([]);
+
+const changeData = async (slug) => {
+  activeKey.value = slug;
+  await fetchData(slug);
+};
+
+const fetchDataTabItem = async () => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_APP_URL_API_POST}/allPostCategory`
+    );
+    dataTab.value = response.data.data;
+    filterData(dataTab.value);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+const categoryOrder = {
+  "kien-thuc": 1,
+  "tin-tuc": 2,
+};
+
+const filterData = (data) => {
+  dataTab.value = data
+    .filter((item) => slugsToFilter.includes(item.slug))
+    .map((item) => ({
+      ...item,
+      order: categoryOrder[item.slug] || 0,
+    }))
+    .sort((a, b) => a.order - b.order);
+  if (dataTab.value.length <= 0) {
+    console.log("Không có data");
+  }
+};
 </script>
 <style scoped>
 .contentHtmlSpan2Text {
@@ -112,7 +168,7 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  max-width: 100%; 
+  max-width: 100%;
 }
 
 .contentHtmlSpan3Text {
@@ -123,5 +179,23 @@ onMounted(() => {
   text-overflow: ellipsis;
   white-space: normal;
   max-width: 100%;
+}
+:deep(.tabList .ant-tabs-nav) {
+  margin: 0;
+}
+
+:deep(.tabList .ant-tabs-tab) {
+  border: 0;
+  color: black !important;
+  background-color: white;
+}
+
+:deep(.tabList .ant-tabs-tab-active) {
+  background-color: #02b6ac;
+  transition: all 0.5s ease-in-out;
+}
+
+:deep(.tabList .ant-tabs-tab-active .ant-tabs-tab-btn) {
+  color: white !important;
 }
 </style>

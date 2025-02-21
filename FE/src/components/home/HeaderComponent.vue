@@ -1,17 +1,18 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
   <a-flex class="flex-1 relative justify-between p-[20px] gap-[30px] a">
-    <a-flex>
+    <a-flex class="justify-center items-center">
       <router-link to="/">
         <img
           src="https://livotec.com/wp-content/uploads/2024/08/logo-livotec.png"
         />
       </router-link>
     </a-flex>
-    <a-flex class="w-[460px] hidden-mobie" vertical>
+    <a-flex class="w-[650px] hidden-mobie" vertical>
       <a-input
         placeholder="Chúng tôi có thể giúp bạn tìm kiếm?"
         @mouseenter="searchInputHover = true"
+        @mouseleave="searchInputHover = false"
         @focus="searchInputHover = true"
         @blur="searchInputHover = false"
         v-model:value="searchInput"
@@ -50,7 +51,7 @@
         <a-dropdown
           v-for="(item, index) in data"
           :key="index"
-          class="flex flex-row items-center gap-1 hover:text-white text-nowrap basis-1/7"
+          class="flex flex-row items-center gap-1 font-semibold hover:text-white text-nowrap basis-1/7"
         >
           <a class="ant-dropdown-link" :href="`/${item.category.slug}`">
             {{ item.category.name }}
@@ -110,7 +111,7 @@
       </a-badge>
       <AnOutlinedMenu class="icon iconHidden" @click="showMenu" />
       <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
-      <a-flex class="items-center">
+      <a-flex class="items-center whitespace-nowrap">
         <AnOutlinedUser
           v-if="isLogin"
           @click="handleLogout"
@@ -169,14 +170,10 @@ const handleLogout = async () => {
   }
 };
 
-const test = (value) => {
-  console.log("value: ", value);
-  router.replace({ path: `/product/${value.products[0].slug}` });
-};
 watch(
   () => route.fullPath,
   () => {
-    getdata(); // Gọi lại API khi đường dẫn thay đổi
+    getdata();
   }
 );
 
@@ -195,7 +192,11 @@ const getdata = async () => {
         maxId = product.id;
       }
 
-      if (product.category && product.category.name) {
+      if (
+        product.category &&
+        product.category.name &&
+        !product.category.parent_id
+      ) {
         const categoryName = product.category.name;
         if (!categoryMap[categoryName]) {
           categoryMap[categoryName] = [];

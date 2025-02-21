@@ -1,42 +1,19 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <DefaultLayout>
-    <!-- <a-flex class="w-[100%] px-[20px] py-[15px] gap-[30px] a">
-      <a-flex vertical class="flex-1 gap-[15px]">
-        <a-flex class="fledx-1 border-b-[1px] pb-[15px] border-[#dbe0f0]">
-          <span class="text-[18px] text-[#38b6ac] font-medium">Tin tức</span>
-        </a-flex>
-        <a-flex class="justify-center">
-          <h1 class="text-[28px] font-bold text-[#38b6ac]">Tin nổi bật</h1>
-        </a-flex>
-      </a-flex>
-    </a-flex> -->
-    <ItemLatestNews :categories="'kien-thuc'"/>
+    <a-flex vertical class="w-full mt-[50px] justify-center items-center">
+      <ItemLatestNews />
+    </a-flex>
   </DefaultLayout>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import DefaultLayout from "../DefaultLayout.vue";
 import "./news.css";
 import axios from "axios";
 import ItemLatestNews from "./latestNews/ItemLatestNews.vue";
-
-// onMounted(() => {
-//   fetchData();
-// });
-// const fetchData = async () => {
-//   try {
-//     const response = await axios.get(
-//       `${import.meta.env.VITE_APP_URL_API_POST}/hotNews/${}`
-//     );
-//     const sortedPosts = response.data.sort(
-//       (a, b) => new Date(a.published_at) - new Date(b.published_at)
-//     );
-//     console.log(sortedPosts.slice(0, 3));
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
 </script>
 
 <style scoped></style>
