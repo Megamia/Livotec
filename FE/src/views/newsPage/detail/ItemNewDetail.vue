@@ -67,7 +67,6 @@ const fetchData = async () => {
       `${import.meta.env.VITE_APP_URL_API_POST}/post/${slug}`
     );
     post.value = response.data;
-    console.log(post.value);
   } catch (e) {
     console.log(e);
   }

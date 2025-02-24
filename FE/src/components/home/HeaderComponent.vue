@@ -164,7 +164,6 @@ const handleLogout = async () => {
       return;
     }
   } catch (error) {
-    // Xử lý khi xảy ra lỗi
     console.error("Logout failed:", error.response?.data || error.message);
     alert("Logout failed! Please check your credentials.");
   }
@@ -235,29 +234,10 @@ const getdata = async () => {
     });
 
     data.value = [...categorizedProducts, ...anotherData];
-    // console.log(data.value);
   } catch (e) {
     console.log("Error: ", e);
   }
 };
-
-// const checkToken = async () => {
-//   try {
-//     const response = await axios.post(
-//       `${import.meta.env.VITE_APP_URL_API}/check-token`,
-//       {},
-//       {
-//         withCredentials: true,
-//       }
-//     );
-
-//     console.log(response.data);
-//     return { valid: true, message: response.data.message };
-//   } catch (error) {
-//     console.error(error.response.data.message);
-//     return { valid: false, message: error.response.data.message };
-//   }
-// };
 
 const token = computed(() => Cookies.get("user"));
 
@@ -269,7 +249,6 @@ const fetchData = () => {
   isLogin.value = !!token.value;
 };
 onMounted(() => {
-  // checkToken();
   fetchData();
   getdata();
 });
