@@ -4,7 +4,7 @@
       <a-flex> </a-flex>
 
       <a-flex>
-        <a-flex vertical class="flex-1 px-[125px] p-[30px] gap-[10px]">
+        <a-flex vertical class="flex-1 p-[30px] gap-[10px]">
           <a-flex vertical class="border-b-[1px] border-[#ededed]">
             <a-flex>
               <span

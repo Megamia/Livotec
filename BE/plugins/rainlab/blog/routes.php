@@ -18,13 +18,18 @@ Route::group(['prefix' => 'apiPost'], function () {
         return $post;
     });
     Route::get('hotNews/{slugCategory}', function ($slugCategory) {
-        $hotNews = Post::with('categories')
+        $hotNews = Post::with(['featured_images', 'categories'])
             ->whereHas('categories', function ($query) use ($slugCategory) {
                 $query->where('slug', $slugCategory);
             })
             ->get();
 
-        return response()->json($hotNews);
+        return response()->json([
+            'data' => $hotNews,
+            'images' => $hotNews->map(function ($post) {
+                return $post->featured_images ?? null; 
+            }),
+        ]);
     });
 
     Route::get('allPostCategory', function () {

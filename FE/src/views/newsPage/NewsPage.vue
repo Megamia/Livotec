@@ -1,7 +1,12 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
   <DefaultLayout>
-    <a-flex vertical class="w-full mt-[50px] justify-center items-center">
+    <a-flex vertical class="w-full px-[125px] justify-center items-center">
+      <a-flex
+        class="py-[1rem] w-full text-[#38b6ac] text-[18px] border-b-[1px] border-[#dbe0f0] mb-3"
+      >
+        <span class="font-medium">Tin tức</span>
+      </a-flex>
       <ItemNavNewsComponent />
       <ItemLatestNewsComponent />
     </a-flex>

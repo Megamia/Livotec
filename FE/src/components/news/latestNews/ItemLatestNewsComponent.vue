@@ -84,7 +84,7 @@ const fetchData = async (value) => {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_POST}/hotNews/${value}`
     );
-    data.value = response.data;
+    data.value = response.data.data;
   } catch (e) {
     console.log(e);
   }
