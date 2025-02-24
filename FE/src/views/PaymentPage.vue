@@ -379,6 +379,11 @@ import PayPalButton from "@/components/paypal/PayPalButton.vue";
 
 const PayPalButtonRef = ref(false);
 
+const data = ref([]);
+
+const dataStore = store.getters["product/getDataStoreCart"];
+data.value = dataStore;
+
 const formRef = ref();
 const formState = reactive({
   user_id: null,
@@ -399,6 +404,11 @@ const formState = reactive({
   terms: false,
   paymenttype: 1,
   differentaddresschecked: false,
+  items: data.value.map((item) => ({
+    product_id: item.id, // ID sản phẩm
+    quantity: item.quantity, // Số lượng
+    price: item.price, // Giá của một sản phẩm
+  })),
 });
 
 const LocateState = reactive({
@@ -436,7 +446,6 @@ const columns = ref([
     dataIndex: "subtotal",
   },
 ]);
-const data = ref([]);
 
 const totals = computed(() => {
   let subtotal = 0;
@@ -723,13 +732,6 @@ const handlePaymentSuccess = async (orderID) => {
 };
 
 fetchProvinces();
-
-const fetchData = () => {
-  const dataStore = store.getters["product/getDataStoreCart"];
-  data.value = dataStore;
-};
-
-onMounted(() => fetchData());
 </script>
 
 <style scoped></style>

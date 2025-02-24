@@ -1,5 +1,6 @@
 <?php
 
+use Betod\Livotec\Models\Orders;
 use Betod\Livotec\Models\Product;
 use Betod\Livotec\Models\Category;
 use Betod\Livotec\Controllers\PayPalController;
@@ -95,3 +96,11 @@ Route::group(['prefix' => 'apiPaypal'], function () {
     // Route để xác nhận thanh toán
     Route::post('captureOrder', [PayPalController::class, 'captureOrder']);
 });
+
+Route::group(['prefix' => 'apiOrder'], function () {
+    Route::get('order/{id}', function ($id) {
+        $data = Orders::with('orderdetail.product')->where('id', $id)->first();
+        return $data;
+    });
+});
+

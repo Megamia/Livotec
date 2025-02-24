@@ -1,9 +1,11 @@
 <?php
 namespace Betod\Livotec\Controllers;
 
+use Betod\Livotec\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Betod\Livotec\Models\Orders;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -29,13 +31,35 @@ class OrderController extends Controller
             'terms' => 'required|boolean',
             'paymenttype' => 'required|integer',
             'differentaddresschecked' => 'required|boolean',
+            'items' => 'required|array',
+            'items.*.product_id' => 'required|integer',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
         ]);
+
+        $totalPrice = array_reduce($validatedData['items'], function ($sum, $item) {
+            return $sum + $item['price'] * $item['quantity'];
+        }, 0);
+
+        // Tạo mã đơn hàng
+        $orderCode = 'ORD-' . date('Ymd') . '-' . strtoupper(Str::random(6));
 
         // Chuyển dữ liệu thành JSON trước khi lưu vào cột text
         $order = Orders::create([
             'user_id' => $validatedData['user_id'],
+            'order_code' => $orderCode,
+            'price' => $totalPrice,
             'property' => $validatedData,
         ]);
+
+        foreach ($validatedData['items'] as $item) {
+            OrderDetail::create([
+                'order_id' => $order->id,
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+                'price' => ($item['price'] * $item['quantity']), // Tổng giá của từng sản phẩm
+            ]);
+        }
 
         return response()->json([
             'message' => 'Order created successfully!',

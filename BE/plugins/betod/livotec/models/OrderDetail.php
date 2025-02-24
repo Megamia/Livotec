@@ -23,12 +23,16 @@ class OrderDetail extends Model
         'id',
         'order_id',
         'product_id',
-        'quantity'
+        'quantity',
+        'price',
     ];
 
     public $belongsTo = [
         'order' => ['Betod\Livotec\Models\Orders', 'key' => 'order_id'],
+        'product' => ['Betod\Livotec\Models\Product', 'key' => 'product_id'],
     ];
+
+
 
     public $rules = [
     ];

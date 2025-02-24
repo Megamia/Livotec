@@ -73,22 +73,12 @@ tabs:
             tab: 'Shipping address'
         orderdetail:
             label: 'Danh sách sản phẩm'
-            searching: 1
             span: full
-            disabled: 0
-            readOnly: 1
-            type: datatable
-            columns:
-                id:
-                    type: string
-                    title: ID
-                order_id:
-                    type: string
-                    title: 'Order ID'
-                product_id:
-                    type: string
-                    title: 'Product ID'
-            tab: 'Sản phẩm'
+            tab: 'Order detail'
+            type: relation
+            controller:
+                label: 'sản phẩm'
+                list: ~/plugins/betod/livotec/models/orderdetail/columns.yaml
 fields:
     id:
         label: Id
@@ -118,3 +108,9 @@ fields:
         span: auto
         disabled: 1
         type: dropdown
+    price:
+        label: 'Tổng tiền'
+        span: left
+        disabled: 1
+        readOnly: 1
+        type: number

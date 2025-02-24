@@ -83,6 +83,16 @@ const router = createRouter({
       name: "about",
       component: () => import("../views/aboutPage/AboutPage.vue"),
     },
+    {
+      path: "/payment/order-received/:slug",
+      name: "orderdetail_haveslug",
+      component: () => import("../views/OrderDetailPage.vue"),
+    },
+    {
+      path: "/payment/order-received",
+      name: "orderdetail_noslug",
+      component: () => import("../views/OrderDetailPage.vue"),
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     return { top: 0, behavior: "smooth" };

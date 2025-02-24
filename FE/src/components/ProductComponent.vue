@@ -168,6 +168,8 @@ const fetchData = async () => {
       //UPDATE
       if (categoryChil.value.length > 0) {
         fillterData(categoryChil.value[0].slug);
+      } else {
+        dataChil.value = productData.value;
       }
       //UPDATE
     } else {

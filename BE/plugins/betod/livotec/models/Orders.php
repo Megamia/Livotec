@@ -19,6 +19,8 @@ class Orders extends Model
     protected $fillable = [
         'user_id',
         'property',
+        'order_code',
+        'price',
     ];
 
     public $hasMany = [
@@ -34,17 +36,6 @@ class Orders extends Model
         ];
 
         return $statuses[$this->state_id] ?? 'Không xác định';
-    }
-
-    public function getOrderdetailAttribute()
-    {
-        return $this->orderdetail->map(function ($detail) {
-            return [
-                'id' => $detail->id,
-                'product_id' => $detail->product_id,
-                'quantity' => $detail->quantity,
-            ];
-        })->toArray();
     }
 
     /**
