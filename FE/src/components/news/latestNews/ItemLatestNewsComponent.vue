@@ -100,11 +100,11 @@ const paginatedData = computed(() => {
   return data.value.slice(start, end);
 });
 
-const truncateText = (htmlContent) => {
-  if (!htmlContent) return "";
+const truncateText = (summary) => {
+  if (!summary) return "";
 
   const tempElement = document.createElement("div");
-  tempElement.innerHTML = htmlContent;
+  tempElement.innerHTML = summary;
   tempElement.querySelectorAll("img").forEach((img) => img.remove());
 
   return tempElement.textContent.trim().split("\n")[0];

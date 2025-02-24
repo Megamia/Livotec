@@ -31,7 +31,7 @@
             <span
               class="contentHtmlSpan3Text text-[16px] text-start text-black font-medium h-[72px]"
             >
-              {{ truncateText(dataFake[0].content_html) }}
+              {{ truncateText(dataFake[0].summary) }}
             </span>
           </a-flex>
         </a-flex>
@@ -69,7 +69,7 @@
               <span
                 class="contentHtmlSpan3Text text-[16px] text-start text-black font-medium h-[72px]"
               >
-                {{ truncateText(item.content_html) }}
+                {{ truncateText(item.summary) }}
               </span>
             </a-flex>
           </a-flex>
@@ -133,7 +133,7 @@
                   <span
                     class="contentHtmlSpan3Text text-[16px] text-start text-black font-normal h-[72px]"
                   >
-                    {{ truncateText(item.content_html) }}
+                    {{ truncateText(item.summary) }}
                   </span>
                   <a
                     :href="`/detailNews/${item.slug}`"
@@ -204,11 +204,11 @@ onMounted(() => {
   fetchData();
   fetchData2();
 });
-const truncateText = (htmlContent) => {
-  if (!htmlContent) return "";
+const truncateText = (summary) => {
+  if (!summary) return "";
 
   const tempElement = document.createElement("div");
-  tempElement.innerHTML = htmlContent;
+  tempElement.innerHTML = summary;
   tempElement.querySelectorAll("img").forEach((img) => img.remove());
 
   return tempElement.textContent.trim().split("\n")[0];
