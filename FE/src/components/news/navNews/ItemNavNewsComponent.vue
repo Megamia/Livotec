@@ -76,10 +76,10 @@
         </a-flex>
       </a-flex>
     </a-flex>
-    <a-flex class="w-full justify-center items-center gap-[50px]">
+    <a-flex class="w-full justify-center items-center gap-[50px] relative">
       <button
         v-if="data.length > 4"
-        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[175%] left-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
+        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] translate-y-[-50%] left-[-50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
         @click="prevSlide"
       >
         <BsArrowLeft class="font-black" />
@@ -126,7 +126,7 @@
                   </a-flex>
 
                   <span
-                    class="contentHtmlSpan2Text text-black text-start font-normal leading-[23px] min-h-[50px]"
+                    class="contentHtmlSpan2Text text-black text-start font-normal leading-[24px] h-[51.5px]"
                   >
                     {{ item.title }}
                   </span>
@@ -150,7 +150,7 @@
       </a-flex>
       <button
         v-if="data.length > 4"
-        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[175%] right-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
+        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] translate-y-[-50%] right-[-50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
         @click="nextSlide"
       >
         <BsArrowRight class="font-black" />
