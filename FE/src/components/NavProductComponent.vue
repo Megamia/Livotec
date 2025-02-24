@@ -133,7 +133,13 @@ import { useRouter } from "vue-router";
 import { BsArrowLeft, BsArrowRight } from "@kalimahapps/vue-icons";
 
 const modules = [Navigation];
-const slugsToFilter = ["bep-tu", "may-loc-nuoc", "linh-kien-loi-loc"];
+const slugsToFilter = [
+  "bep-tu",
+  "quat-dieu-hoa",
+  "may-loc-nuoc",
+  "binh-nuoc-nong",
+  "linh-kien-loi-loc",
+];
 const activeKey = ref(slugsToFilter[0]);
 
 const haveData = ref(false);
@@ -195,8 +201,10 @@ const validateCategory = ref([]);
 
 const categoryOrder = {
   "bep-tu": 1,
-  "may-loc-nuoc": 2,
-  "linh-kien-loi-loc": 3,
+  "quat-dieu-hoa": 2,
+  "may-loc-nuoc": 3,
+  "binh-nuoc-nong": 4,
+  "linh-kien-loi-loc": 5,
 };
 
 const filterData = (data) => {

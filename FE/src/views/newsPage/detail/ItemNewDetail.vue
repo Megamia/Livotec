@@ -4,7 +4,7 @@
       <a-flex> </a-flex>
 
       <a-flex>
-        <a-flex vertical class="flex-1 px-[125px] p-[30px] gap-[10px]">
+        <a-flex vertical class="flex-1 p-[30px] gap-[10px]">
           <a-flex vertical class="border-b-[1px] border-[#ededed]">
             <a-flex>
               <span
@@ -67,7 +67,6 @@ const fetchData = async () => {
       `${import.meta.env.VITE_APP_URL_API_POST}/post/${slug}`
     );
     post.value = response.data;
-    console.log(post.value);
   } catch (e) {
     console.log(e);
   }

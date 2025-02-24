@@ -22,7 +22,11 @@
           ></a-tabs>
         </a-flex>
       </a-flex>
-      <a-flex horizontal class="max-w-[100%] overflow-hidden">
+      <a-flex
+        horizontal
+        class="max-w-[100%] overflow-hidden"
+        v-if="dataChil.length > 0"
+      >
         <a-flex
           v-for="itemChil in dataChil.slice(0, 4)"
           :key="itemChil.id"
@@ -101,6 +105,7 @@
           </a-flex>
         </a-flex>
       </a-flex>
+      <a-flex v-else class="flex-1 justify-center mt-[-40px]">Không có dữ liệu để hiển thị</a-flex>
     </a-flex>
   </a-flex>
 </template>
@@ -166,10 +171,10 @@ const fetchData = async () => {
       pathImg.value = response.data.category?.image?.path;
       haveData.value = true;
       //UPDATE
-      if (categoryChil.value.length > 0) {
+      if (categoryChil.value.length > 0 && productData.value != "No data") {
         fillterData(categoryChil.value[0].slug);
       } else {
-        dataChil.value = productData.value;
+        dataChil.value = response.data.products;
       }
       //UPDATE
     } else {

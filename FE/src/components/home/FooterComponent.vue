@@ -130,9 +130,10 @@ const a = ref(false);
 
 const onSearch = () => {
   if (register.value.trim() == "") {
-    console.log("Chưa nhập");
+    alert("Chưa nhập");
+    return;
   } else {
-    console.log("Đã nhập: ", register.value);
+    alert("Đã nhập: ", register.value);
   }
 };
 
