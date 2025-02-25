@@ -265,8 +265,8 @@ const breakpoints = {
 .contentHtmlSpan2Text {
   font-size: calc(1.275rem + 0.3vw);
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
