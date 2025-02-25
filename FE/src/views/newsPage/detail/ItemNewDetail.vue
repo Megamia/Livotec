@@ -1,5 +1,5 @@
 <template>
-  <DefaultLayoutGuarantee>
+  <DefaultLayout>
     <a-flex class="py-[30px]">
       <a-flex> </a-flex>
 
@@ -45,15 +45,15 @@
         </a-flex>
       </a-flex>
     </a-flex>
-  </DefaultLayoutGuarantee>
+  </DefaultLayout>
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
-import DefaultLayoutGuarantee from "@/views/DefaultLayoutGuarantee.vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import dayjs from "dayjs";
+import DefaultLayout from "@/views/DefaultLayout.vue";
 
 const post = ref("");
 const route = useRoute();
