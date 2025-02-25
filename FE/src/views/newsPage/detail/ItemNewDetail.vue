@@ -1,10 +1,10 @@
 <template>
   <DefaultLayoutGuarantee>
-    <a-flex>
+    <a-flex class="py-[30px]">
       <a-flex> </a-flex>
 
-      <a-flex>
-        <a-flex vertical class="flex-1 p-[30px] gap-[10px]">
+      <a-flex class="gap-[30px]">
+        <a-flex vertical class="flex-1 pl-[125px] gap-[10px]">
           <a-flex vertical class="border-b-[1px] border-[#ededed]">
             <a-flex>
               <span

@@ -8,9 +8,14 @@
       <a-flex horizontal v-if="dataFake.length > 0" class="gap-[20px]">
         <a-flex vertical class="flex-1 gap-[10px]">
           <a-flex>
-            <img
-              src="https://livotec.com/wp-content/uploads/2025/02/Bep-Tu-don-Livotec-E-smart-%E2%80%93-Tiet-kiem-thoi-gian-va-dien-nang-100.jpg"
-            />
+            <a
+              :href="`detailNews/${dataFake[0].slug}`"
+              class="hover:bg-white p-0"
+            >
+              <img
+                src="https://livotec.com/wp-content/uploads/2025/02/Bep-Tu-don-Livotec-E-smart-%E2%80%93-Tiet-kiem-thoi-gian-va-dien-nang-100.jpg"
+              />
+            </a>
           </a-flex>
           <a-flex vertical class="gap-[10px]">
             <a-flex
@@ -23,11 +28,16 @@
                   : "No data"
               }}
             </a-flex>
-            <span
-              class="contentHtmlSpan2Text text-black text-start font-normal leading-[23px] min-h-[50px]"
+            <a
+              :href="`detailNews/${dataFake[0].slug}`"
+              class="hover:bg-white p-0"
             >
-              {{ dataFake[0].title }}
-            </span>
+              <span
+                class="text-[calc(1.275rem+0.3vw)] text-black text-start font-normal leading-[24px] min-h-[51.5px] hover:text-[#02B6AC] transition-all duration-300 whitespace-nowrap"
+              >
+                {{ dataFake[0].title }}
+              </span>
+            </a>
             <span
               class="contentHtmlSpan3Text text-[16px] text-start text-black font-medium h-[72px]"
             >
@@ -42,13 +52,15 @@
             class="gap-[20px]"
           >
             <a-flex>
-              <img
-                :src="
-                  item.featured_images?.path ||
-                  'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
-                "
-                class="h-[190px]"
-              />
+              <a :href="`detailNews/${item.slug}`" class="hover:bg-white p-0">
+                <img
+                  :src="
+                    item.featured_images?.path ||
+                    'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty-300x240.jpg'
+                  "
+                  class="h-[190px]"
+                />
+              </a>
             </a-flex>
             <a-flex vertical class="flex-1 gap-[5px]">
               <a-flex
@@ -61,11 +73,13 @@
                     : "No data"
                 }}
               </a-flex>
-              <span
-                class="contentHtmlSpan2Text text-black text-start font-normal leading-[23px] min-h-[50px]"
-              >
-                {{ item.title }}
-              </span>
+              <a :href="`detailNews/${item.slug}`" class="hover:bg-white p-0">
+                <span
+                  class="contentHtmlSpan2Text text-black text-start font-normal leading-[24px] min-h-[51.5px]"
+                >
+                  {{ item.title }}
+                </span>
+              </a>
               <span
                 class="contentHtmlSpan3Text text-[16px] text-start text-black font-medium h-[72px]"
               >
