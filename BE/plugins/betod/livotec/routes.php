@@ -87,6 +87,15 @@ Route::group(['prefix' => 'apiCategory'], function () {
             return response()->json(['data1' => 'No data', 'status' => 0]);
         }
     });
+    Route::get('allCategoryParent', function () {
+        $allCategoryParent = Category::whereNull('parent_id')->get();
+
+        if ($allCategoryParent->isNotEmpty()) {
+            return response()->json(['allCategoryParent' => $allCategoryParent, 'status' => 1]);
+        } else {
+            return response()->json(['allCategoryParent' => 'No data', 'status' => 0]);
+        }
+    });
 });
 
 Route::group(['prefix' => 'apiPaypal'], function () {

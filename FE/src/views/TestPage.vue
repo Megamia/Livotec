@@ -39,7 +39,7 @@
 
       <div
         v-if="chatHistory.length"
-        class="mt-4 p-4 border rounded-lg bg-gray-100 max-h-80 overflow-y-auto flex flex-col-reverse"
+        class="mt-4 p-4 border rounded-lg bg-gray-100 max-h-80 overflow-y-scroll flex flex-col-reverse"
       >
         <ul>
           <li v-for="(chat, index) in chatHistory" :key="index" class="">

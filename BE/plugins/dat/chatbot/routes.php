@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Dat\Chatbot\Models\ChatBot;
+use GuzzleHttp\Client;
 
 Route::group(['prefix' => 'apiChatBot'], function () {
 
@@ -58,27 +59,31 @@ Route::group(['prefix' => 'apiChatBot'], function () {
                 return response()->json(['reply' => 'Vui lòng nhập tin nhắn hợp lệ.'], 400);
             }
 
-            if (str_starts_with($message, 'học:')) {
-                $learnMessage = substr($message, 4);
-                return response()->json(app()->handle(Request::create('/apiChatBot/learn', 'POST', ['message' => $learnMessage]))->getData());
-            }
-
             $response = ChatBot::where('question', $message)->inRandomOrder()->first();
-
             if ($response) {
                 return response()->json(['reply' => $response->answer]);
             }
 
-            return response()->json(['reply' => 'Xin lỗi, tôi không biết câu trả lời. Hãy dạy tôi bằng "học: câu hỏi | câu trả lời".']);
+            $client = new Client();
+            $huggingface_api_key = env('HUGGINGFACE_API_KEY');
+            $res = $client->post('https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill', [
+                'headers' => [
+                    'Authorization' => "Bearer $huggingface_api_key",
+                    'Content-Type' => 'application/json'
+                ],
+                'json' => ['inputs' => $message]
+            ]);
+
+            $responseData = json_decode($res->getBody(), true);
+            $reply = $responseData[0]['generated_text'] ?? 'Xin lỗi, tôi không có câu trả lời.';
+
+            return response()->json(['reply' => $reply]);
 
         } catch (\Exception $e) {
-            \Log::error('Lỗi trong /chat API: ' . $e->getMessage());
-            return response()->json(['reply' => 'Đã xảy ra lỗi khi xử lý yêu cầu!'], 500);
+            \Log::error('Lỗi Hugging Face API: ' . $e->getMessage());
+            return response()->json(['reply' => 'Đã xảy ra lỗi khi xử lý yêu cầu!' . $e->getMessage()], 500);
         }
     });
-
-
-
 
     Route::get('/allChat', function () {
         $data = ChatBot::all();
