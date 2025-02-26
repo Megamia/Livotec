@@ -11,10 +11,8 @@
     <a-flex class="w-[650px] hidden-mobie" vertical>
       <a-input
         placeholder="Chúng tôi có thể giúp bạn tìm kiếm?"
-        @mouseenter="searchInputHover = true"
-        @mouseleave="searchInputHover = false"
         @focus="searchInputHover = true"
-        @blur="searchInputHover = false"
+        @blur="handleBlur"
         v-model:value="searchInput"
       >
         <template #suffix>
@@ -24,6 +22,7 @@
       <a-flex
         v-if="searchInputHover"
         @mouseenter="searchInputHover = true"
+        @mouseleave="handleMouseLeave"
         class="max-h-[400px] overflow-hidden overflow-y-scroll rounded-[30px] w-[66%] absolute bg-white top-[50px] z-40 p-[20px]"
       >
         <a-flex v-if="filteredData.length" vertical>
@@ -318,6 +317,18 @@ const data1 = ref([
 
 const handleChangeToProductDetails = (value) => {
   alert("Chưa có data để đổi trang");
+};
+
+const handleBlur = () => {
+  setTimeout(() => {
+    searchInputHover.value = false;
+  }, 200);
+};
+
+const handleMouseLeave = () => {
+  setTimeout(() => {
+    searchInputHover.value = false;
+  }, 200);
 };
 </script>
 

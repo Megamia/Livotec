@@ -97,24 +97,11 @@
               >
             </a-flex>
             <div class="flex items-center gap-3 max-lg:justify-center">
-              <span> Chia sẻ mạng sản phẩm: </span>
-              <div class="items-center justify-center flex">
-                <img
-                  src="https://livotec.com/wp-content/themes/livotec/icon/fb.svg"
-                  class="w-8 h-8"
-                />
-              </div>
-              <div class="items-center justify-center flex">
-                <img
-                  src="https://livotec.com/wp-content/themes/livotec/icon/in.svg"
-                  class="w-8 h-8"
-                />
-              </div>
-              <div class="items-center justify-center flex">
-                <img
-                  src="https://livotec.com/wp-content/themes/livotec/icon/zalo.svg"
-                  class="w-8 h-8"
-                />
+              <span> Chia sẻ sản phẩm: </span>
+              <div v-for="item in imgSocialMedia" :key="item.id">
+                <div class="items-center justify-center flex">
+                  <img :src="item.path" class="w-8 h-8 cursor-pointer" />
+                </div>
               </div>
             </div>
             <div class="border-spacing-1 border-gray-400 border mx-10"></div>
@@ -283,6 +270,24 @@ const addToComparison = (product) => {
 
   compare.value = true;
 };
+
+const imgSocialMedia = ref([
+  {
+    id: 1,
+    name: "FaceBook",
+    path: "https://livotec.com/wp-content/themes/livotec/icon/fb.svg",
+  },
+  {
+    id: 2,
+    name: "Linkedin",
+    path: "https://livotec.com/wp-content/themes/livotec/icon/in.svg",
+  },
+  {
+    id: 3,
+    name: "Zalo",
+    path: "https://livotec.com/wp-content/themes/livotec/icon/zalo.svg",
+  },
+]);
 </script>
 
 <style>

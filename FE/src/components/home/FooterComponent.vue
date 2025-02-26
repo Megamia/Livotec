@@ -49,8 +49,18 @@
                 Tầng 7, số 113 - 115 Đường Lê Duẩn, Phường Cửa Nam, Quận Hoàn
                 Kiếm, thành phố Hà Nội
               </li>
-              <li>Email: livotecvn@gmail.com</li>
-              <li>Điện thoại: 1800 2298</li>
+              <li>
+                Email:
+                <span class="hover:text-[#02b6ac] cursor-pointer">
+                  livotecvn@gmail.com
+                </span>
+              </li>
+              <li>
+                Điện thoại:
+                <span class="hover:text-[#02b6ac] cursor-pointer">
+                  1800 2298</span
+                >
+              </li>
             </ul>
           </a-flex>
         </a-flex>
@@ -66,7 +76,9 @@
           <a-flex class="flex gap-[10px]" vertical>
             <ul v-for="data in item.data" :key="data.id">
               <li>
-                {{ data.name }}
+                <span class="hover:text-[#02b6ac] cursor-pointer">
+                  {{ data.name }}
+                </span>
               </li>
             </ul>
           </a-flex>

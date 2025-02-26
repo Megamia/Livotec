@@ -24,19 +24,24 @@
               class="w-[100%] h-[270px] object-cover"
             />
             <a-flex vertical class="w-[100%] p-[15px] gap-[10px] bg-[#ededed]">
-              <a-flex class="text-[#6d6d6d] items-center gap-[3px]">
-                <AkClock /> {{ formatDate(item.published_at) }}
+              <a-flex class="text-[#6d6d6d] items-center gap-[3px] h-[20px]">
+                <AkClock />
+                {{
+                  formatDate(item.published_at)
+                    ? formatDate(item.published_at)
+                    : "No data"
+                }}
               </a-flex>
 
               <span
-                class="contentHtmlSpan2Text text-black font-normal leading-[23px] min-h-[50px]"
+                class="contentHtmlSpan2Text text-black font-normal leading-[24px] min-h-[51.5px]"
               >
                 {{ item.title }}
               </span>
               <span
-                class="contentHtmlSpan3Text text-[16px] text-black font-normal"
+                class="contentHtmlSpan3Text text-[16px] text-black font-normal h-[100%] min-h-[72px]"
               >
-                {{ truncateText(item.content_html) }}
+                {{ truncateText(item.summary) }}
               </span>
               <a
                 :href="`/detailNews/${item.slug}`"
@@ -76,7 +81,6 @@ const slugsToFilter = ["kien-thuc", "tin-tuc"];
 const activeKey = ref(slugsToFilter[0]);
 
 const fetchData = async (value) => {
-
   if (!value || value == undefined) {
     value = activeKey.value;
   }
@@ -96,11 +100,11 @@ const paginatedData = computed(() => {
   return data.value.slice(start, end);
 });
 
-const truncateText = (htmlContent) => {
-  if (!htmlContent) return "";
+const truncateText = (summary) => {
+  if (!summary) return "";
 
   const tempElement = document.createElement("div");
-  tempElement.innerHTML = htmlContent;
+  tempElement.innerHTML = summary;
   tempElement.querySelectorAll("img").forEach((img) => img.remove());
 
   return tempElement.textContent.trim().split("\n")[0];
@@ -124,6 +128,7 @@ const dataTab = ref([]);
 const changeData = async (slug) => {
   activeKey.value = slug;
   await fetchData(slug);
+  return (currentPage.value = 1);
 };
 
 const fetchDataTabItem = async () => {
@@ -165,7 +170,7 @@ const filterData = (data) => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  max-width: 100%;
+  max-width: 300px;
 }
 
 .contentHtmlSpan3Text {
@@ -175,7 +180,7 @@ const filterData = (data) => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  max-width: 100%;
+  max-width: 300px;
 }
 :deep(.tabList .ant-tabs-nav) {
   margin: 0;
