@@ -106,7 +106,7 @@ fields:
             2: 'Tiền mặt'
         showSearch: true
         span: auto
-        disabled: 1
+        disabled: 0
         type: dropdown
     price:
         label: 'Tổng tiền'

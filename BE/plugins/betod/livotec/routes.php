@@ -98,8 +98,8 @@ Route::group(['prefix' => 'apiPaypal'], function () {
 });
 
 Route::group(['prefix' => 'apiOrder'], function () {
-    Route::get('order/{id}', function ($id) {
-        $data = Orders::with('orderdetail.product')->where('id', $id)->first();
+    Route::get('order/{order_code}', function ($order_code) {
+        $data = Orders::with('orderdetail.product')->where('order_code', $order_code)->first();
         return $data;
     });
 });

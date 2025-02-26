@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Betod\Livotec\Models\Orders;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class OrderController extends Controller
 {
@@ -44,12 +45,14 @@ class OrderController extends Controller
         // Tạo mã đơn hàng
         $orderCode = 'ORD-' . date('Ymd') . '-' . strtoupper(Str::random(6));
 
+        $propertyData = Arr::except($validatedData, ['items', 'differentaddresschecked', 'terms', 'user_id']);
+
         // Chuyển dữ liệu thành JSON trước khi lưu vào cột text
         $order = Orders::create([
             'user_id' => $validatedData['user_id'],
             'order_code' => $orderCode,
             'price' => $totalPrice,
-            'property' => $validatedData,
+            'property' => $propertyData,
         ]);
 
         foreach ($validatedData['items'] as $item) {
@@ -63,7 +66,7 @@ class OrderController extends Controller
 
         return response()->json([
             'message' => 'Order created successfully!',
-            'order' => $order
+            'order_code' => $order->order_code
         ], 201);
     }
 }

@@ -7,26 +7,34 @@
       <div>
         <h1 class="text-3xl text-[#38B6AC] font-bold my-3">Thanh toán</h1>
         <p class="font-medium">Thank you. Your order has been received.</p>
-        <div class="flex flex-col gap-4">
+        <div v-if="IsorderCode" class="flex flex-col gap-4">
           <div class="flex flex-col gap-5 md:flex-row items-center my-4 mx-8">
             <div class="flex flex-col items-center md:items-start mb-4 md:mb-0">
               <span class="text-[10px] font-bold">ORDER NUMBER:</span>
-              <span class="font-bold">{{ orderNumber }}</span>
+              <span class="font-bold">{{ OrderData.id }}</span>
             </div>
             <div class="separator hidden md:flex"></div>
             <div class="flex flex-col items-center md:items-start mb-4 md:mb-0">
               <span class="text-[10px] font-bold">DATE:</span>
-              <span class="font-bold">{{ date }}</span>
+              <span class="font-bold">{{
+                formatDate(OrderData.created_at)
+              }}</span>
             </div>
             <div class="separator hidden md:flex"></div>
             <div class="flex flex-col items-center md:items-start mb-4 md:mb-0">
               <span class="text-[10px] font-bold">TOTAL:</span>
-              <span class="font-bold text-teal-500">{{ total }}</span>
+              <span class="font-bold text-teal-500">{{
+                formatCurrency(OrderData.price)
+              }}</span>
             </div>
             <div class="separator hidden md:flex"></div>
             <div class="flex flex-col items-center md:items-start">
               <span class="text-[10px] font-bold">PAYMENT METHOD:</span>
-              <span class="font-bold">{{ paymentMethod }}</span>
+              <span class="font-bold">{{
+                OrderData.property?.paymenttype == 1
+                  ? "Chuyển khoản ngân hàng"
+                  : "Tiền mặt"
+              }}</span>
             </div>
           </div>
           <h2 class="text-2xl font-medium">Our bank details</h2>
@@ -62,13 +70,17 @@
               <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'name'">
                   <a-flex gap="5" class="items-center">
-                    {{ record.name }} <AkXSmall />
+                    <a
+                      class="a-product"
+                      :href="`/product/${record.product.slug}`"
+                      >{{ record.product.name }}</a
+                    ><AkXSmall />
                     <span class="font-bold">{{ record.quantity }}</span>
                   </a-flex>
                 </template>
                 <template v-else-if="column.key === 'subtotal'">
                   <span class="text-[#02B6AC] text-[16px] font-bold">{{
-                    formatCurrency(record.price * record.quantity)
+                    formatCurrency(record.price)
                   }}</span>
                 </template>
               </template>
@@ -81,7 +93,7 @@
                   >
                   <a-table-summary-cell>
                     <span class="text-[#02B6AC] text-[16px] font-bold">{{
-                      formatCurrency(totals.subtotal)
+                      formatCurrency(OrderData.price)
                     }}</span>
                   </a-table-summary-cell>
                 </a-table-summary-row>
@@ -113,7 +125,7 @@
                   >
                   <a-table-summary-cell>
                     <span class="text-[#02B6AC] text-[16px] font-bold">{{
-                      formatCurrency(totals.subtotal)
+                      formatCurrency(OrderData.price)
                     }}</span>
                   </a-table-summary-cell>
                 </a-table-summary-row>
@@ -127,18 +139,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import DefaultLayout from "./DefaultLayout.vue";
-
-const orderNumber = ref("4055");
-const date = ref("24/02/2025");
-const total = ref("2.190.000 đ");
-const paymentMethod = ref("Chuyển khoản ngân hàng");
-const bank = ref(
-  "Ngân hàng TMCP Công Thương Việt Nam (Vietinbank) – Chi nhánh Ba Đình"
-);
-const accountNumber = ref("112609426688");
+import { AkXSmall } from "@kalimahapps/vue-icons";
+import axios from "axios";
+const bank = ref(import.meta.env.VITE_BANK_NAME);
+const accountNumber = ref(import.meta.env.VITE_BANK_NUMBER);
+const OrderData = ref([]);
 const data = ref([]);
+const route = useRoute();
+const IsorderCode = ref(false);
 
 const columns = ref([
   {
@@ -153,20 +164,39 @@ const columns = ref([
   },
 ]);
 
-const totals = computed(() => {
-  let subtotal = 0;
-  data.value.forEach(({ price, quantity }) => {
-    subtotal += price * quantity;
-  });
-  return {
-    subtotal,
-  };
+const fetchData = async () => {
+  try {
+    const order_code = route.params.slug;
+    const response = await axios.get(
+      `${import.meta.env.VITE_APP_URL_API_ORDER}/order/${order_code}`
+    );
+    if (response.data) {
+      IsorderCode.value = true;
+      OrderData.value = response.data;
+      data.value = response.data.orderdetail;
+    }
+  } catch (error) {
+    console.error("Error fetching order:", error);
+  }
+};
+
+onMounted(() => {
+  fetchData();
 });
+
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
   }).format(value);
+};
+
+const formatDate = (dateString) => {
+  return new Date(dateString).toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 };
 </script>
 
@@ -175,5 +205,14 @@ const formatCurrency = (value) => {
   width: 1px;
   height: 32px;
   border-left: 1px dashed gray;
+}
+.a-product {
+  color: #38B6AC;
+  font-weight: bold;
+}
+.a-product:hover {
+  color: #0024d9;
+  font-weight: bold;
+  background-color: transparent;
 }
 </style>

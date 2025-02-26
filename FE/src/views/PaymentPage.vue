@@ -250,7 +250,10 @@
                 <template #bodyCell="{ column, record }">
                   <template v-if="column.key === 'name'">
                     <a-flex gap="5" class="items-center">
-                      {{ record.name }} <AkXSmall />
+                      <a class="a-product" :href="`/product/${record.slug}`">{{
+                        record.name
+                      }}</a
+                      ><AkXSmall />
                       <span class="font-bold">{{ record.quantity }}</span>
                     </a-flex>
                   </template>
@@ -376,7 +379,9 @@ import axios from "axios";
 import { AkXSmall } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
 import PayPalButton from "@/components/paypal/PayPalButton.vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const PayPalButtonRef = ref(false);
 
 const data = ref([]);
@@ -702,7 +707,9 @@ const onSubmit = async () => {
         formState
       );
       console.log("Order created successfully:", response.data);
+      store.dispatch("product/clearDataStoreCart");
       alert("Order created successfully");
+      router.push(`/payment/order-received/${response.data.order_code}`);
     }
   } catch (error) {
     if (error.errors) {
@@ -722,10 +729,10 @@ const handlePaymentSuccess = async (orderID) => {
       `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
       formState
     );
-
     console.log("Order created successfully:", response.data);
     store.dispatch("product/clearDataStoreCart");
     alert("Order created successfully");
+    router.push(`/payment/order-received/${response.data.order_code}`);
   } catch (error) {
     console.error("Error adding order to database:", error);
   }
@@ -734,4 +741,14 @@ const handlePaymentSuccess = async (orderID) => {
 fetchProvinces();
 </script>
 
-<style scoped></style>
+<style scoped>
+.a-product {
+  color: #38b6ac;
+  font-weight: bold;
+}
+.a-product:hover {
+  color: #0024d9;
+  font-weight: bold;
+  background-color: transparent;
+}
+</style>
