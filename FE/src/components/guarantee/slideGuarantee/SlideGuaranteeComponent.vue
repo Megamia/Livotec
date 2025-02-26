@@ -129,14 +129,10 @@ const changeLiActive = (value) => {
 
 const dataSlide = ref([]);
 const fetchDataSldie = async (slug) => {
-  console.log(slug);
-
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${slug}`
     );
-    console.log(response.data);
-
     if (response.data) {
       dataSlide.value = response.data.products;
       haveData.value = true;
@@ -162,6 +158,21 @@ const prevSlide = () => {
 
 const nextSlide = () => {
   if (swiperInstance.value) swiperInstance.value.slideNext();
+};
+
+const breakpoints = {
+  0: {
+    slidesPerView: 1,
+  },
+  580: {
+    slidesPerView: 2,
+  },
+  876: {
+    slidesPerView: 3,
+  },
+  1200: {
+    slidesPerView: 4,
+  },
 };
 </script>
 
