@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
-  <a-flex vertical class="flex-1">
+  <a-flex vertical class="flex-1 w-full">
     <img
       src="https://example.sudospaces.com/baohanhlivotec/2024/06/bao-hanh-livotec-pc.jpg"
     />
@@ -23,22 +23,12 @@
       </a-flex>
     </a-flex>
 
-    <a-flex vertical class="contentDiv mb-[66px]">
+    <a-flex vertical class="contentDiv mb-[66px]  flex-1 ">
       <h2 class="h2Text">Sản phẩm nổi bật</h2>
-      <ul class="flex flex-1 flex-row justify-center gap-[30px]">
-        <li
-          v-for="item in data"
-          :key="item.id"
-          class="text-black text-[22px] font-semibold whitespace-nowrap cursor-pointer liActive"
-          :class="{
-            liActived: liActive === item.id,
-          }"
-          @click="changeLiActive(item.id)"
-        >
-          {{ item.name }}
-        </li>
-      </ul>
-      <a-flex justify="center" class="h-[100px] pb-[77px]"> data </a-flex>
+
+      <a-flex justify="center" class="flex-1 pb-[77px]  max-w-[100%]">
+        <SlideGuaranteeComponent />
+      </a-flex>
       <a-flex justify="center">
         <button
           class="bg-[#01b6ac] text-white rounded-3xl w-[205px] py-[11px] text-[18px] font-semibold"
@@ -176,7 +166,7 @@
         </a-flex>
       </a-flex>
     </a-flex>
-    <a-flex class=" justify-center mb-0">
+    <a-flex class="justify-center mb-0">
       <a-flex class="a flex-1 justify-between">
         <a-flex class="max-w-[33%] text-[12px] text-black">
           <span
@@ -187,10 +177,10 @@
             Điện thoại: 1800 2298</span
           >
         </a-flex>
-        <a-flex vertical class=" gap-[30px]  w-[300px]">
+        <a-flex vertical class="gap-[30px] w-[300px]">
           <a-flex style="flex-basis: calc(100% - 105px)" class="">
             <span class="flex-1">Kết nối với chúng tôi</span>
-            <a-flex class="basis-[105px] justify-between ">
+            <a-flex class="basis-[105px] justify-between">
               <img
                 src="https://baohanh.livotec.com/assetsUpdate/images/icons/fb.png"
                 alt=""
@@ -236,11 +226,10 @@ import { AnFilledCaretDown } from "@kalimahapps/vue-icons";
 import { onMounted, ref } from "vue";
 import axios from "axios";
 import "./guaranteePage.css";
+import SlideGuaranteeComponent from "@/components/guarantee/slideGuarantee/SlideGuaranteeComponent.vue";
 
 const handleSubmit = async () => {};
-onMounted(() => fetchData());
 
-const liActive = ref(1);
 const formState = ref({
   username: "",
   phoneNumber: "",
@@ -283,8 +272,9 @@ const dataFixed = ref([
   },
 ]);
 
-const data = ref([]);
 const selectedItem = ref("");
+
+const data = ref([]);
 const fetchData = async () => {
   try {
     const response = await axios.get(
@@ -299,37 +289,21 @@ const fetchData = async () => {
   }
 };
 
+onMounted(() => fetchData());
 const handleChangeItem = (value) => {
   selectedItem.value = value.name;
-};
-
-const changeLiActive = (value) => {
-  liActive.value = value;
 };
 </script>
 
 <style scoped>
 .h2Text {
   padding-top: 81px;
-  padding-bottom: 47px;
+  padding-bottom: 27px;
   text-align: center;
   color: #01b6ac;
   font-size: 32px;
   font-weight: 600;
   text-transform: uppercase;
-}
-.liActived {
-  text-decoration: underline solid;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  color: #01b6ac;
-}
-.liActive:hover {
-  transition: all 0.3s ease-in-out;
-  text-decoration: underline solid;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  color: #01b6ac;
 }
 
 .form::v-deep(.ant-form-item) {
