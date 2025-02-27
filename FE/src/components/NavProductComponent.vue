@@ -38,7 +38,11 @@
         @swiper="onSwiper"
         :breakpoints="breakpoints"
         :navigation="false"
-        :class="dataChil.length > 4 ? 'swiperProduct swiperProduct4' : 'swiperProduct swiperProduct3'"
+        :class="
+          dataChil.length > 4
+            ? 'swiperProduct swiperProduct4'
+            : 'swiperProduct swiperProduct3'
+        "
       >
         <swiper-slide
           v-for="itemChil in dataChil"
@@ -140,25 +144,56 @@ const slugsToFilter = [
   "binh-nuoc-nong",
   "linh-kien-loi-loc",
 ];
-const activeKey = ref(slugsToFilter[0]);
 
+const data = ref([]);
+const activeKey = ref(null);
 const haveData = ref(false);
 const router = useRouter();
+const dataChil = ref([]);
+const validateCategory = ref([]);
+
+const categoryOrder = {
+  "bep-tu": 1,
+  "quat-dieu-hoa": 2,
+  "may-loc-nuoc": 3,
+  "binh-nuoc-nong": 4,
+  "linh-kien-loi-loc": 5,
+};
 
 const fetchDataCategory = async () => {
+
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategoryParent`
     );
     data.value = response.data.allCategoryParent;
+
     filterData(data.value);
+
+    if (validateCategory.value.length > 0) {
+      activeKey.value = validateCategory.value[0].slug;
+      await fetchData(activeKey.value);
+    } else {
+      activeKey.value = null;
+      dataChil.value = [];
+      haveData.value = false;
+    }
   } catch (e) {
     console.log("Error: ", e);
   }
 };
 
-onMounted(() => fetchDataCategory());
-const dataChil = ref([]);
+const filterData = (data) => {
+  validateCategory.value = data
+    .filter((item) => slugsToFilter.includes(item.slug))
+    .map((item) => ({
+      ...item,
+      order: categoryOrder[item.slug] || 0,
+    }))
+    .sort((a, b) => a.order - b.order);
+};
+
+onMounted(fetchDataCategory);
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("vi-VN", {
@@ -176,14 +211,13 @@ const changeData = async (slug) => {
   await fetchData(slug);
 };
 
-const data = ref([]);
-
 const fetchData = async (slug) => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${slug}`
     );
-    if (response.data) {
+
+    if (response.data && response.data.products.length > 0) {
       dataChil.value = response.data.products;
       haveData.value = true;
     } else {
@@ -194,29 +228,6 @@ const fetchData = async (slug) => {
     console.error("Error fetching data:", e);
     dataChil.value = [];
     haveData.value = false;
-  }
-};
-
-const validateCategory = ref([]);
-
-const categoryOrder = {
-  "bep-tu": 1,
-  "quat-dieu-hoa": 2,
-  "may-loc-nuoc": 3,
-  "binh-nuoc-nong": 4,
-  "linh-kien-loi-loc": 5,
-};
-
-const filterData = (data) => {
-  validateCategory.value = data
-    .filter((item) => slugsToFilter.includes(item.slug))
-    .map((item) => ({
-      ...item,
-      order: categoryOrder[item.slug] || 0,
-    }))
-    .sort((a, b) => a.order - b.order);
-  if (validateCategory.value.length <= 0) {
-    console.log("Không có data");
   }
 };
 
@@ -233,8 +244,6 @@ const prevSlide = () => {
 const nextSlide = () => {
   if (swiperInstance.value) swiperInstance.value.slideNext();
 };
-
-onMounted(() => fetchData(activeKey.value));
 
 const breakpoints = {
   0: {

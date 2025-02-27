@@ -14,15 +14,23 @@ Route::group(['prefix' => 'apiProduct'], function () {
     Route::get('navProducts/{slug}', function ($slug) {
         $category = Category::with(['children'])->where('slug', $slug)->first();
 
-        $categoryIds = $category->getAllChildrenAndSelf()->pluck('id');
-        $products = Product::with(['image', 'category'])
-            ->whereIn('category_id', $categoryIds)
-            ->get();
-
-        return response()->json([
-            'category' => $category,
-            'products' => $products,
-        ]);
+        if ($category) {
+            $categoryIds = $category->getAllChildrenAndSelf()->pluck('id');
+            $products = Product::with(['image', 'category'])
+                ->whereIn('category_id', $categoryIds)
+                ->get();
+            if ($category && $products) {
+                return response()->json([
+                    'category' => $category,
+                    'products' => $products,
+                    'status' => 1
+                ]);
+            } else {
+                return response()->json(['status' => 0, 'message' => 'No data']);
+            }
+        } else {
+            return response()->json(['status' => 0, 'message' => 'No data']);
+        }
     });
 
     Route::get('product/{slug}', function ($slug) {
