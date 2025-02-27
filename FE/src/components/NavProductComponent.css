@@ -13,7 +13,11 @@
 }
 .swiperProduct {
   min-width: 300px;
+  width: 100%;
   overflow: hidden;
+}
+.swiperProduct3 .swiper-wrapper {
+  justify-content: center;
 }
 
 .swiper-slide {
@@ -63,4 +67,3 @@
     font-size: 14px;
   }
 }
-

@@ -179,27 +179,63 @@ const data = ref({});
 
 const getdata = async () => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/products`
+    const categoryResponse = await axios.get(
+      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategoryParent`
     );
-    const categoryMap = {};
+
+    if (!Array.isArray(categoryResponse.data.allCategoryParent)) {
+      console.error("API did not return an array:", categoryResponse.data);
+      return;
+    }
+
+    const allowedCategories = [
+      "may-loc-nuoc",
+      "bep-tu",
+      "quat-dieu-hoa",
+      "binh-nuoc-nong",
+    ];
+
+    const categories = categoryResponse.data.allCategoryParent.filter(
+      (category) => allowedCategories.includes(category.slug)
+    );
 
     let maxId = 0;
-    response.data.forEach((product) => {
-      if (product.id && product.id > maxId) {
-        maxId = product.id;
-      }
 
-      if (
-        product.category &&
-        product.category.name &&
-        !product.category.parent_id
-      ) {
-        const categoryName = product.category.name;
-        if (!categoryMap[categoryName]) {
-          categoryMap[categoryName] = [];
-        }
-        categoryMap[categoryName].push(product);
+    const productRequests = categories.map((category) =>
+      axios
+        .get(
+          `${import.meta.env.VITE_APP_URL_API_PRODUCT}/products/${
+            category.slug
+          }`
+        )
+        .catch((error) => {
+          console.error(
+            `Error fetching products for category: ${category.slug}`,
+            error
+          );
+          return { data: [] };
+        })
+    );
+
+    const productResponses = await Promise.allSettled(productRequests);
+
+    const categorizedProducts = categories.map((category, index) => {
+      if (productResponses[index].status === "fulfilled") {
+        const productsInCategory = productResponses[index].value.data;
+        const shuffled = productsInCategory.sort(() => 0.5 - Math.random());
+
+        return {
+          category,
+          products: shuffled.slice(0, 4),
+        };
+      } else {
+        console.error(
+          `Failed to fetch products for category: ${category.slug}`
+        );
+        return {
+          category,
+          products: [],
+        };
       }
     });
 
@@ -221,16 +257,6 @@ const getdata = async () => {
       },
       { id: ++maxId, category: { name: "Thư viện" }, products: [] },
     ];
-
-    const categorizedProducts = Object.keys(categoryMap).map((categoryName) => {
-      const productsInCategory = categoryMap[categoryName];
-      const shuffled = productsInCategory.sort(() => 0.5 - Math.random());
-
-      return {
-        category: productsInCategory[0].category,
-        products: shuffled.slice(0, 4),
-      };
-    });
 
     data.value = [...categorizedProducts, ...anotherData];
   } catch (e) {

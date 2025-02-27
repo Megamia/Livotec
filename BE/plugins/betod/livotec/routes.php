@@ -25,14 +25,20 @@ Route::group(['prefix' => 'apiProduct'], function () {
         ]);
     });
 
-    Route::get('product/{slug}', function ($slug) {
-        $product = Product::with(['gallery', 'image', 'category.parent', 'post'])->where('slug', $slug)->first();
-        if ($product) {
-            return $product;
-        } else {
-            return response()->json(['message' => 'Product not found'], 404);
+    Route::get('products/{slug}', function ($slug) {
+        $category = Category::where('slug', $slug)->first();
+
+        if (!$category) {
+            return response()->json(['message' => 'Category not found'], 404);
         }
+
+        $products = Product::with(['gallery', 'image', 'category.parent', 'post'])
+            ->where('category_id', $category->id)
+            ->get();
+
+        return response()->json($products);
     });
+
 });
 
 Route::group(['prefix' => 'apiOrder'], function () {
