@@ -353,7 +353,10 @@
                   </a-checkbox>
                 </a-form-item>
                 <a-flex class="justify-end">
-                  <a-button type="primary" @click="onSubmit"
+                  <a-button
+                    type="primary"
+                    @click="onSubmit"
+                    v-if="!PayPalButtonRef"
                     >Place order</a-button
                   >
                   <PayPalButton

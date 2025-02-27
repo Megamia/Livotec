@@ -9,7 +9,7 @@
       <a-flex vertical>
         <span
           class="text-[28px] text-[#02b6ac] font-bold uppercase text-center"
-          >{{ nameCategory }}</span
+          >{{ nameCategory ? nameCategory : props.categorySlug }}</span
         >
         <a-flex class="max-w-[100%] justify-center">
           <a-tabs class="nav max-w-[100%]" @change="changeData"
@@ -105,7 +105,9 @@
           </a-flex>
         </a-flex>
       </a-flex>
-      <a-flex v-else class="flex-1 justify-center mt-[-40px]">Không có dữ liệu để hiển thị</a-flex>
+      <a-flex v-else class="flex-1 justify-center mt-[-40px]"
+        >Không có dữ liệu để hiển thị</a-flex
+      >
     </a-flex>
   </a-flex>
 </template>
@@ -155,7 +157,9 @@ const fetchData = async () => {
       }`
     );
 
-    if (response.data) {
+    if (response.data.status === 1) {
+      console.log(response.data);
+
       //   dataChil.value = response.data.products?.length
       //     ? response.data.products.sort((a, b) => b.sold_out - a.sold_out)
       //     : [];
