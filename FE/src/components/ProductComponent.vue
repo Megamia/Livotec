@@ -158,8 +158,6 @@ const fetchData = async () => {
     );
 
     if (response.data.status === 1) {
-      console.log(response.data);
-
       //   dataChil.value = response.data.products?.length
       //     ? response.data.products.sort((a, b) => b.sold_out - a.sold_out)
       //     : [];
@@ -167,20 +165,18 @@ const fetchData = async () => {
       //   dataChil.value = response.data.products?.length
       // ? response.data.products : [];
 
-      productData.value = response.data.products
-        ? response.data.products
-        : "No data";
-      categoryChil.value = response.data.category?.children;
-      nameCategory.value = response.data.category?.name;
-      pathImg.value = response.data.category?.image?.path;
+      productData.value =
+        response.data.products?.length > 0 ? response.data.products : [];
+      categoryChil.value = response.data.category?.children || [];
+      nameCategory.value = response.data.category?.name || "";
+      pathImg.value = response.data.category?.image?.path || "";
       haveData.value = true;
-      //UPDATE
-      if (categoryChil.value.length > 0 && productData.value != "No data") {
+
+      if (categoryChil.value.length > 0 && productData.value.length > 0) {
         fillterData(categoryChil.value[0].slug);
       } else {
-        dataChil.value = response.data.products;
+        dataChil.value = productData.value;
       }
-      //UPDATE
     } else {
       dataChil.value = [];
       haveData.value = false;
