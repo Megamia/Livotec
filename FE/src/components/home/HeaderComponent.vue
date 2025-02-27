@@ -116,8 +116,8 @@
           @click="handleLogout"
           class="icon iconShow"
         />
-        <RouterLink to="/login" class="text-white" v-else>
-          Đăng nhập</RouterLink
+        <RouterLink to="/login" v-else>
+         <a-flex class="px-4 py-2 justify-center items-center bg-white text-[#02B6AC] font-bold rounded-md cursor-pointer peer-hover:animate-ping transition-transform hover:scale-105">Đăng nhập</a-flex> </RouterLink
         >
       </a-flex>
     </a-flex>

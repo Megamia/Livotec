@@ -1,4 +1,5 @@
-<?php namespace RainLab\User;
+<?php
+namespace RainLab\User;
 
 use App;
 use Event;
@@ -48,6 +49,7 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
+        require_once(__DIR__ . '/helpers.php');
     }
 
     /**
@@ -72,8 +74,8 @@ class Plugin extends PluginBase
         $this->app->alias('auth', \Illuminate\Contracts\Auth\Factory::class);
         $this->app->alias('auth.driver', \Illuminate\Contracts\Auth\Guard::class);
 
-        $this->app->singleton('auth', fn ($app) => new \RainLab\User\Classes\AuthManager($app));
-        $this->app->singleton('auth.driver', fn ($app) => $app['auth']->guard());
+        $this->app->singleton('auth', fn($app) => new \RainLab\User\Classes\AuthManager($app));
+        $this->app->singleton('auth.driver', fn($app) => $app['auth']->guard());
     }
 
     /**
