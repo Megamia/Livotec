@@ -108,24 +108,6 @@ v1.0.36:
 v1.0.37:
     - 'Created table betod_livotec_filter'
     - builder_table_create_betod_livotec_filter.php
-v1.0.38:
-    - 'Updated table betod_livotec_filter'
-    - builder_table_update_betod_livotec_filter.php
-v1.0.39:
-    - 'Updated table betod_livotec_filter'
-    - builder_table_update_betod_livotec_filter_2.php
-v1.0.40:
-    - 'Updated table betod_livotec_filter'
-    - builder_table_update_betod_livotec_filter_3.php
-v1.0.41:
-    - 'Updated table betod_livotec_filter'
-    - builder_table_update_betod_livotec_filter_4.php
-v1.0.42:
-    - 'Updated table betod_livotec_filter'
-    - builder_table_update_betod_livotec_filter_5.php
-v1.0.43:
-    - 'Updated table betod_livotec_filter'
-    - builder_table_update_betod_livotec_filter_6.php
 v1.0.44:
     - 'Updated table betod_livotec_category'
     - builder_table_update_betod_livotec_category.php
