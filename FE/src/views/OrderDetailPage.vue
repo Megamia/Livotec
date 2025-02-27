@@ -39,13 +39,13 @@
           </div>
           <h2 class="text-2xl font-medium">Our bank details</h2>
           <div class="mb-4">
-            <p class="font-bold">Công ty TNHH Betod:</p>
+            <p class="font-bold">{{ bankUsername }}:</p>
             <div class="flex flex-col md:flex-row items-center my-1 mx-8 gap-5">
               <div
                 class="flex flex-col items-center md:items-start mb-4 md:mb-0"
               >
                 <span class="text-[10px] font-bold">BANK:</span>
-                <span class="font-bold">{{ bank }}</span>
+                <span class="font-bold">{{ bankName }}</span>
               </div>
               <div class="separator hidden md:flex"></div>
               <div
@@ -54,7 +54,7 @@
                 <span class="text-[10px] font-bold uppercase"
                   >Account number:</span
                 >
-                <span class="font-bold">{{ accountNumber }}</span>
+                <span class="font-bold">{{ bankNumber }}</span>
               </div>
             </div>
           </div>
@@ -144,8 +144,9 @@ import { useRoute } from "vue-router";
 import DefaultLayout from "./DefaultLayout.vue";
 import { AkXSmall } from "@kalimahapps/vue-icons";
 import axios from "axios";
-const bank = ref(import.meta.env.VITE_BANK_NAME);
-const accountNumber = ref(import.meta.env.VITE_BANK_NUMBER);
+const bankName = ref(import.meta.env.VITE_BANK_NAME);
+const bankNumber = ref(import.meta.env.VITE_BANK_NUMBER);
+const bankUsername = ref(import.meta.env.VITE_BANK_USERNAME);
 const OrderData = ref([]);
 const data = ref([]);
 const route = useRoute();
@@ -207,7 +208,7 @@ const formatDate = (dateString) => {
   border-left: 1px dashed gray;
 }
 .a-product {
-  color: #38B6AC;
+  color: #38b6ac;
   font-weight: bold;
 }
 .a-product:hover {
