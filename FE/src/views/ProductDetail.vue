@@ -202,7 +202,7 @@ onMounted(async () => {
   try {
     const { slug } = route.params;
     const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${slug}`
+      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/detailProduct/${slug}`
     );
     product.value = response.data;
     formattedPrice.value = new Intl.NumberFormat("de-DE").format(

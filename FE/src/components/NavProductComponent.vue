@@ -38,7 +38,7 @@
         @swiper="onSwiper"
         :breakpoints="breakpoints"
         :navigation="false"
-        class="swiperProduct"
+        :class="dataChil.length > 4 ? 'swiperProduct swiperProduct4' : 'swiperProduct swiperProduct3'"
       >
         <swiper-slide
           v-for="itemChil in dataChil"
@@ -148,9 +148,9 @@ const router = useRouter();
 const fetchDataCategory = async () => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
+      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategoryParent`
     );
-    data.value = response.data.data1;
+    data.value = response.data.allCategoryParent;
     filterData(data.value);
   } catch (e) {
     console.log("Error: ", e);
