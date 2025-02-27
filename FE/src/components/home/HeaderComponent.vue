@@ -204,7 +204,7 @@ const getdata = async () => {
     const productRequests = categories.map((category) =>
       axios
         .get(
-          `${import.meta.env.VITE_APP_URL_API_PRODUCT}/products/${
+          `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${
             category.slug
           }`
         )

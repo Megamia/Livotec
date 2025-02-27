@@ -25,7 +25,7 @@ Route::group(['prefix' => 'apiProduct'], function () {
         ]);
     });
 
-    Route::get('products/{slug}', function ($slug) {
+    Route::get('product/{slug}', function ($slug) {
         $category = Category::where('slug', $slug)->first();
 
         if (!$category) {
@@ -37,6 +37,15 @@ Route::group(['prefix' => 'apiProduct'], function () {
             ->get();
 
         return response()->json($products);
+    });
+
+    Route::get('detailProduct/{slug}', function ($slug) {
+        $product = Product::with(['gallery', 'image', 'category.parent', 'post'])->where('slug', $slug)->first();
+        if ($product) {
+            return $product;
+        } else {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
     });
 
 });
