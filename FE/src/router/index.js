@@ -23,10 +23,15 @@ const router = createRouter({
       name: "category",
       component: () => import("../views/CategoryPage.vue"),
     },
+    // {
+    //   path: "/test",
+    //   name: "test",
+    //   component: () => import("../views/TestPage.vue"),
+    // },
     {
-      path: "/test",
-      name: "test",
-      component: () => import("../views/TestPage.vue"),
+      path: "/chatBot",
+      name: "chatBot",
+      component: () => import("../components/chatBot/ChatBotComponent.vue"),
     },
     {
       path: "/nav",
