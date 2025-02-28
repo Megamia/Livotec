@@ -53,7 +53,7 @@ import { onMounted, ref } from "vue";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import dayjs from "dayjs";
-import DefaultLayout from "@/views/DefaultLayout.vue";
+import DefaultLayout from "@/views/layouts/DefaultLayout.vue";
 
 const post = ref("");
 const route = useRoute();

@@ -47,7 +47,7 @@
 
 <script setup>
 import { ref } from "vue";
-import DefaultLayout from "../DefaultLayout.vue";
+import DefaultLayout from "../layouts/DefaultLayout.vue";
 
 const anotherNews = ref([
   {

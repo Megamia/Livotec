@@ -1,5 +1,4 @@
 <template>
-  <DefaultLayout>
     <div
       class="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]"
     >
@@ -161,11 +160,9 @@
         </div>
       </main>
     </div>
-  </DefaultLayout>
 </template>
 
 <script setup>
-import DefaultLayout from "./DefaultLayout.vue";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";

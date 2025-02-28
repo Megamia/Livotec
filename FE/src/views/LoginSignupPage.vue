@@ -1,5 +1,4 @@
 <template>
-  <DefaultLayout>
     <div class="w-full bg-gray-100 h-full p-7">
       <div
         class="relative h-[530px] flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg dark:bg-gray-800 lg:max-w-4xl"
@@ -219,12 +218,10 @@
         </div>
       </div>
     </div>
-  </DefaultLayout>
 </template>
 <script setup>
 import { ref, computed } from "vue";
 import axios from "axios";
-import DefaultLayout from "./DefaultLayout.vue";
 import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
 
@@ -259,11 +256,13 @@ const login = async () => {
         password: dataForm.value.password,
       },
       {
-        withCredentials: true,  
+        withCredentials: true,
       }
     );
     const firstName = response.data.user.first_name;
+    const avatar_preview = response.data.user.avatar_url;
     Cookies.set("user", firstName, { expires: 1 });
+    Cookies.set("user_avatar", avatar_preview, { expires: 1 });
     alert("Login successful!");
     router.push("/");
   } catch (error) {

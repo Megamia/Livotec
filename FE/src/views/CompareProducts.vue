@@ -1,6 +1,5 @@
 <template>
-  <DefaultLayout>
-    <div class="container flex flex-1 flex-col">
+    <div class="w-full flex flex-1 flex-col">
       <div class="w-full border-b-[1px] border-gray-300 py-3 mb-4">
         <span class="text-[#38B6AC] font-bold">So sánh sản phẩm</span>
       </div>
@@ -73,11 +72,9 @@
         <span>Không có sản phẩm nào được thêm vào bảng so sánh.</span>
       </div>
     </div>
-  </DefaultLayout>
 </template>
 
 <script setup>
-import DefaultLayout from "./DefaultLayout.vue";
 import { ref, onMounted, computed } from "vue";
 import store from "@/store/store";
 

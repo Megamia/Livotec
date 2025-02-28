@@ -111,14 +111,15 @@
       <AnOutlinedMenu class="icon iconHidden" @click="showMenu" />
       <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
       <a-flex class="items-center whitespace-nowrap">
-        <AnOutlinedUser
-          v-if="isLogin"
-          @click="handleLogout"
-          class="icon iconShow"
-        />
+        <a-flex v-if="isLogin" @click="handleLogout" class="icon iconShow"
+          ><a-avatar src="https://www.antdv.com/assets/logo.1ef800a8.svg"
+        /></a-flex>
         <RouterLink to="/login" v-else>
-         <a-flex class="px-4 py-2 justify-center items-center bg-white text-[#02B6AC] font-bold rounded-md cursor-pointer peer-hover:animate-ping transition-transform hover:scale-105">Đăng nhập</a-flex> </RouterLink
-        >
+          <a-flex
+            class="px-4 py-2 justify-center items-center bg-white text-[#02B6AC] font-bold rounded-md cursor-pointer peer-hover:animate-ping transition-transform hover:scale-105"
+            >Đăng nhập</a-flex
+          >
+        </RouterLink>
       </a-flex>
     </a-flex>
   </a-flex>
@@ -204,9 +205,7 @@ const getdata = async () => {
     const productRequests = categories.map((category) =>
       axios
         .get(
-          `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${
-            category.slug
-          }`
+          `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${category.slug}`
         )
         .catch((error) => {
           console.error(
@@ -273,6 +272,11 @@ watchEffect(() => {
 const fetchData = () => {
   isLogin.value = !!token.value;
 };
+
+const profileData = async () => {
+  
+};
+
 onMounted(() => {
   fetchData();
   getdata();

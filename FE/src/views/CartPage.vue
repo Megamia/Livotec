@@ -1,7 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
-  <DefaultLayout>
-    <div class="container flex flex-1 flex-col">
+    <div class="w-full flex flex-1 flex-col">
       <div class="w-full border-b-[1px] border-gray-300 py-3 mb-4">
         <span class="text-[#38B6AC] font-bold">Giỏ hàng</span>
       </div>
@@ -115,12 +114,10 @@
         </p>
       </a-flex>
     </div>
-  </DefaultLayout>
-  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
-import DefaultLayout from "./DefaultLayout.vue";
+import DefaultLayout from "./layouts/DefaultLayout.vue";
 import { ref, onMounted } from "vue";
 import store from "@/store/store";
 import { CgClose } from "@kalimahapps/vue-icons";

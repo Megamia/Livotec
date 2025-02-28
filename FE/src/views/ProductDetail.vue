@@ -1,7 +1,6 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
-  <DefaultLayout>
-    <section v-if="product" class="w-full container">
+    <section v-if="product" class="w-full">
       <main :key="product.id">
         <div class="py-2 border-b-2">
           <a-breadcrumb>
@@ -176,14 +175,12 @@
       </main>
     </section>
     <div v-else>Không có sản phẩm</div>
-  </DefaultLayout>
   <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import DefaultLayout from "./DefaultLayout.vue";
 import axios from "axios";
 import ProductSpecifications from "@/components/ProductSpecifications.vue";
 import ProductPosts from "@/components/ProductPosts.vue";

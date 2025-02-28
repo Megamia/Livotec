@@ -1,8 +1,12 @@
 <script setup>
-import { RouterView } from "vue-router";
-import { onMounted, onUnmounted } from "vue";
+import layouts from "./views/layouts";
+import { RouterView, useRoute } from "vue-router";
+import { computed, onMounted, onUnmounted } from "vue";
 
 let timeoutId;
+const route = useRoute();
+
+const layout = computed(() => layouts[route.meta.layout] || layouts.default);
 
 onMounted(() => {
   const tokenTimestamp = localStorage.getItem("tokenTimestamp");
@@ -36,7 +40,9 @@ onUnmounted(() => {
       },
     }"
   >
-    <RouterView />
+    <component :is="layout">
+      <router-view />
+    </component>
   </a-config-provider>
 </template>
 

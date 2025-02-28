@@ -1,125 +1,76 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
-  <DefaultLayout>
-    <section class="container w-full flex flex-col gap-[30px]">
-      <CategorySlideComponent :path="category?.category?.image?.path" />
-      <a-flex vertical class="w-full">
-        <a-flex
-          class="mb-[1rem] border-t-[1px] border-b-[1px] border-[#dbe0f0] bg-[#f6f9ff] gap-[24px] w-full"
-        >
-          <a-flex class="p-[18px] px-[15px] border-b border-b-[#02b6ac]">
-            <h1 class="text-[16px] font-bold text-[#02b6ac]">
-              {{ category?.category?.name }}
-            </h1>
-          </a-flex>
+
+  <section class="w-full flex flex-col gap-[30px]">
+    <CategorySlideComponent :path="category?.category?.image?.path" />
+    <a-flex vertical class="w-full">
+      <a-flex
+        class="mb-[1rem] border-t-[1px] border-b-[1px] border-[#dbe0f0] bg-[#f6f9ff] gap-[24px] w-full"
+      >
+        <a-flex class="p-[18px] px-[15px] border-b border-b-[#02b6ac]">
+          <h1 class="text-[16px] font-bold text-[#02b6ac]">
+            {{ category?.category?.name }}
+          </h1>
         </a-flex>
-        <a-form></a-form>
+      </a-flex>
+      <a-form></a-form>
+      <a-flex
+        v-if="Object.keys(selectedFilter).length > 0"
+        class="flex-wrap gap-2"
+      >
         <a-flex
-          v-if="Object.keys(selectedFilter).length > 0"
-          class="flex-wrap gap-2"
+          v-for="(item, filterId) in selectedFilter"
+          :key="filterId"
+          class="p-1 px-3 bg-[#FDC400] rounded-md mb-[15px]"
         >
-          <a-flex
-            v-for="(item, filterId) in selectedFilter"
-            :key="filterId"
-            class="p-1 px-3 bg-[#FDC400] rounded-md mb-[15px]"
-          >
-            <span class="font-normal">{{ item[0] }}</span>
-          </a-flex>
+          <span class="font-normal">{{ item[0] }}</span>
         </a-flex>
-        <a-flex class="mb-4">
-          <section>
-            <a-flex wrap="wrap" gap="small">
-              <a-badge
-                :count="Object.keys(selectedFilter).length"
-                :offset="[-15, 0]"
+      </a-flex>
+      <a-flex class="mb-4">
+        <section>
+          <a-flex wrap="wrap" gap="small">
+            <a-badge
+              :count="Object.keys(selectedFilter).length"
+              :offset="[-15, 0]"
+            >
+              <a-flex class="gap-1 items-center sort_item"
+                ><PhLightFunnel class="text-[18px] font-medium" /><span
+                  class="text-[14px]"
+                  >Bộ lọc</span
+                ></a-flex
               >
-                <a-flex class="gap-1 items-center sort_item"
-                  ><PhLightFunnel class="text-[18px] font-medium" /><span
-                    class="text-[14px]"
-                    >Bộ lọc</span
-                  ></a-flex
+            </a-badge>
+            <div v-for="filter in category?.category?.filters" :key="filter.id">
+              <a-dropdown :trigger="['click']" arrow>
+                <a
+                  @click.prevent
+                  type="primary"
+                  class="gap-1 items-center sort_item flex"
                 >
-              </a-badge>
-              <div v-for="filter in category?.category?.filters" :key="filter.id">
-                <a-dropdown :trigger="['click']" arrow>
-                  <a
-                    @click.prevent
-                    type="primary"
-                    class="gap-1 items-center sort_item flex"
-                  >
-                    {{ filter.name }}<AkChevronDownSmall />
-                  </a>
-                  <template #overlay>
-                    <a-flex vertical class="gap-2 p-0">
-                      <a-menu>
-                        <a-flex class="flex-wrap gap-2 max-w-[400px]">
-                          <div
-                            v-for="(item, index) in filter.options"
-                            :key="index"
-                          >
-                            <a-menu-item
-                              v-if="filter.type === 'radiobutton'"
-                              :key="item.label"
-                              @click="selectOption(filter.name, item.label)"
-                              class="border"
-                            >
-                              {{ item.label }}
-                            </a-menu-item>
-                            <a-menu-item
-                              v-if="filter.type === 'range'"
-                              :key="item.label"
-                              @click="
-                                rangeOption(
-                                  filter.name,
-                                  item.label,
-                                  item.min,
-                                  item.max
-                                )
-                              "
-                              class="border"
-                            >
-                              {{ item.label }}
-                            </a-menu-item>
-                          </div>
-                        </a-flex>
-                      </a-menu>
-                      <a-flex
-                        class="w-full gap-3 py-2 px-6 bg-white z-10 justify-center"
-                        ><a-button
-                          class="text-red-500 border-red-500 px-8"
-                          @click="clearOption(filter.name)"
+                  {{ filter.name }}<AkChevronDownSmall />
+                </a>
+                <template #overlay>
+                  <a-flex vertical class="gap-2 p-0">
+                    <a-menu>
+                      <a-flex class="flex-wrap gap-2 max-w-[400px]">
+                        <div
+                          v-for="(item, index) in filter.options"
+                          :key="index"
                         >
-                          <span class="font-bold">Bỏ chọn</span> </a-button
-                        ><a-button
-                          class="text-white px-5 bg-[#02b6ac]"
-                          @click="applyFilter"
-                        >
-                          <span class="font-bold">Xem kết quả</span>
-                        </a-button></a-flex
-                      >
-                    </a-flex>
-                  </template>
-                </a-dropdown>
-              </div>
-              <div key="price">
-                <a-dropdown :trigger="['click']" arrow>
-                  <a
-                    @click.prevent
-                    type="primary"
-                    class="gap-2 items-center sort_item flex"
-                  >
-                    <CdTag class="text-[17px]" />Giá
-                  </a>
-                  <template #overlay>
-                    <a-flex vertical class="gap-2 p-0">
-                      <a-menu>
-                        <a-flex class="flex-wrap gap-2 max-w-[335px]">
                           <a-menu-item
-                            v-for="item in price"
+                            v-if="filter.type === 'radiobutton'"
+                            :key="item.label"
+                            @click="selectOption(filter.name, item.label)"
+                            class="border"
+                          >
+                            {{ item.label }}
+                          </a-menu-item>
+                          <a-menu-item
+                            v-if="filter.type === 'range'"
                             :key="item.label"
                             @click="
                               rangeOption(
-                                'price',
+                                filter.name,
                                 item.label,
                                 item.min,
                                 item.max
@@ -129,69 +80,112 @@
                           >
                             {{ item.label }}
                           </a-menu-item>
-                        </a-flex>
-                      </a-menu>
-                      <a-flex
-                        class="w-full gap-3 py-2 px-6 bg-white z-10 justify-center"
-                        ><a-button
-                          class="text-red-500 border-red-500 px-8"
-                          @click="clearOption('price')"
-                        >
-                          <span class="font-bold">Bỏ chọn</span> </a-button
-                        ><a-button
-                          class="text-white px-5 bg-[#02b6ac]"
-                          @click="applyFilter"
-                        >
-                          <span class="font-bold">Xem kết quả</span>
-                        </a-button></a-flex
+                        </div>
+                      </a-flex>
+                    </a-menu>
+                    <a-flex
+                      class="w-full gap-3 py-2 px-6 bg-white z-10 justify-center"
+                      ><a-button
+                        class="text-red-500 border-red-500 px-8"
+                        @click="clearOption(filter.name)"
                       >
-                    </a-flex>
-                  </template>
-                </a-dropdown>
-              </div>
-            </a-flex>
-          </section>
-        </a-flex>
-        <a-flex class="justify-between items-center mb-4">
-          <a-flex
-            ><span
-              >Hiển thị tất cả {{ productCurrentData.length }} kết quả</span
-            ></a-flex
-          >
-          <a-flex
-            ><a-select
-              ref="select"
-              v-model:value="value1"
-              style="width: 250px"
-              :options="options1"
-              @focus="focus"
-              @change="handleChange"
-            ></a-select>
+                        <span class="font-bold">Bỏ chọn</span> </a-button
+                      ><a-button
+                        class="text-white px-5 bg-[#02b6ac]"
+                        @click="applyFilter"
+                      >
+                        <span class="font-bold">Xem kết quả</span>
+                      </a-button></a-flex
+                    >
+                  </a-flex>
+                </template>
+              </a-dropdown>
+            </div>
+            <div key="price">
+              <a-dropdown :trigger="['click']" arrow>
+                <a
+                  @click.prevent
+                  type="primary"
+                  class="gap-2 items-center sort_item flex"
+                >
+                  <CdTag class="text-[17px]" />Giá
+                </a>
+                <template #overlay>
+                  <a-flex vertical class="gap-2 p-0">
+                    <a-menu>
+                      <a-flex class="flex-wrap gap-2 max-w-[335px]">
+                        <a-menu-item
+                          v-for="item in price"
+                          :key="item.label"
+                          @click="
+                            rangeOption('price', item.label, item.min, item.max)
+                          "
+                          class="border"
+                        >
+                          {{ item.label }}
+                        </a-menu-item>
+                      </a-flex>
+                    </a-menu>
+                    <a-flex
+                      class="w-full gap-3 py-2 px-6 bg-white z-10 justify-center"
+                      ><a-button
+                        class="text-red-500 border-red-500 px-8"
+                        @click="clearOption('price')"
+                      >
+                        <span class="font-bold">Bỏ chọn</span> </a-button
+                      ><a-button
+                        class="text-white px-5 bg-[#02b6ac]"
+                        @click="applyFilter"
+                      >
+                        <span class="font-bold">Xem kết quả</span>
+                      </a-button></a-flex
+                    >
+                  </a-flex>
+                </template>
+              </a-dropdown>
+            </div>
           </a-flex>
-        </a-flex>
-        <a-flex horizontal class="flex-wrap gap-8 justify-center"
-          ><ProductItemComponent
-            v-for="product in productCurrentData"
-            :key="product.id"
-            :product="product" /><ProductItemComponent
-            v-for="product in productCurrentData"
-            :key="product.id"
-            :product="product" /><ProductItemComponent
-            v-for="product in productCurrentData"
-            :key="product.id"
-            :product="product" /><ProductItemComponent
-            v-for="product in productCurrentData"
-            :key="product.id"
-            :product="product"
-        /></a-flex>
+        </section>
       </a-flex>
-    </section>
-  </DefaultLayout>
+      <a-flex class="justify-between items-center mb-4">
+        <a-flex
+          ><span
+            >Hiển thị tất cả {{ productCurrentData.length }} kết quả</span
+          ></a-flex
+        >
+        <a-flex
+          ><a-select
+            ref="select"
+            v-model:value="value1"
+            style="width: 250px"
+            :options="options1"
+            @focus="focus"
+            @change="handleChange"
+          ></a-select>
+        </a-flex>
+      </a-flex>
+      <a-flex horizontal class="flex-wrap gap-8 justify-center"
+        ><ProductItemComponent
+          v-for="product in productCurrentData"
+          :key="product.id"
+          :product="product" /><ProductItemComponent
+          v-for="product in productCurrentData"
+          :key="product.id"
+          :product="product" /><ProductItemComponent
+          v-for="product in productCurrentData"
+          :key="product.id"
+          :product="product" /><ProductItemComponent
+          v-for="product in productCurrentData"
+          :key="product.id"
+          :product="product"
+      /></a-flex>
+    </a-flex>
+  </section>
+
   <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
-import DefaultLayout from "./DefaultLayout.vue";
 import CategorySlideComponent from "@/components/CategorySlideComponent.vue";
 import ProductItemComponent from "@/components/ProductItemComponent.vue";
 import {
@@ -278,7 +272,7 @@ onMounted(async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_CATEGORY}/category/${slug1}/${slug2}`
     );
-    category.value = response.data;    
+    category.value = response.data;
     productCurrentData.value = category.value.products;
     console.log("Danh sách: ", productCurrentData.value);
   } catch (error) {

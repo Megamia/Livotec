@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import DefaultLayoutGuarantee from "../views/DefaultLayoutGuarantee.vue";
+import DefaultLayoutGuarantee from "./DefaultLayoutGuarantee.vue";
 import GuaranteePage from "./guarantee/GuaranteePage.vue";
 </script>
 
