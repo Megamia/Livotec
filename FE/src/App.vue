@@ -2,8 +2,6 @@
 import layouts from "./views/layouts";
 import { RouterView, useRoute } from "vue-router";
 import { computed, onMounted, onUnmounted } from "vue";
-import { RouterView } from "vue-router";
-import { onMounted, onUnmounted } from "vue";
 import {
   saveDataToIndexedDB,
   getDataFromIndexedDB,

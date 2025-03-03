@@ -10,6 +10,16 @@
     >
       <slot></slot>
     </main>
+    <div
+      class="fixed top-[80%] right-[2%] bg-[red] z-[90] p-2 rounded-lg border-[1px] border-gray-600"
+    >
+      <button class="text-[30px] text-white" @click="hanldeOpenChatBot">
+        ChatBot
+      </button>
+    </div>
+    <a-modal v-model:open="openChat" @ok="handleOk" class="modal">
+      <ChatBotComponent />
+    </a-modal>
     <a-flex class="justify-center bg-[#EAEBF4] bottom-0">
       <FooterComponent />
     </a-flex>
@@ -17,8 +27,18 @@
 </template>
 
 <script setup>
+import ChatBotComponent from "@/components/chatBot/ChatBotComponent.vue";
 import FooterComponent from "@/components/home/FooterComponent.vue";
 import HeaderComponent from "@/components/home/HeaderComponent.vue";
+import { ref } from "vue";
+
+const openChat = ref(false);
+const hanldeOpenChatBot = () => {
+  openChat.value = true;
+};
+const handleOk = () => {
+  openChat.value = false;
+};
 </script>
 
 <style>
