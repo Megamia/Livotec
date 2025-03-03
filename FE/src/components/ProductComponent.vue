@@ -15,7 +15,7 @@
           <a-tabs class="nav max-w-[100%]" @change="changeData"
             ><a-tab-pane
               v-for="item in categoryChil"
-              :key="item.slug"
+              :key="item.id"
               :tab="item.name"
               class="flex gap-[10px]"
             ></a-tab-pane
@@ -122,7 +122,6 @@ const router = useRouter();
 const dataChil = ref([]);
 const categoryChil = ref([]);
 const productData = ref([]);
-const haveData = ref(false);
 const props = defineProps({
   categorySlug: [String, String],
 });
@@ -136,31 +135,14 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-const changeData = (id) => {
-  fillterData(id);
-};
-
-const fillterData = (id) => {
-  console.log(id);
-  console.log(dataChil.value);
-  console.log(productData.value);
-
-  dataChil.value = productData.value.filter(
-    (product) => product.category.id === id
-  );
-};
-
-const handleProductDetail = (items) => {
-  router.push(`/product/${items}`);
-};
 const fetchData = async () => {
   try {
-    const [categoryData, productData] = await Promise.all([
+    const [allCategoryData, allProductData] = await Promise.all([
       getDataFromIndexedDB("category"),
       getDataFromIndexedDB("products"),
     ]);
 
-    const parentCategory = categoryData.find(
+    const parentCategory = allCategoryData.find(
       (item) => item.slug === props.categorySlug
     );
     if (!parentCategory) {
@@ -171,24 +153,41 @@ const fetchData = async () => {
 
     const categoryIds = [
       parentCategory.id,
-      ...categoryData
+      ...allCategoryData
         .filter((item) => item.parent_id === parentCategory.id)
         .map((item) => item.id),
     ];
 
-    const filteredProducts = productData.filter((product) =>
+    const filteredProducts = allProductData.filter((product) =>
       categoryIds.includes(product.category_id)
     );
 
-    categoryChil.value = categoryData.filter(
+    categoryChil.value = allCategoryData.filter(
       (item) => item.parent_id === parentCategory.id
     );
     productData.value = filteredProducts.length > 0 ? filteredProducts : [];
-
-    dataChil.value = productData.value;
+    fillterData(categoryChil.value[0].id);
   } catch (error) {
     console.error("Lỗi khi lấy dữ liệu:", error);
   }
+};
+
+const test = () => {
+  console.log("data: ", productData.value);
+};
+
+const changeData = (id) => {
+  fillterData(id);
+};
+
+const fillterData = (id) => {
+  dataChil.value = productData.value.filter(
+    (product) => product.category_id === id
+  );
+};
+
+const handleProductDetail = (items) => {
+  router.push(`/product/${items}`);
 };
 
 onMounted(() => fetchData());
@@ -229,5 +228,8 @@ onMounted(() => fetchData());
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   position: relative;
+}
+:deep(.ant-tabs-nav .ant-tabs-tab-btn::first-letter) {
+  text-transform: uppercase;
 }
 </style>

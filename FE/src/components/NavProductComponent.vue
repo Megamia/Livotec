@@ -321,6 +321,9 @@ const breakpoints = {
   font-size: 18px;
   font-weight: 500;
 }
+:deep(.ant-tabs-nav .ant-tabs-tab-btn::first-letter) {
+  text-transform: uppercase;
+}
 </style>
 
 <style>
