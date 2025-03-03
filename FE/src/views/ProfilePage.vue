@@ -1,5 +1,4 @@
 <template>
-  <DefaultLayout>
     <div
       class="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]"
     >
@@ -46,7 +45,7 @@
               >
                 <img
                   class="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500"
-                  src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhY2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+                  :src="profile.avatar?.path"
                   alt="Bordered avatar"
                 />
 
@@ -81,7 +80,7 @@
                       id="first_name"
                       class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                       placeholder="Your first name"
-                      value="Jane"
+                      v-model="profile.first_name"
                       required
                     />
                   </div>
@@ -97,7 +96,7 @@
                       id="last_name"
                       class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                       placeholder="Your last name"
-                      value="Ferguson"
+                      v-model="profile.last_name"
                       required
                     />
                   </div>
@@ -113,12 +112,12 @@
                     type="email"
                     id="email"
                     class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                    placeholder="your.email@mail.com"
-                    required
+                    v-model="profile.email"
+                    disabled
                   />
                 </div>
 
-                <div class="mb-2 sm:mb-6">
+                <!-- <div class="mb-2 sm:mb-6">
                   <label
                     for="profession"
                     class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
@@ -145,7 +144,7 @@
                     class="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500"
                     placeholder="Write your bio here..."
                   ></textarea>
-                </div>
+                </div> -->
 
                 <div class="flex justify-end">
                   <button
@@ -161,27 +160,38 @@
         </div>
       </main>
     </div>
-  </DefaultLayout>
 </template>
 
 <script setup>
-import DefaultLayout from "./DefaultLayout.vue";
 import { onMounted, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import axios from "axios";
+const router = useRouter();
 
-const fetchData = async () => {
+const profile = ref({});
+const defaultAvatar = ref("https://www.gravatar.com/avatar/?d=mp");
+
+const fetchProfile = async () => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${slug}`
+    const response = await axios.post(
+      `${import.meta.env.VITE_APP_URL_API_USER}/profile`,
+      {},
+      { withCredentials: true }
     );
+    profile.value = response.data;
+    console.log(profile.value);
   } catch (error) {
-    console.error("Error fetching product:", error);
+    if (error.response && error.response.status === 401) {
+      console.log("Bạn chưa đăng nhập. Đang chuyển hướng...");
+      alert("Bạn chưa đăng nhập. Đang chuyển hướng...");
+      router.push("/login");
+    } else {
+      console.log(error);
+    }
   }
 };
-onMounted(async () => {
-  fetchData();
-});
+
+onMounted(fetchProfile);
 </script>
 
 <style scoped></style>

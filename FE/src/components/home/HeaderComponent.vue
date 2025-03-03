@@ -111,14 +111,23 @@
       <AnOutlinedMenu class="icon iconHidden" @click="showMenu" />
       <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
       <a-flex class="items-center whitespace-nowrap">
-        <AnOutlinedUser
-          v-if="isLogin"
-          @click="handleLogout"
-          class="icon iconShow"
-        />
-        <RouterLink to="/login" class="text-white" v-else>
-          Đăng nhập</RouterLink
+        <a-flex vertical v-if="isLogin" class="icon iconShow group relative items-center"
+          ><a-avatar :src="avatar" :size="40" /><span class="text-[13px] font-medium"
+            >{{ firstName }}</span
+          >
+          <div
+            class="hidden group-hover:flex absolute bg-white text-black left-0 top-5 rounded-md px-3 py-1 mt-3 text-[17px]"
+            @click="handleLogout"
+          >
+            Logout
+          </div></a-flex
         >
+        <RouterLink to="/login" v-else>
+          <a-flex
+            class="px-4 py-2 justify-center items-center bg-white text-[#02B6AC] font-bold rounded-md cursor-pointer peer-hover:animate-ping transition-transform hover:scale-105"
+            >Đăng nhập</a-flex
+          >
+        </RouterLink>
       </a-flex>
     </a-flex>
   </a-flex>
@@ -147,6 +156,9 @@ const route = useRoute();
 const isLogin = ref(false);
 const searchInputHover = ref(false);
 
+const firstName = computed(() => store.getters["user/getFirstName"]);
+const avatar = computed(() => store.getters["user/getAvatar"]);
+
 const handleLogout = async () => {
   try {
     if (confirm("Chắc chắn muốn đăng xuất?")) {
@@ -158,6 +170,7 @@ const handleLogout = async () => {
         }
       );
       Cookies.remove("user");
+      store.dispatch("user/clearDataUser");
       isLogin.value = false;
     } else {
       return;
@@ -204,9 +217,7 @@ const getdata = async () => {
     const productRequests = categories.map((category) =>
       axios
         .get(
-          `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${
-            category.slug
-          }`
+          `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${category.slug}`
         )
         .catch((error) => {
           console.error(
@@ -267,12 +278,15 @@ const getdata = async () => {
 const token = computed(() => Cookies.get("user"));
 
 watchEffect(() => {
-  isLogin.value = !!token.value;
+  isLogin.value = !!firstName.value;
 });
 
 const fetchData = () => {
-  isLogin.value = !!token.value;
+  isLogin.value = !!firstName.value;
 };
+
+const profileData = async () => {};
+
 onMounted(() => {
   fetchData();
   getdata();

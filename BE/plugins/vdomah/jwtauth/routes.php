@@ -35,6 +35,7 @@ Route::group(['prefix' => 'api'], function () {
                 'first_name' => $userModel->first_name,
                 'email' => $userModel->email,
                 'is_activated' => $userModel->is_activated,
+                'avatar_preview' => $userModel->avatar ? $userModel->avatar_url : null,
             ];
         }
 
@@ -133,7 +134,7 @@ Route::group(['prefix' => 'api'], function () {
 
     Route::post('check-token', function (Request $request) {
         Log::info('Check token endpoint hit');
-            $token = Request::cookie('token');
+        $token = Request::cookie('token');
 
         if (!$token) {
             Log::error('Token not found in cookie');

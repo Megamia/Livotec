@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import storeProducts from "./StoreProducts/storeProducts";
 import createPersistedState from "vuex-persistedstate";
 import CryptoJS from "crypto-js";
+import user from './modules/user';
 
 const SECRET_KEY = "your-secret-key";
 
@@ -27,6 +28,7 @@ const decryptData = (cipherText) => {
 const store = createStore({
   modules: {
     product: storeProducts,
+    user: user,
   },
   plugins: [
     createPersistedState({

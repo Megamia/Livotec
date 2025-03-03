@@ -1,6 +1,5 @@
 <template>
-  <DefaultLayout>
-    <div class="container mb-[3rem]">
+    <div class="w-full mb-[3rem]">
       <div class="w-full border-b-[1px] border-gray-300 py-3">
         <span class="text-[#38B6AC] font-bold">Thanh toán</span>
       </div>
@@ -135,13 +134,11 @@
         </div>
       </div>
     </div>
-  </DefaultLayout>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import DefaultLayout from "./DefaultLayout.vue";
 import { AkXSmall } from "@kalimahapps/vue-icons";
 import axios from "axios";
 const bankName = ref(import.meta.env.VITE_BANK_NAME);

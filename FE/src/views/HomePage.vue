@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <a-flex class="flex-1 flex-col">
     <DefaultLayout>
       <HomeHeroSlideComponent />
@@ -7,11 +8,16 @@
       <ProductComponent :categorySlug="'bep-tu'" />
     </DefaultLayout>
   </a-flex>
+=======
+    <HomeHeroSlideComponent />
+    <NavProductComponent />
+    <ProductComponent :categorySlug="'may-loc-nuoc'" />
+    <ProductComponent :categorySlug="'bep-tu'" />
+>>>>>>> cdc64764f6c81b29d0ca71feff9c76119d5ead85
 </template>
 
 <script setup>
 import HomeHeroSlideComponent from "@/components/HomeHeroSlideComponent.vue";
-import DefaultLayout from "./DefaultLayout.vue";
 import NavProductComponent from "@/components/NavProductComponent.vue";
 import ProductComponent from "@/components/ProductComponent.vue";
 // import { onMounted } from "vue";

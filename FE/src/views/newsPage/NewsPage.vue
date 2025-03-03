@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import DefaultLayout from "../DefaultLayout.vue";
+import DefaultLayout from "../layouts/DefaultLayout.vue";
 import "./news.css";
 import ItemLatestNewsComponent from "@/components/news/latestNews/ItemLatestNewsComponent.vue";
 import ItemNavNewsComponent from "@/components/news/navNews/ItemNavNewsComponent.vue";

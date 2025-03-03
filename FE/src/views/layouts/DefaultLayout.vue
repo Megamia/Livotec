@@ -1,12 +1,13 @@
 <template>
-  <!-- eslint-disable vue/no-v-model-argument -->
-  <div class="">
+  <div>
     <a-flex
       class="justify-center bg-[#02B6AC] sticky top-0 z-50 border-b-[1px] border-white"
     >
       <HeaderComponent />
     </a-flex>
-    <main class="flex flex-col flex-1 gap-[100px] items-center mb-[50px]">
+    <main
+      class="flex flex-col flex-1 gap-[100px] items-center mb-[50px] container p-0"
+    >
       <slot></slot>
     </main>
     <div
@@ -23,7 +24,6 @@
       <FooterComponent />
     </a-flex>
   </div>
-  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>
@@ -42,68 +42,43 @@ const handleOk = () => {
 </script>
 
 <style>
-.container,
-.container-fluid,
-.container-lg,
-.container-md,
-.container-sm,
-.container-xl,
-.container-xxl {
-  --bs-gutter-x: 1.5rem;
-  --bs-gutter-y: 0;
-  width: 100%;
-  padding-right: calc(var(--bs-gutter-x) * 0.5);
-  padding-left: calc(var(--bs-gutter-x) * 0.5);
-  margin-right: auto;
-  margin-left: auto;
+.container {
+  --bs-gutter-x: 1.5rem !important;
+  --bs-gutter-y: 0 !important;
+  width: 100% !important;
+  padding-right: calc(var(--bs-gutter-x) * 0.5) !important;
+  padding-left: calc(var(--bs-gutter-x) * 0.5) !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
 }
 
 @media (min-width: 576px) {
-  .container,
-  .container-sm {
-    max-width: 540px;
+  .container {
+    max-width: 540px !important;
   }
 }
 
 @media (min-width: 768px) {
-  .container,
-  .container-md,
-  .container-sm {
-    max-width: 720px;
+  .container {
+    max-width: 720px !important;
   }
 }
 
 @media (min-width: 992px) {
-  .container,
-  .container-lg,
-  .container-md,
-  .container-sm {
-    max-width: 960px;
+  .container {
+    max-width: 960px !important;
   }
 }
 
 @media (min-width: 1200px) {
-  .container,
-  .container-lg,
-  .container-md,
-  .container-sm,
-  .container-xl {
-    max-width: 1140px;
+  .container {
+    max-width: 1140px !important;
   }
 }
 
 @media (min-width: 1400px) {
-  .container,
-  .container-lg,
-  .container-md,
-  .container-sm,
-  .container-xl,
-  .container-xxl {
-    max-width: 1320px;
+  .container {
+    max-width: 1320px !important;
   }
-}
-
-.modal {
-  top: 50px;
 }
 </style>
