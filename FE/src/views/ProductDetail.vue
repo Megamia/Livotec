@@ -221,22 +221,24 @@ const setActiveImage = (path) => {
 };
 
 const handleAddToCart = (cart) => {
-  const currentCart = store.getters["product/getDataStoreCart"] || [];
+  console.log(cart);
+  
+  // const currentCart = store.getters["product/getDataStoreCart"] || [];
 
-  const updatedCart = currentCart.map((item) => {
-    if (item.id === cart.id) {
-      return { ...item, quantity: (item.quantity || 1) + 1 };
-    }
-    return item;
-  });
+  // const updatedCart = currentCart.map((item) => {
+  //   if (item.id === cart.id) {
+  //     return { ...item, quantity: (item.quantity || 1) + 1 };
+  //   }
+  //   return item;
+  // });
 
-  if (!currentCart.some((item) => item.id === cart.id)) {
-    updatedCart.push({ ...cart, quantity: 1 });
-  }
+  // if (!currentCart.some((item) => item.id === cart.id)) {
+  //   updatedCart.push({ ...cart, quantity: 1 });
+  // }
 
-  store.commit("product/setDataStoreCart", {
-    dataStoreCart: updatedCart,
-  });
+  // store.commit("product/setDataStoreCart", {
+  //   dataStoreCart: updatedCart,
+  // });
 };
 
 const addToComparison = (product) => {

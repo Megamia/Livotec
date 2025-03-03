@@ -113,10 +113,10 @@
 </template>
 
 <script setup>
-import axios from "axios";
 import { onMounted, ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import "./ProductComponent.css";
+import { getDataFromIndexedDB } from "@/store/indexedDB";
 
 const router = useRouter();
 const dataChil = ref([]);
@@ -136,13 +136,17 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-const changeData = (slug) => {
-  fillterData(slug);
+const changeData = (id) => {
+  fillterData(id);
 };
 
-const fillterData = (slug) => {
+const fillterData = (id) => {
+  console.log(id);
+  console.log(dataChil.value);
+  console.log(productData.value);
+
   dataChil.value = productData.value.filter(
-    (product) => product.category.slug === slug
+    (product) => product.category.id === id
   );
 };
 
@@ -151,40 +155,39 @@ const handleProductDetail = (items) => {
 };
 const fetchData = async () => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${
-        props.categorySlug
-      }`
+    const [categoryData, productData] = await Promise.all([
+      getDataFromIndexedDB("category"),
+      getDataFromIndexedDB("products"),
+    ]);
+
+    const parentCategory = categoryData.find(
+      (item) => item.slug === props.categorySlug
+    );
+    if (!parentCategory) {
+      console.warn("Không tìm thấy danh mục");
+      return;
+    }
+    nameCategory.value = parentCategory.name || "";
+
+    const categoryIds = [
+      parentCategory.id,
+      ...categoryData
+        .filter((item) => item.parent_id === parentCategory.id)
+        .map((item) => item.id),
+    ];
+
+    const filteredProducts = productData.filter((product) =>
+      categoryIds.includes(product.category_id)
     );
 
-    if (response.data.status === 1) {
-      //   dataChil.value = response.data.products?.length
-      //     ? response.data.products.sort((a, b) => b.sold_out - a.sold_out)
-      //     : [];
+    categoryChil.value = categoryData.filter(
+      (item) => item.parent_id === parentCategory.id
+    );
+    productData.value = filteredProducts.length > 0 ? filteredProducts : [];
 
-      //   dataChil.value = response.data.products?.length
-      // ? response.data.products : [];
-
-      productData.value =
-        response.data.products?.length > 0 ? response.data.products : [];
-      categoryChil.value = response.data.category?.children || [];
-      nameCategory.value = response.data.category?.name || "";
-      pathImg.value = response.data.category?.image?.path || "";
-      haveData.value = true;
-
-      if (categoryChil.value.length > 0 && productData.value.length > 0) {
-        fillterData(categoryChil.value[0].slug);
-      } else {
-        dataChil.value = productData.value;
-      }
-    } else {
-      dataChil.value = [];
-      haveData.value = false;
-    }
-  } catch (e) {
-    console.error("Error fetching data:", e);
-    dataChil.value = [];
-    haveData.value = false;
+    dataChil.value = productData.value;
+  } catch (error) {
+    console.error("Lỗi khi lấy dữ liệu:", error);
   }
 };
 

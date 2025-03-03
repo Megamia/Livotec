@@ -54,7 +54,7 @@
               <div class="w-full relative py-[20px] justify-center flex">
                 <img
                   :src="
-                    itemChil.image?.path ||
+                    itemChil.image ||
                     'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
                   "
                   class="justify-center items-center w-[300px] h-[300px] max-w-full max-h-full object-cover"
@@ -94,7 +94,7 @@
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
                       class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
-                      @click="handleProductDetail(itemChil.slug)"
+                      @click="handleAddToCart(itemChil)"
                     >
                       Mua ngay
                     </button>
@@ -127,7 +127,6 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -135,6 +134,8 @@ import "./NavProductComponent.css";
 import { Navigation } from "swiper";
 import { useRouter } from "vue-router";
 import { BsArrowLeft, BsArrowRight } from "@kalimahapps/vue-icons";
+import store from "@/store/store";
+import { getDataFromIndexedDB } from "@/store/indexedDB";
 
 const modules = [Navigation];
 const slugsToFilter = [
@@ -161,12 +162,10 @@ const categoryOrder = {
 };
 
 const fetchDataCategory = async () => {
-
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategoryParent`
-    );
-    data.value = response.data.allCategoryParent;
+    let categoryData = await getDataFromIndexedDB("category");
+    const parent = categoryData.filter((item) => !item.parent_id);
+    data.value = parent;
 
     filterData(data.value);
 
@@ -202,6 +201,25 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
+const handleAddToCart = (cart) => {
+  const currentCart = store.getters["product/getDataStoreCart"] || [];
+
+  const updatedCart = currentCart.map((item) => {
+    if (item.id === cart.id) {
+      return { ...item, quantity: (item.quantity || 1) + 1 };
+    }
+    return item;
+  });
+
+  if (!currentCart.some((item) => item.id === cart.id)) {
+    updatedCart.push({ ...cart, quantity: 1 });
+  }
+
+  store.commit("product/setDataStoreCart", {
+    dataStoreCart: updatedCart,
+  });
+};
+
 const handleProductDetail = (items) => {
   router.push(`/product/${items}`);
 };
@@ -213,22 +231,53 @@ const changeData = async (slug) => {
 
 const fetchData = async (slug) => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${slug}`
-    );
+    let categoryData = await getDataFromIndexedDB("category");
+    let productData = await getDataFromIndexedDB("products");
 
-    if (response.data && response.data.products.length > 0) {
-      dataChil.value = response.data.products;
+    const parent = categoryData.find((item) => item.slug === slug);
+    if (!parent) {
+      console.log("Không tìm thấy danh mục");
+      return;
+    }
+
+    const categoryIds = [
+      parent.id,
+      ...categoryData
+        .filter((item) => item.parent_id === parent.id)
+        .map((item) => item.id),
+    ];
+
+    const filteredProducts = productData.filter((product) =>
+      categoryIds.includes(product.category_id)
+    );
+    if (filteredProducts.length > 0) {
+      dataChil.value = filteredProducts;
       haveData.value = true;
     } else {
       dataChil.value = [];
       haveData.value = false;
     }
   } catch (e) {
-    console.error("Error fetching data:", e);
-    dataChil.value = [];
-    haveData.value = false;
+    console.log("Error: ", e);
   }
+
+  // try {
+  //   const response = await axios.get(
+  //     `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${slug}`
+  //   );
+
+  //   if (response.data && response.data.products.length > 0) {
+  //     dataChil.value = response.data.products;
+  //     haveData.value = true;
+  //   } else {
+  //     dataChil.value = [];
+  //     haveData.value = false;
+  //   }
+  // } catch (e) {
+  //   console.error("Error fetching data:", e);
+  //   dataChil.value = [];
+  //   haveData.value = false;
+  // }
 };
 
 const swiperInstance = ref(null);
