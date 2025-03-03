@@ -43,13 +43,13 @@ const fetchData1 = async () => {
         ...product,
         image: product.image?.path || "",
       }));
-      return products;
+      return { data: products, timestamp: Date.now() };
     } else {
-      return [];
+      return { data: [], timestamp: Date.now() };
     }
   } catch (e) {
     console.log("Error: ", e);
-    return [];
+    return { data: [], timestamp: Date.now() };
   }
 };
 
@@ -60,16 +60,16 @@ const fetchDataCategory = async () => {
     );
 
     if (response.data.status === 1) {
-      return response.data.allCategory;
+      return { data: response.data.allCategory, timestamp: Date.now() };
     } else {
-      return [];
+      return { data: [], timestamp: Date.now() };
     }
   } catch (e) {
     console.log("Error: ", e);
-    return [];
+    return { data: [], timestamp: Date.now() };
   }
 };
-fetchData1();
+
 const fetchData2 = async () => {
   let localData = await getDataFromIndexedDB("products");
   let categoryData = await getDataFromIndexedDB("category");
@@ -97,6 +97,52 @@ onMounted(async () => {
   const { products, categories } = await fetchData2();
   // console.log("Products:", products);
   // console.log("Categories:", categories);
+});
+
+const fetchDataWithTimestamp = async () => {
+  try {
+    const categoryData = await getDataFromIndexedDB("category");
+    const productData = await getDataFromIndexedDB("products");
+
+    const newCategoryData = await fetchDataCategory();
+    const newProductData = await fetchData1();
+
+    console.log(
+      "productData: ,",
+      productData,
+      "\n",
+      "newProductData: ",
+      newProductData
+    );
+
+    const isCategoryChanged =
+      JSON.stringify(categoryData) !== JSON.stringify(newCategoryData.data);
+    const isProductChanged =
+      JSON.stringify(productData) !== JSON.stringify(newProductData.data);
+
+    if (isCategoryChanged || isProductChanged) {
+      console.log("⏳ Dữ liệu thay đổi, đang cập nhật...");
+
+      if (isCategoryChanged) {
+        await saveDataToIndexedDB("category", newCategoryData.data);
+      }
+
+      if (isProductChanged) {
+        await saveDataToIndexedDB("products", newProductData.data);
+      }
+
+      localStorage.setItem("lastUpdated", Date.now());
+      console.log("✅ Dữ liệu đã được cập nhật!");
+    } else {
+      console.log("✅ Dữ liệu không thay đổi, giữ nguyên.");
+    }
+  } catch (error) {
+    console.error("❌ Lỗi khi tải dữ liệu:", error);
+  }
+};
+
+onMounted(() => {
+  fetchDataWithTimestamp();
 });
 </script>
 

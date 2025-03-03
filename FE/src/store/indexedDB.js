@@ -30,9 +30,12 @@ export const saveDataToIndexedDB = async (storeName, data) => {
     const db = await dbPromise;
     const tx = db.transaction(storeName, "readwrite");
     const store = tx.objectStore(storeName);
+    const timestamp = Date.now();
 
     for (const item of data) {
       try {
+        item.timestamp = timestamp;
+
         store.put(item);
       } catch (err) {
         console.error("Lỗi khi lưu item:", item, err);

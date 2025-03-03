@@ -145,45 +145,41 @@ const fetchData = async () => {
     const parentCategory = allCategoryData.find(
       (item) => item.slug === props.categorySlug
     );
-    if (!parentCategory) {
-      console.warn("Không tìm thấy danh mục");
-      return;
-    }
+    if (!parentCategory) return;
+
     nameCategory.value = parentCategory.name || "";
-
-    const categoryIds = [
-      parentCategory.id,
-      ...allCategoryData
-        .filter((item) => item.parent_id === parentCategory.id)
-        .map((item) => item.id),
-    ];
-
-    const filteredProducts = allProductData.filter((product) =>
-      categoryIds.includes(product.category_id)
-    );
 
     categoryChil.value = allCategoryData.filter(
       (item) => item.parent_id === parentCategory.id
     );
-    productData.value = filteredProducts.length > 0 ? filteredProducts : [];
-    fillterData(categoryChil.value[0].id);
+
+    const categoryIds = [
+      parentCategory.id,
+      ...categoryChil.value.map((item) => item.id),
+    ];
+
+    productData.value = allProductData.filter((product) =>
+      categoryIds.includes(product.category_id)
+    );
+
+    if (categoryChil.value.length > 0) {
+      fillterData(categoryChil.value[0].id);
+    } else {
+      fillterData(parentCategory.id);
+    }
   } catch (error) {
     console.error("Lỗi khi lấy dữ liệu:", error);
   }
 };
 
-const test = () => {
-  console.log("data: ", productData.value);
+const fillterData = (id) => {
+  dataChil.value = productData.value.filter(
+    (product) => Number(product.category_id) === Number(id)
+  );
 };
 
 const changeData = (id) => {
   fillterData(id);
-};
-
-const fillterData = (id) => {
-  dataChil.value = productData.value.filter(
-    (product) => product.category_id === id
-  );
 };
 
 const handleProductDetail = (items) => {

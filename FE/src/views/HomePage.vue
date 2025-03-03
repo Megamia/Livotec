@@ -3,7 +3,7 @@
     <DefaultLayout>
       <HomeHeroSlideComponent />
       <NavProductComponent />
-      <ProductComponent :categorySlug="'may-loc-nuoc'" />
+      <!-- <ProductComponent :categorySlug="'may-loc-nuoc'" /> -->
       <ProductComponent :categorySlug="'bep-tu'" />
     </DefaultLayout>
   </a-flex>
