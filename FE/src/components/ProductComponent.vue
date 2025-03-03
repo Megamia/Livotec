@@ -15,7 +15,7 @@
           <a-tabs class="nav max-w-[100%]" @change="changeData"
             ><a-tab-pane
               v-for="item in categoryChil"
-              :key="item.slug"
+              :key="item.id"
               :tab="item.name"
               class="flex gap-[10px]"
             ></a-tab-pane
@@ -113,16 +113,15 @@
 </template>
 
 <script setup>
-import axios from "axios";
 import { onMounted, ref, defineProps } from "vue";
 import { useRouter } from "vue-router";
 import "./ProductComponent.css";
+import { getDataFromIndexedDB } from "@/store/indexedDB";
 
 const router = useRouter();
 const dataChil = ref([]);
 const categoryChil = ref([]);
 const productData = ref([]);
-const haveData = ref(false);
 const props = defineProps({
   categorySlug: [String, String],
 });
@@ -136,60 +135,59 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-const changeData = (slug) => {
-  fillterData(slug);
+const fetchData = async () => {
+  try {
+    const [allCategoryData, allProductData] = await Promise.all([
+      getDataFromIndexedDB("category"),
+      getDataFromIndexedDB("products"),
+    ]);
+
+    const parentCategory = allCategoryData.find(
+      (item) => item.slug === props.categorySlug
+    );
+    if (!parentCategory) {
+      console.warn("Không tìm thấy danh mục");
+      return;
+    }
+    nameCategory.value = parentCategory.name || "";
+
+    const categoryIds = [
+      parentCategory.id,
+      ...allCategoryData
+        .filter((item) => item.parent_id === parentCategory.id)
+        .map((item) => item.id),
+    ];
+
+    const filteredProducts = allProductData.filter((product) =>
+      categoryIds.includes(product.category_id)
+    );
+
+    categoryChil.value = allCategoryData.filter(
+      (item) => item.parent_id === parentCategory.id
+    );
+    productData.value = filteredProducts.length > 0 ? filteredProducts : [];
+    fillterData(categoryChil.value[0].id);
+  } catch (error) {
+    console.error("Lỗi khi lấy dữ liệu:", error);
+  }
 };
 
-const fillterData = (slug) => {
+const test = () => {
+  console.log("data: ", productData.value);
+};
+
+const changeData = (id) => {
+  fillterData(id);
+};
+
+const fillterData = (id) => {
   dataChil.value = productData.value.filter(
-    (product) => product.category.slug === slug
+    (product) => product.category_id === id
   );
 };
 
 const handleProductDetail = (items) => {
   router.push(`/product/${items}`);
-};
-const fetchData = async () => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${
-        props.categorySlug
-      }`
-    );
-
-    if (response.data.status === 1) {
-      console.log(response.data);
-
-      //   dataChil.value = response.data.products?.length
-      //     ? response.data.products.sort((a, b) => b.sold_out - a.sold_out)
-      //     : [];
-
-      //   dataChil.value = response.data.products?.length
-      // ? response.data.products : [];
-
-      productData.value = response.data.products
-        ? response.data.products
-        : "No data";
-      categoryChil.value = response.data.category?.children;
-      nameCategory.value = response.data.category?.name;
-      pathImg.value = response.data.category?.image?.path;
-      haveData.value = true;
-      //UPDATE
-      if (categoryChil.value.length > 0 && productData.value != "No data") {
-        fillterData(categoryChil.value[0].slug);
-      } else {
-        dataChil.value = response.data.products;
-      }
-      //UPDATE
-    } else {
-      dataChil.value = [];
-      haveData.value = false;
-    }
-  } catch (e) {
-    console.error("Error fetching data:", e);
-    dataChil.value = [];
-    haveData.value = false;
-  }
 };
 
 onMounted(() => fetchData());
@@ -230,5 +228,8 @@ onMounted(() => fetchData());
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   position: relative;
+}
+:deep(.ant-tabs-nav .ant-tabs-tab-btn::first-letter) {
+  text-transform: uppercase;
 }
 </style>

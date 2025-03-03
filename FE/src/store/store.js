@@ -4,7 +4,7 @@ import createPersistedState from "vuex-persistedstate";
 import CryptoJS from "crypto-js";
 import user from './modules/user';
 
-const SECRET_KEY = "your-secret-key"; 
+const SECRET_KEY = "your-secret-key";
 
 const encryptData = (data) => {
   try {
@@ -33,18 +33,33 @@ const store = createStore({
   plugins: [
     createPersistedState({
       key: "vuex",
-      paths: ["product.dataStoreProducts", "product.dataStoreCart"], 
+      paths: [
+        "product.dataStoreProducts",
+        "product.dataStoreCart",
+        "product.allDataProducts",
+      ],
       storage: {
         getItem: (key) => {
           const data = localStorage.getItem(key);
-          return data ? decryptData(data) : null;
+          // return data ? decryptData(data) : null;
+          return data ? data : null;
         },
         setItem: (key, value) => {
-          const encryptedData = encryptData(value);
-          localStorage.setItem(key, encryptedData);
+          // const encryptedData = encryptData(value);
+          localStorage.setItem(key, value);
         },
         removeItem: (key) => localStorage.removeItem(key),
       },
+      // storage: {
+      //   getItem: (key) => {
+      //     const data = localStorage.getItem(key);
+      //     return data ? JSON.parse(data) : null;
+      //   },
+      //   setItem: (key, value) => {
+      //     localStorage.setItem(key, JSON.stringify(value));
+      //   },
+      //   removeItem: (key) => localStorage.removeItem(key),
+      // },
     }),
   ],
 });

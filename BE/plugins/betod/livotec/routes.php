@@ -10,6 +10,14 @@ Route::group(['prefix' => 'apiProduct'], function () {
         $product = Product::with(['image', 'category'])->get();
         return $product;
     });
+    Route::get("allProduct", function () {
+        $allProduct = Product::with(['image'])->get();
+        if ($allProduct) {
+            return response()->json(['allProduct' => $allProduct, 'status' => 1]);
+        } else {
+            return response()->json(['allProduct' => 'No data', 'status' => 0]);
+        }
+    });
 
     Route::get('navProducts/{slug}', function ($slug) {
         $category = Category::with(['children'])->where('slug', $slug)->first();
@@ -62,6 +70,7 @@ Route::group(['prefix' => 'apiOrder'], function () {
     Route::post('createOrder', 'Betod\Livotec\Controllers\OrderController@createOrder');
 });
 
+
 Route::group(['prefix' => 'apiCategory'], function () {
     Route::get('category/{slug1}/{slug2?}', function ($slug1, $slug2 = null) {
         // Truy vấn category cha theo slug1
@@ -103,11 +112,11 @@ Route::group(['prefix' => 'apiCategory'], function () {
     });
 
     Route::get('allCategory', function () {
-        $data = Category::all();
-        if ($data) {
-            return response()->json(['data1' => $data, 'status' => 1]);
+        $allCategory = Category::all();
+        if ($allCategory) {
+            return response()->json(['allCategory' => $allCategory, 'status' => 1]);
         } else {
-            return response()->json(['data1' => 'No data', 'status' => 0]);
+            return response()->json(['allCategory' => 'No data', 'status' => 0]);
         }
     });
     Route::get('allCategoryParent', function () {

@@ -34,6 +34,11 @@ const router = createRouter({
       meta: { layout: "default" },
     },
     {
+      path: "/chatBot",
+      name: "chatBot",
+      component: () => import("../components/chatBot/ChatBotComponent.vue"),
+    },
+    {
       path: "/nav",
       name: "nav",
       component: () => import("../components/NavProductComponent.vue"),
