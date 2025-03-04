@@ -3,7 +3,6 @@ import { openDB } from "idb";
 const dbPromise = openDB("myDatabase", 2, {
   upgrade(db) {
     const stores = ["products", "detailProduct", "cart", "compare", "category"];
-
     stores.forEach((store) => {
       if (!db.objectStoreNames.contains(store)) {
         db.createObjectStore(store, { keyPath: "id" });
@@ -13,16 +12,20 @@ const dbPromise = openDB("myDatabase", 2, {
 });
 
 export const getAllDataFromIndexedDB = async () => {
-  const db = await dbPromise;
-  const stores = ["products", "detailProduct", "cart", "compare", "category"];
+  try {
+    const db = await dbPromise;
+    const stores = ["products", "detailProduct", "cart", "compare", "category"];
+    let allData = {};
 
-  let allData = {};
+    for (const storeName of stores) {
+      allData[storeName] = await db.getAll(storeName);
+    }
 
-  for (const storeName of stores) {
-    allData[storeName] = await db.getAll(storeName);
+    return allData;
+  } catch (error) {
+    console.error("❌ Lỗi khi lấy toàn bộ dữ liệu từ IndexedDB:", error);
+    return null;
   }
-
-  return allData;
 };
 
 export const saveDataToIndexedDB = async (storeName, data) => {
@@ -32,29 +35,55 @@ export const saveDataToIndexedDB = async (storeName, data) => {
     const store = tx.objectStore(storeName);
     const timestamp = Date.now();
 
-    for (const item of data) {
-      try {
-        item.timestamp = timestamp;
-
-        store.put(item);
-      } catch (err) {
-        console.error("Lỗi khi lưu item:", item, err);
-      }
+    if (!Array.isArray(data)) {
+      console.error(`❌ Dữ liệu không hợp lệ cho ${storeName}:`, data);
+      return;
     }
+
+    await store.clear();
+
+    for (const item of data) {
+      item.timestamp = timestamp;
+      store.put(item);
+    }
+
     await tx.done;
   } catch (error) {
-    console.error("Lỗi khi lưu dữ liệu vào IndexedDB:", error);
+    console.error("❌ Lỗi khi lưu dữ liệu vào IndexedDB:", error);
   }
 };
 
 export const getDataFromIndexedDB = async (storeName) => {
-  const db = await dbPromise;
-  return db.getAll(storeName);
+  try {
+    const db = await dbPromise;
+    return await db.getAll(storeName);
+  } catch (error) {
+    console.error(`❌ Lỗi khi lấy dữ liệu từ ${storeName}:`, error);
+    return [];
+  }
 };
 
 export const clearDataFromIndexedDB = async (storeName) => {
-  const db = await dbPromise;
-  const tx = db.transaction(storeName, "readwrite");
-  tx.objectStore(storeName).clear();
-  await tx.done;
+  try {
+    const db = await dbPromise;
+    const tx = db.transaction(storeName, "readwrite");
+    await tx.objectStore(storeName).clear();
+    await tx.done;
+  } catch (error) {
+    console.error(`❌ Lỗi khi xóa dữ liệu trong ${storeName}:`, error);
+  }
+};
+
+export const clearAllDataFromIndexedDB = async () => {
+  try {
+    const db = await dbPromise;
+    const stores = ["products", "detailProduct", "cart", "compare", "category"];
+    const tx = db.transaction(stores, "readwrite");
+
+    await Promise.all(stores.map((store) => tx.objectStore(store).clear()));
+
+    await tx.done;
+  } catch (error) {
+    console.error("❌ Lỗi khi xóa toàn bộ dữ liệu IndexedDB:", error);
+  }
 };
