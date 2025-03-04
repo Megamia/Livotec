@@ -2,151 +2,100 @@
 import layouts from "./views/layouts";
 import { RouterView, useRoute } from "vue-router";
 import { computed, onMounted, onUnmounted } from "vue";
-import {
-  saveDataToIndexedDB,
-  getDataFromIndexedDB,
-  getAllDataFromIndexedDB,
-} from "./store/indexedDB";
+import { saveDataToIndexedDB, getDataFromIndexedDB } from "./store/indexedDB";
 import axios from "axios";
-let timeoutId;
-const route = useRoute();
 
+const route = useRoute();
 const layout = computed(() => layouts[route.meta.layout] || layouts.default);
 
-onMounted(() => {
+let timeoutId;
+
+// Xử lý token
+const handleToken = () => {
   const tokenTimestamp = localStorage.getItem("tokenTimestamp");
   const currentTime = Date.now();
+  const timeElapsed = tokenTimestamp ? currentTime - tokenTimestamp : 0;
+  const oneHour = 3600000;
 
-  if (tokenTimestamp && currentTime - tokenTimestamp >= 3600000) {
+  if (!tokenTimestamp || timeElapsed >= oneHour) {
     localStorage.removeItem("token");
     localStorage.removeItem("tokenTimestamp");
+    localStorage.setItem("tokenTimestamp", Date.now());
   } else {
     timeoutId = setTimeout(() => {
       localStorage.removeItem("token");
       localStorage.removeItem("tokenTimestamp");
-    }, 3600000 - (currentTime - tokenTimestamp || 0));
+    }, oneHour - timeElapsed);
   }
+};
 
-  if (!tokenTimestamp) {
-    localStorage.setItem("tokenTimestamp", Date.now());
-  }
-});
-
-onUnmounted(() => {
-  clearTimeout(timeoutId);
-});
-
+// Lấy dữ liệu sản phẩm từ API
 const fetchData1 = async () => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/allProduct`
     );
-
-    if (response.data.status === 1) {
-      const products = response.data.allProduct.map((product) => ({
-        ...product,
-        image: product.image?.path || "",
-      }));
-      return { data: products, timestamp: Date.now() };
-    } else {
-      return { data: [], timestamp: Date.now() };
-    }
+    return response.data.status === 1
+      ? response.data.allProduct.map((product) => ({
+          ...product,
+          image: product.image?.path || "",
+        }))
+      : [];
   } catch (e) {
-    console.log("Error: ", e);
-    return { data: [], timestamp: Date.now() };
+    console.error("Error fetching products:", e);
+    return [];
   }
 };
 
+// Lấy dữ liệu danh mục từ API
 const fetchDataCategory = async () => {
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
     );
-
-    if (response.data.status === 1) {
-      return { data: response.data.allCategory, timestamp: Date.now() };
-    } else {
-      return { data: [], timestamp: Date.now() };
-    }
+    return response.data.status === 1 ? response.data.allCategory : [];
   } catch (e) {
-    console.log("Error: ", e);
-    return { data: [], timestamp: Date.now() };
+    console.error("Error fetching categories:", e);
+    return [];
   }
 };
 
-const fetchData2 = async () => {
-  let localData = await getDataFromIndexedDB("products");
-  let categoryData = await getDataFromIndexedDB("category");
+// Kiểm tra và cập nhật dữ liệu nếu cần
+const updateDataIfNeeded = async () => {
+  try {
+    const [localProducts, localCategories] = await Promise.all([
+      getDataFromIndexedDB("products"),
+      getDataFromIndexedDB("category"),
+    ]);
 
-  if (localData.length === 0 || categoryData.length === 0) {
-    const apiData = await fetchData1();
-    const apiCategory = await fetchDataCategory();
+    const [apiProducts, apiCategories] = await Promise.all([
+      fetchData1(),
+      fetchDataCategory(),
+    ]);
 
-    if (apiCategory.length > 0) {
-      await saveDataToIndexedDB("category", apiCategory);
-      categoryData = apiCategory;
+    const isProductChanged =
+      JSON.stringify(localProducts) !== JSON.stringify(apiProducts);
+    const isCategoryChanged =
+      JSON.stringify(localCategories) !== JSON.stringify(apiCategories);
+
+    if (isProductChanged) await saveDataToIndexedDB("products", apiProducts);
+    if (isCategoryChanged) await saveDataToIndexedDB("category", apiCategories);
+
+    if (isProductChanged || isCategoryChanged) {
+      localStorage.setItem("lastUpdated", Date.now());
     }
-
-    if (apiData.length > 0) {
-      await saveDataToIndexedDB("products", apiData);
-      localData = apiData;
-    }
+  } catch (error) {
+    console.error("❌ Lỗi khi cập nhật dữ liệu:", error);
   }
-
-  return { products: localData, categories: categoryData };
 };
 
 onMounted(async () => {
-  await fetchData2();
-  const { products, categories } = await fetchData2();
-  // console.log("Products:", products);
-  // console.log("Categories:", categories);
+  handleToken();
+  await updateDataIfNeeded();
 });
 
-const fetchDataWithTimestamp = async () => {
-  try {
-    const categoryData = await getDataFromIndexedDB("category");
-    const productData = await getDataFromIndexedDB("products");
-
-    const newCategoryData = await fetchDataCategory();
-    const newProductData = await fetchData1();
-
-    console.log(
-      "productData: ,",
-      productData,
-      "\n",
-      "newProductData: ",
-      newProductData
-    );
-
-    const isCategoryChanged =
-      JSON.stringify(categoryData) !== JSON.stringify(newCategoryData.data);
-    const isProductChanged =
-      JSON.stringify(productData) !== JSON.stringify(newProductData.data);
-
-    if (isCategoryChanged || isProductChanged) {
-      console.log("⏳ Dữ liệu thay đổi, đang cập nhật...");
-
-      if (isCategoryChanged) {
-        await saveDataToIndexedDB("category", newCategoryData.data);
-      }
-
-      if (isProductChanged) {
-        await saveDataToIndexedDB("products", newProductData.data);
-      }
-
-      localStorage.setItem("lastUpdated", Date.now());
-      console.log("✅ Dữ liệu đã được cập nhật!");
-    } else {
-      console.log("✅ Dữ liệu không thay đổi, giữ nguyên.");
-    }
-  } catch (error) {
-    console.error("❌ Lỗi khi tải dữ liệu:", error);
-  }
-};
-
-onMounted(() => {
-  fetchDataWithTimestamp();
+onUnmounted(() => {
+  clearTimeout(timeoutId);
 });
 </script>
 
