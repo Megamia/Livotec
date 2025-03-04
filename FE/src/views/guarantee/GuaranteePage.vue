@@ -23,10 +23,10 @@
       </a-flex>
     </a-flex>
 
-    <a-flex vertical class="contentDiv mb-[66px]  flex-1 ">
+    <a-flex vertical class="contentDiv mb-[66px] flex-1">
       <h2 class="h2Text">Sản phẩm nổi bật</h2>
 
-      <a-flex justify="center" class="flex-1 pb-[77px]  max-w-[100%]">
+      <a-flex justify="center" class="flex-1 pb-[77px] max-w-[100%]">
         <SlideGuaranteeComponent />
       </a-flex>
       <a-flex justify="center">
@@ -227,6 +227,7 @@ import { onMounted, ref } from "vue";
 import axios from "axios";
 import "./guaranteePage.css";
 import SlideGuaranteeComponent from "@/components/guarantee/slideGuarantee/SlideGuaranteeComponent.vue";
+import { getDataFromIndexedDB } from "@/store/indexedDB";
 
 const handleSubmit = async () => {};
 
@@ -277,10 +278,16 @@ const selectedItem = ref("");
 const data = ref([]);
 const fetchData = async () => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
-    );
-    data.value = response.data.data1.slice(0, 4);
+    // const response = await axios.get(
+    //   `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
+    // );
+    // data.value = response.data.data1.slice(0, 4);
+    // selectedItem.value = data.value
+    //   ? data.value[0].name
+    //   : "Chọn 1 loại sản phẩm";
+
+    const categoryData = await getDataFromIndexedDB("category");
+    data.value = categoryData.slice(0, 4);
     selectedItem.value = data.value
       ? data.value[0].name
       : "Chọn 1 loại sản phẩm";

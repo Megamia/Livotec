@@ -1,6 +1,6 @@
 <template>
   <a-flex vertical class="px-[100px] max-w-[100%]">
-    <img :src="pathImg" class="w-[100%] bg-red-500 mb-5" />
+    <img :src="pathImg" class="w-[100%] bg-red-500 mb-5" v-if="pathImg"/>
     <a-flex
       justify="center"
       vertical
@@ -24,7 +24,7 @@
       </a-flex>
       <a-flex
         horizontal
-        class="max-w-[100%] overflow-hidden"
+        class="max-w-[100%] overflow-hidden justify-center"
         v-if="dataChil.length > 0"
       >
         <a-flex

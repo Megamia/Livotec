@@ -1,13 +1,13 @@
 <template>
   <a-flex class="flex-1 flex-col">
-    <DefaultLayoutGuarantee>
+    <!-- <DefaultLayoutGuarantee> -->
       <GuaranteePage />
-    </DefaultLayoutGuarantee>
+    <!-- </DefaultLayoutGuarantee> -->
   </a-flex>
 </template>
 
 <script setup>
-import DefaultLayoutGuarantee from "./DefaultLayoutGuarantee.vue";
+// import DefaultLayoutGuarantee from "./layouts/DefaultLayoutGuarantee.vue";
 import GuaranteePage from "./guarantee/GuaranteePage.vue";
 </script>
 

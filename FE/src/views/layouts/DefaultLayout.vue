@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <div>
     <a-flex
       class="justify-center bg-[#02B6AC] sticky top-0 z-50 border-b-[1px] border-white"
@@ -24,6 +25,7 @@
       <FooterComponent />
     </a-flex>
   </div>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>

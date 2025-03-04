@@ -1,5 +1,5 @@
 <template>
-  <a-flex class="flex-1">
+  <a-flex class="flex-1 w-[100%] flex-col gap-[100px]">
     <HomeHeroSlideComponent />
     <NavProductComponent />
     <ProductComponent :categorySlug="'may-loc-nuoc'" />
