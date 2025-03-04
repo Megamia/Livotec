@@ -44,11 +44,11 @@ Route::group(['prefix' => 'api'], function () {
             value: $token,       // Giá trị token
             minutes: 1440,         // Thời gian hết hạn trong phút
             path: '/',           // Đường dẫn cookie
-            sameSite: 'None',
+            sameSite: 'Lax',
             secure: true,
         );
         // if no errors are encountered we can return a JWT
-        return response()->json(compact('token', 'user'))->cookie(cookie: $cookie);
+        return response()->json(compact('user'))->cookie(cookie: $cookie);
     });
 
     Route::post('refresh', function (Request $request) {
