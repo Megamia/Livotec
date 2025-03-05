@@ -32,11 +32,23 @@
         <BsArrowLeft class="font-black" />
       </button>
       <swiper
-        :slidesPerView="dataChil.length > 0 ? Math.min(dataChil.length, 4) : 1"
         :spaceBetween="30"
         :modules="modules"
         @swiper="onSwiper"
-        :breakpoints="breakpoints"
+        :breakpoints="{
+          0: {
+            slidesPerView: 1,
+          },
+          580: {
+            slidesPerView: 2,
+          },
+          876: {
+            slidesPerView: 3,
+          },
+          1200: {
+            slidesPerView: 4,
+          },
+        }"
         :navigation="false"
         :class="
           dataChil.length > 4
@@ -47,9 +59,12 @@
         <swiper-slide
           v-for="itemChil in dataChil"
           :key="itemChil.id"
-          class="w-[350px]"
+          class="flex-1"
         >
-          <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
+          <a-flex
+            vertical
+            class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full flex-1"
+          >
             <a-flex vertical align="center" class="flex-1">
               <div class="w-full relative py-[20px] justify-center flex">
                 <img
@@ -135,7 +150,7 @@ import { Navigation } from "swiper";
 import { useRouter } from "vue-router";
 import { BsArrowLeft, BsArrowRight } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
-import { getDataFromIndexedDB } from "@/store/indexedDB";
+import { getDataFromIndexedDB, saveDataToIndexedDB } from "@/store/indexedDB";
 
 const modules = [Navigation];
 const slugsToFilter = [
@@ -192,7 +207,7 @@ const filterData = (data) => {
     .sort((a, b) => a.order - b.order);
 };
 
-onMounted(fetchDataCategory);
+onMounted(() => fetchDataCategory());
 
 const formatCurrency = (value) => {
   return new Intl.NumberFormat("vi-VN", {
@@ -201,23 +216,44 @@ const formatCurrency = (value) => {
   }).format(value);
 };
 
-const handleAddToCart = (cart) => {
-  const currentCart = store.getters["product/getDataStoreCart"] || [];
+const handleAddToCart = async (data) => {
+  // const currentCart = store.getters["product/getDataStoreCart"] || [];
 
-  const updatedCart = currentCart.map((item) => {
-    if (item.id === cart.id) {
-      return { ...item, quantity: (item.quantity || 1) + 1 };
-    }
-    return item;
-  });
+  // const updatedCart = data.map((item) => {
+  //   if (item.id === data.id) {
+  //     return { ...item, quantity: (item.quantity || 1) + 1 };
+  //   }
+  //   return item;
+  // });
 
-  if (!currentCart.some((item) => item.id === cart.id)) {
-    updatedCart.push({ ...cart, quantity: 1 });
-  }
+  // if (!currentCart.some((item) => item.id === data.id)) {
+  //   updatedCart.push({ ...data, quantity: 1 });
+  // }
 
-  store.commit("product/setDataStoreCart", {
-    dataStoreCart: updatedCart,
-  });
+  // store.commit("product/setDataStoreCart", {
+  //   dataStoreCart: updatedCart,
+  // });
+
+  // const cart = await getDataFromIndexedDB("cart");
+
+  // let itemExists = false;
+
+  // const updatedCart = cart.map((item) => {
+  //   if (item.id === data.id) {
+  //     itemExists = true;
+  //     return { ...item, quantity: (item.quantity || 1) + 1 };
+  //   }
+  //   return item;
+  // });
+
+  // if (!itemExists) {
+  //   updatedCart.push({ ...data, quantity: 1 });
+  // }
+
+  // await saveDataToIndexedDB("cart", updatedCart);
+
+  // console.log("✅ Giỏ hàng đã được cập nhật:", updatedCart);
+  // return updatedCart;
 };
 
 const handleProductDetail = (items) => {
@@ -260,24 +296,6 @@ const fetchData = async (slug) => {
   } catch (e) {
     console.log("Error: ", e);
   }
-
-  // try {
-  //   const response = await axios.get(
-  //     `${import.meta.env.VITE_APP_URL_API_PRODUCT}/navProducts/${slug}`
-  //   );
-
-  //   if (response.data && response.data.products.length > 0) {
-  //     dataChil.value = response.data.products;
-  //     haveData.value = true;
-  //   } else {
-  //     dataChil.value = [];
-  //     haveData.value = false;
-  //   }
-  // } catch (e) {
-  //   console.error("Error fetching data:", e);
-  //   dataChil.value = [];
-  //   haveData.value = false;
-  // }
 };
 
 const swiperInstance = ref(null);
@@ -292,21 +310,6 @@ const prevSlide = () => {
 
 const nextSlide = () => {
   if (swiperInstance.value) swiperInstance.value.slideNext();
-};
-
-const breakpoints = {
-  0: {
-    slidesPerView: 1,
-  },
-  580: {
-    slidesPerView: 2,
-  },
-  876: {
-    slidesPerView: 3,
-  },
-  1200: {
-    slidesPerView: 4,
-  },
 };
 </script>
 
