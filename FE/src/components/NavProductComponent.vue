@@ -22,7 +22,7 @@
 
     <a-flex
       v-if="haveData && dataChil.length > 0"
-      class="max-w-[100%] w-full px-[100px] py-[30px] justify-center relative"
+      class="max-w-[100%] w-full px-[100px] py-[30px] relative"
     >
       <button
         v-if="dataChil.length > 4"
@@ -47,7 +47,6 @@
         <swiper-slide
           v-for="itemChil in dataChil"
           :key="itemChil.id"
-          class="w-[350px]"
         >
           <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
             <a-flex vertical align="center" class="flex-1">
