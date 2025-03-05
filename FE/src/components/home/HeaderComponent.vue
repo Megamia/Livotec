@@ -161,37 +161,54 @@ const firstName = ref("");
 const avatar = ref("");
 const searchInputHover = ref(false);
 
-const checkUserSession = async () => {
-  const storedUser = sessionStorage.getItem("user");
-  console.log(storedUser);
+const getUser = async () => {
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_APP_URL_API_USER}/user`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+    if (response.data) {
+      const user = response.data;
+      sessionStorage.setItem("user", JSON.stringify(user));
+      firstName.value = user.first_name;
+      avatar.value = user.avatar_preview;
+      isLogin.value = true;
+    } else {
+      isLogin.value = false;
+    }
+  } catch (error) {
+    console.error("Failed to fetch user profile:", error);
+    if (error.response && error.response.status === 401) {
+      console.log("Chưa đăng nhập");
 
+      sessionStorage.removeItem("user");
+    }
+    isLogin.value = false;
+  }
+};
+
+const getUserSession = () => {
+  const storedUser = sessionStorage.getItem("user");
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+    firstName.value = user.first_name;
+    avatar.value = user.avatar_preview;
+    isLogin.value = true;
+  }
+};
+
+const checkUserSession = () => {
+  const storedUser = sessionStorage.getItem("user");
   if (storedUser) {
     const user = JSON.parse(storedUser);
     firstName.value = user.first_name;
     avatar.value = user.avatar_preview;
     isLogin.value = true;
   } else {
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_URL_API_USER}/user`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-      if (response.data) {
-        const user = response.data;
-        sessionStorage.setItem("user", JSON.stringify(user));
-        firstName.value = user.first_name;
-        avatar.value = user.avatar_preview;
-        isLogin.value = true;
-      } else {
-        isLogin.value = false;
-      }
-    } catch (error) {
-      console.error("Failed to fetch user profile:", error);
-      isLogin.value = false;
-    }
+    getUser();
   }
 };
 
@@ -220,7 +237,7 @@ watch(
   () => route.fullPath,
   () => {
     getdata();
-    checkUserSession();
+    getUserSession();
   }
 );
 
