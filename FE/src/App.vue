@@ -73,16 +73,21 @@ const updateDataIfNeeded = async () => {
       fetchDataCategory(),
     ]);
 
-    const isProductChanged =
-      JSON.stringify(localProducts) !== JSON.stringify(apiProducts);
-    const isCategoryChanged =
-      JSON.stringify(localCategories) !== JSON.stringify(apiCategories);
+    const isEqual = (a, b) =>
+      JSON.stringify(a, Object.keys(a).sort()) ===
+      JSON.stringify(b, Object.keys(b).sort());
+
+    const isProductChanged = !isEqual(localProducts, apiProducts);
+    const isCategoryChanged = !isEqual(localCategories, apiCategories);
 
     if (isProductChanged) await saveDataToIndexedDB("products", apiProducts);
     if (isCategoryChanged) await saveDataToIndexedDB("category", apiCategories);
 
     if (isProductChanged || isCategoryChanged) {
+      console.log("Dữ liệu thay đổi");
       localStorage.setItem("lastUpdated", Date.now());
+    } else {
+      console.log("Dữ liệu giữ nguyên");
     }
   } catch (error) {
     console.error("❌ Lỗi khi cập nhật dữ liệu:", error);

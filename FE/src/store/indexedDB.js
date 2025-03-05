@@ -56,7 +56,11 @@ export const saveDataToIndexedDB = async (storeName, data) => {
 export const getDataFromIndexedDB = async (storeName) => {
   try {
     const db = await dbPromise;
-    return await db.getAll(storeName);
+    const tx = db.transaction(storeName, "readonly"); 
+    const store = tx.objectStore(storeName);
+    const data = await store.getAll();
+    await tx.done;
+    return data;
   } catch (error) {
     console.error(`❌ Lỗi khi lấy dữ liệu từ ${storeName}:`, error);
     return [];
@@ -85,5 +89,29 @@ export const clearAllDataFromIndexedDB = async () => {
     await tx.done;
   } catch (error) {
     console.error("❌ Lỗi khi xóa toàn bộ dữ liệu IndexedDB:", error);
+  }
+};
+
+export const updateItemInIndexedDB = async (item) => {
+  try {
+    const db = await dbPromise;
+    const tx = db.transaction("cart", "readwrite");
+    const store = tx.objectStore("cart");
+
+    const existingItem = await store.get(item.id);
+
+    if (existingItem) {
+      existingItem.quantity = item.quantity || existingItem.quantity;
+      existingItem.timestamp = Date.now();
+      await store.put(existingItem);
+    } else {
+      item.timestamp = Date.now();
+      await store.put(item);
+    }
+
+    await tx.done;
+    console.log("Cập nhật giỏ hàng thành công:", item);
+  } catch (error) {
+    console.error(" Lỗi khi cập nhật phần tử trong giỏ hàng:", error);
   }
 };
