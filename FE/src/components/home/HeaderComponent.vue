@@ -148,13 +148,11 @@ import {
   BxSearch,
   BsCart2,
   AnOutlinedMenu,
-  AnOutlinedUser,
   AnFilledCaretDown,
 } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const router = useRouter();
 const route = useRoute();
@@ -165,6 +163,8 @@ const searchInputHover = ref(false);
 
 const checkUserSession = async () => {
   const storedUser = sessionStorage.getItem("user");
+  console.log(storedUser);
+
   if (storedUser) {
     const user = JSON.parse(storedUser);
     firstName.value = user.first_name;
@@ -179,7 +179,6 @@ const checkUserSession = async () => {
           withCredentials: true,
         }
       );
-      console.log(response.data);
       if (response.data) {
         const user = response.data;
         sessionStorage.setItem("user", JSON.stringify(user));
