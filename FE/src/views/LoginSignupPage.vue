@@ -219,9 +219,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useRouter } from "vue-router";
-import store from "@/store/store";
 
 const router = useRouter();
 
@@ -257,15 +255,16 @@ const login = async () => {
         withCredentials: true,
       }
     );
-    const firstName = response.data.user.first_name;
-    const avatar_preview = response.data.user.avatar_preview;
-    store.dispatch("user/updateFirstName", firstName);
-    store.dispatch("user/updateAvatar", avatar_preview);
-    console.log(response.data);
-    Cookies.set("user", firstName, { expires: 1 });
-    Cookies.set("user_avatar", avatar_preview, { expires: 1 });
-    alert("Login successful!");
-    router.push("/");
+    if (response.data) {
+      const user = {
+        id: response.data.user.id,
+        first_name: response.data.user.first_name,
+        avatar_preview: response.data.user.avatar_preview,
+      };
+      sessionStorage.setItem("user", JSON.stringify(user));
+      alert("Login successful!");
+      router.push("/");
+    }
   } catch (error) {
     console.error("Login failed:", error.response?.data || error.message);
     alert("Login failed! Please check your credentials.");
