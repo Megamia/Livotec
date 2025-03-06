@@ -82,7 +82,10 @@
                   >
                     {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
                   </span>
-                  <span class="text-[16px] text-center font-bold text-[#02B6AC]">
+                  <span
+                    class="text-[16px] text-center font-bold text-[#02B6AC] cursor-pointer"
+                    @click="add(itemChil)"
+                  >
                     {{
                       itemChil.price
                         ? formatCurrency(itemChil.price)
@@ -124,7 +127,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import {
+  ref,
+  onMounted,
+  onUnmounted,
+  computed,
+  isRef,
+  toRaw,
+  isReactive,
+} from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -133,7 +144,11 @@ import { Navigation } from "swiper";
 import { useRouter } from "vue-router";
 import { BsArrowLeft, BsArrowRight } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
-import { getDataFromIndexedDB, saveDataToIndexedDB } from "@/store/indexedDB";
+import {
+  clearDataFromIndexedDB,
+  getDataFromIndexedDB,
+  saveDataToIndexedDB,
+} from "@/store/indexedDB";
 
 const modules = [Navigation];
 const slugsToFilter = [
@@ -200,39 +215,65 @@ const formatCurrency = (value) => {
 };
 
 const handleAddToCart = async (data) => {
-  // const currentCart = store.getters["product/getDataStoreCart"] || [];
-  // const updatedCart = data.map((item) => {
-  //   if (item.id === data.id) {
-  //     return { ...item, quantity: (item.quantity || 1) + 1 };
-  //   }
-  //   return item;
-  // });
-  // if (!currentCart.some((item) => item.id === data.id)) {
-  //   updatedCart.push({ ...data, quantity: 1 });
-  // }
-  // store.commit("product/setDataStoreCart", {
-  //   dataStoreCart: updatedCart,
-  // });
-  // const cart = await getDataFromIndexedDB("cart");
-  // let itemExists = false;
-  // const updatedCart = cart.map((item) => {
-  //   if (item.id === data.id) {
-  //     itemExists = true;
-  //     return { ...item, quantity: (item.quantity || 1) + 1 };
-  //   }
-  //   return item;
-  // });
-  // if (!itemExists) {
-  //   updatedCart.push({ ...data, quantity: 1 });
-  // }
-  // await saveDataToIndexedDB("cart", updatedCart);
-  // console.log("✅ Giỏ hàng đã được cập nhật:", updatedCart);
-  // return updatedCart;
+  const currentCart = store.getters["product/getDataStoreCart"] || [];
+
+  let itemExists = false;
+  const updatedCart = currentCart.map((item) => {
+    if (item.id === data.id) {
+      itemExists = true;
+      return { id: item.id, quantity: (item.quantity || 1) + 1 };
+    }
+    return item;
+  });
+
+  if (!itemExists) {
+    updatedCart.push({ id: data.id, quantity: 1 });
+  }
+
+  store.commit("product/setDataStoreCart", {
+    dataStoreCart: updatedCart,
+  });
+
+  console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
 };
 
 const handleProductDetail = (items) => {
   router.push(`/product/${items}`);
 };
+
+const add = () => {
+  const a = JSON.parse(
+    JSON.stringify(store.getters["product/getDataStoreCart"])
+  );
+  console.log("cart: ", a);
+};
+
+// const add = async (data) => {
+//   console.log("Dữ liệu gốc:", data);
+
+//   let plainData = isReactive(data) || isRef(data) ? toRaw(data) : data;
+
+//   console.log("Dữ liệu sau khi chuyển đổi:", plainData);
+
+//   if (!plainData || typeof plainData !== "object" || !plainData.id) {
+//     console.error("❌ Dữ liệu không hợp lệ (thiếu id):", plainData);
+//     return;
+//   }
+
+//   const cart = await getDataFromIndexedDB("cart");
+
+//   const existingItem = cart.find((item) => item.id === plainData.id);
+
+//   if (existingItem) {
+//     existingItem.quantity += 1;
+//   } else {
+//     cart.push({ id: plainData.id, quantity: 1 });
+//   }
+
+//   console.log("Giỏ hàng sau khi cập nhật:", cart);
+
+//   await saveDataToIndexedDB("cart", cart);
+// };
 
 const changeData = async (slug) => {
   activeKey.value = slug;
