@@ -255,7 +255,10 @@ const login = async () => {
         withCredentials: true,
       }
     );
-    if (response.data) {
+    if (response.status === 205) {
+      alert("Sai tài khoản hoặc mật khẩu!");
+      return;
+    } else if (response.data) {
       const user = {
         id: response.data.user.id,
         first_name: response.data.user.first_name,
@@ -266,8 +269,7 @@ const login = async () => {
       router.push("/");
     }
   } catch (error) {
-    console.error("Login failed:", error.response?.data || error.message);
-    alert("Login failed! Please check your credentials.");
+    alert(error.response?.data.error);
   }
 };
 

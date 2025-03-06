@@ -170,7 +170,9 @@ const getUser = async () => {
         withCredentials: true,
       }
     );
-    if (response.data) {
+    if (response.status === 205) {
+      return;
+    } else if (response.data) {
       const user = response.data;
       sessionStorage.setItem("user", JSON.stringify(user));
       firstName.value = user.first_name;

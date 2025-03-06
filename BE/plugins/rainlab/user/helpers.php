@@ -12,7 +12,7 @@ function checkToken(Request $request)
 
     if (!$token) {
         Log::error('Token not found in cookie');
-        return response()->json(['message' => 'Token not found'], 401);
+        return response()->json(['message' => 'Token not found'], 205);
     }
 
     try {
