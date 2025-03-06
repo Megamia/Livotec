@@ -31,23 +31,43 @@ const store = createStore({
   plugins: [
     createPersistedState({
       key: "vuex",
-      paths: [
-        "product.dataStoreProducts",
-        "product.dataStoreCart",
-        "product.allDataProducts",
-      ],
+      paths: ["product.dataStoreProducts", "product.dataStoreCart"],
       storage: {
         getItem: (key) => {
-          const data = localStorage.getItem(key);
-          // return data ? decryptData(data) : null;
-          return data ? data : null;
+          try {
+            const data = localStorage.getItem(key);
+            return data ? decryptData(data) : null;
+          } catch (error) {
+            console.error(
+              `Lỗi khi lấy dữ liệu từ localStorage (${key}):`,
+              error
+            );
+            return null;
+          }
         },
         setItem: (key, value) => {
-          // const encryptedData = encryptData(value);
-          localStorage.setItem(key, value);
+          try {
+            const encryptedData = encryptData(JSON.stringify(value)); 
+            localStorage.setItem(key, encryptedData);
+          } catch (error) {
+            console.error(
+              `Lỗi khi lưu dữ liệu vào localStorage (${key}):`,
+              error
+            );
+          }
         },
-        removeItem: (key) => localStorage.removeItem(key),
+        removeItem: (key) => {
+          try {
+            localStorage.removeItem(key);
+          } catch (error) {
+            console.error(
+              `Lỗi khi xóa dữ liệu từ localStorage (${key}):`,
+              error
+            );
+          }
+        },
       },
+
       // storage: {
       //   getItem: (key) => {
       //     const data = localStorage.getItem(key);

@@ -3,15 +3,11 @@ let autoClearTimeout = null;
 const storeProducts = {
   namespaced: true,
   state: {
-    allDataProducts: [],
     dataStoreProducts: [],
     dataStoreCart: [],
   },
   mutations: {
     //Product
-    setAllDataProducts(state, payload) {
-      state.allDataProducts = payload.allDataProducts;
-    },
     setDataStoreProducts(state, payload) {
       state.dataStoreProducts = payload.dataStoreProducts;
     },
@@ -84,7 +80,6 @@ const storeProducts = {
     },
   },
   getters: {
-    getAllDataProduct: (state) => state.allDataProducts,
     getDataStoreProducts: (state) => state.dataStoreProducts,
     getDataStoreCart: (state) => state.dataStoreCart,
   },
