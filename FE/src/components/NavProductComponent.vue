@@ -35,31 +35,15 @@
         :spaceBetween="30"
         :modules="modules"
         @swiper="onSwiper"
-        :breakpoints="{
-          0: {
-            slidesPerView: 1,
-          },
-          580: {
-            slidesPerView: 2,
-          },
-          876: {
-            slidesPerView: 3,
-          },
-          1200: {
-            slidesPerView: 4,
-          },
-        }"
         :navigation="false"
-        :class="
-          dataChil.length > 4
-            ? 'swiperProduct swiperProduct4'
-            : 'swiperProduct swiperProduct3'
-        "
+        :breakpoints="{
+          580: { slidesPerView: 1 },
+          768: { slidesPerView: 2 },
+          992: { slidesPerView: 3 },
+          1200: { slidesPerView: 4 },
+        }"
       >
-        <swiper-slide
-          v-for="itemChil in dataChil"
-          :key="itemChil.id"
-        >
+        <swiper-slide v-for="itemChil in dataChil" :key="itemChil.id">
           <a-flex
             vertical
             class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full flex-1"
@@ -140,7 +124,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -217,26 +201,20 @@ const formatCurrency = (value) => {
 
 const handleAddToCart = async (data) => {
   // const currentCart = store.getters["product/getDataStoreCart"] || [];
-
   // const updatedCart = data.map((item) => {
   //   if (item.id === data.id) {
   //     return { ...item, quantity: (item.quantity || 1) + 1 };
   //   }
   //   return item;
   // });
-
   // if (!currentCart.some((item) => item.id === data.id)) {
   //   updatedCart.push({ ...data, quantity: 1 });
   // }
-
   // store.commit("product/setDataStoreCart", {
   //   dataStoreCart: updatedCart,
   // });
-
   // const cart = await getDataFromIndexedDB("cart");
-
   // let itemExists = false;
-
   // const updatedCart = cart.map((item) => {
   //   if (item.id === data.id) {
   //     itemExists = true;
@@ -244,13 +222,10 @@ const handleAddToCart = async (data) => {
   //   }
   //   return item;
   // });
-
   // if (!itemExists) {
   //   updatedCart.push({ ...data, quantity: 1 });
   // }
-
   // await saveDataToIndexedDB("cart", updatedCart);
-
   // console.log("✅ Giỏ hàng đã được cập nhật:", updatedCart);
   // return updatedCart;
 };
@@ -310,6 +285,30 @@ const prevSlide = () => {
 const nextSlide = () => {
   if (swiperInstance.value) swiperInstance.value.slideNext();
 };
+
+// const screenWidth = ref(window.innerWidth);
+// const maxItems = computed(() => {
+//   if (screenWidth.value < 420) return 0;
+//   if (screenWidth.value < 720) return 1;
+//   if (screenWidth.value < 992) return 2;
+//   if (screenWidth.value < 1200) return 3;
+//   if (screenWidth.value < 1400) return 4;
+//   return 4;
+// });
+
+// const updateScreenWidth = () => {
+//   screenWidth.value = window.innerWidth;
+// };
+
+// onMounted(() => {
+//   window.addEventListener("resize", updateScreenWidth);
+// });
+
+// onUnmounted(() => {
+//   window.removeEventListener("resize", updateScreenWidth);
+// });
+
+// const displayedItems = computed(() => dataChil.value.slice(0, maxItems.value));
 </script>
 
 <style scoped>

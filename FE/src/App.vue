@@ -84,11 +84,12 @@ const updateDataIfNeeded = async () => {
     if (isCategoryChanged) await saveDataToIndexedDB("category", apiCategories);
 
     if (isProductChanged || isCategoryChanged) {
-      console.log("Dữ liệu thay đổi");
+      // console.log("Dữ liệu thay đổi");
       localStorage.setItem("lastUpdated", Date.now());
-    } else {
-      console.log("Dữ liệu giữ nguyên");
     }
+    //  else {
+    //   console.log("Dữ liệu giữ nguyên");
+    // }
   } catch (error) {
     console.error("❌ Lỗi khi cập nhật dữ liệu:", error);
   }

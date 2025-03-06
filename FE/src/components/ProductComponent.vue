@@ -1,6 +1,6 @@
 <template>
   <a-flex vertical class="px-[100px] max-w-[100%]">
-    <img :src="pathImg" class="w-[100%] bg-red-500 mb-5" v-if="pathImg"/>
+    <img :src="pathImg" class="w-[100%] bg-red-500 mb-5" v-if="pathImg" />
     <a-flex
       justify="center"
       vertical
@@ -28,7 +28,7 @@
         v-if="dataChil.length > 0"
       >
         <a-flex
-          v-for="itemChil in dataChil.slice(0, 4)"
+          v-for="itemChil in displayedItems"
           :key="itemChil.id"
           class="mx-[10px] max-w-[100%] min-w-[100px]"
         >
@@ -113,7 +113,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, defineProps } from "vue";
+import { onMounted, ref, defineProps, onUnmounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import "./ProductComponent.css";
 import { getDataFromIndexedDB } from "@/store/indexedDB";
@@ -187,6 +187,30 @@ const handleProductDetail = (items) => {
 };
 
 onMounted(() => fetchData());
+
+const screenWidth = ref(window.innerWidth);
+const maxItems = computed(() => {
+  if (screenWidth.value < 420) return 0;
+  if (screenWidth.value < 720) return 1;
+  if (screenWidth.value < 992) return 2;
+  if (screenWidth.value < 1200) return 3;
+  if (screenWidth.value < 1400) return 4;
+  return 4;
+});
+
+const updateScreenWidth = () => {
+  screenWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+  window.addEventListener("resize", updateScreenWidth);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateScreenWidth);
+});
+
+const displayedItems = computed(() => dataChil.value.slice(0, maxItems.value));
 </script>
 
 <style scoped>
