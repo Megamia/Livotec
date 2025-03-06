@@ -35,6 +35,8 @@ const fetchData1 = async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/allProduct`
     );
+    console.log(response.data.allProduct);
+
     return response.data.status === 1
       ? response.data.allProduct.map((product) => ({
           ...product,
@@ -77,17 +79,37 @@ const updateDataIfNeeded = async () => {
       JSON.stringify(a, Object.keys(a).sort()) ===
       JSON.stringify(b, Object.keys(b).sort());
 
-    const isProductChanged = !isEqual(localProducts, apiProducts);
-    const isCategoryChanged = !isEqual(localCategories, apiCategories);
+    const isProductChanged =
+      localProducts.length !== apiProducts.length ||
+      localProducts.some((localItem) => {
+        const apiItem = apiProducts.find(
+          (apiItem) => apiItem.id === localItem.id
+        );
+        return (
+          !apiItem || JSON.stringify(localItem) !== JSON.stringify(apiItem)
+        );
+      });
+
+    const isCategoryChanged =
+      localCategories.length !== apiCategories.length ||
+      localCategories.some((localItem) => {
+        const apiItem = apiCategories.find(
+          (apiItem) => apiItem.id === localItem.id
+        );
+        return (
+          !apiItem || JSON.stringify(localItem) !== JSON.stringify(apiItem)
+        );
+      });
 
     if (isProductChanged) await saveDataToIndexedDB("products", apiProducts);
     if (isCategoryChanged) await saveDataToIndexedDB("category", apiCategories);
+    // console.log(localProducts, apiProducts);
 
     if (isProductChanged || isCategoryChanged) {
       // console.log("Dữ liệu thay đổi");
       localStorage.setItem("lastUpdated", Date.now());
-    }
-    //  else {
+    } 
+    // else {
     //   console.log("Dữ liệu giữ nguyên");
     // }
   } catch (error) {
