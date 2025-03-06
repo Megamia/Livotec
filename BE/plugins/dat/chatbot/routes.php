@@ -59,28 +59,39 @@ Route::group(['prefix' => 'apiChatBot'], function () {
                 return response()->json(['reply' => 'Vui lòng nhập tin nhắn hợp lệ.'], 400);
             }
 
+            // Kiểm tra trong database trước
             $response = ChatBot::where('question', $message)->inRandomOrder()->first();
             if ($response) {
                 return response()->json(['reply' => $response->answer]);
             }
 
+            // Gọi API Google Gemini
             $client = new Client();
-            $huggingface_api_key = env('HUGGINGFACE_API_KEY');
-            $res = $client->post('https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill', [
+            $gemini_api_key = env('GEMINI_API_KEY');
+
+            $res = $client->post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$gemini_api_key", [
                 'headers' => [
-                    'Authorization' => "Bearer $huggingface_api_key",
                     'Content-Type' => 'application/json'
                 ],
-                'json' => ['inputs' => $message]
+                'json' => [
+                    'contents' => [
+                        ['parts' => [['text' => $message]]]
+                    ]
+                ]
             ]);
 
             $responseData = json_decode($res->getBody(), true);
-            $reply = $responseData[0]['generated_text'] ?? 'Xin lỗi, tôi không có câu trả lời.';
+
+            if (isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
+                $reply = $responseData['candidates'][0]['content']['parts'][0]['text'];
+            } else {
+                $reply = 'Xin lỗi, tôi không có câu trả lời.';
+            }
 
             return response()->json(['reply' => $reply]);
 
         } catch (\Exception $e) {
-            \Log::error('Lỗi Hugging Face API: ' . $e->getMessage());
+            \Log::error('Lỗi Google Gemini API: ' . $e->getMessage());
             return response()->json(['reply' => 'Đã xảy ra lỗi khi xử lý yêu cầu!' . $e->getMessage()], 500);
         }
     });
