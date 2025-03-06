@@ -166,13 +166,23 @@
                   class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
                   >Mật khẩu cũ</label
                 >
-                <input
-                  type="password"
-                  id="email"
-                  class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                  v-model="profile.email"
-                  required
-                />
+                <div class="relative">
+                  <input
+                    :type="passwordVisibility.old ? 'text' : 'password'"
+                    id="old_password"
+                    class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                    placeholder="Nhập mật khẩu cũ..."
+                    required
+                  />
+                  <button
+                    type="button"
+                    @click="passwordVisibility.old = !passwordVisibility.old"
+                    class="absolute inset-y-0 right-2 flex items-center text-indigo-600"
+                  >
+                    <CdEye class="text-[20px]" v-if="passwordVisibility.old" />
+                    <CdEyeClosed class="text-[20px]" v-else />
+                  </button>
+                </div>
               </div>
               <div class="mb-2 sm:mb-6">
                 <label
@@ -180,13 +190,23 @@
                   class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
                   >Mật khẩu mới</label
                 >
-                <input
-                  type="email"
-                  id="email"
-                  class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                  v-model="profile.email"
-                  required
-                />
+                <div class="relative">
+                  <input
+                    :type="passwordVisibility.new ? 'text' : 'password'"
+                    id="new_password"
+                    class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                    placeholder="Nhập mật khẩu mới..."
+                    required
+                  />
+                  <button
+                    type="button"
+                    @click="passwordVisibility.new = !passwordVisibility.new"
+                    class="absolute inset-y-0 right-2 flex items-center text-indigo-600"
+                  >
+                    <CdEye class="text-[20px]" v-if="passwordVisibility.new" />
+                    <CdEyeClosed class="text-[20px]" v-else />
+                  </button>
+                </div>
               </div>
               <div class="mb-2 sm:mb-6">
                 <label
@@ -194,44 +214,29 @@
                   class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
                   >Xác nhận mật khẩu mới</label
                 >
-                <input
-                  type="email"
-                  id="email"
-                  class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                  v-model="profile.email"
-                  required
-                />
-              </div>
-
-              <!-- <div class="mb-2 sm:mb-6">
-                  <label
-                    for="profession"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                    >Profession</label
-                  >
+                <div class="relative">
                   <input
-                    type="text"
-                    id="profession"
+                    :type="passwordVisibility.confirm ? 'text' : 'password'"
+                    id="confirm_password"
                     class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                    placeholder="your profession"
+                    placeholder="Nhập lại mật khẩu mới..."
                     required
                   />
-                </div>
-
-                <div class="mb-6">
-                  <label
-                    for="message"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                    >Bio</label
+                  <button
+                    type="button"
+                    @click="
+                      passwordVisibility.confirm = !passwordVisibility.confirm
+                    "
+                    class="absolute inset-y-0 right-2 flex items-center text-indigo-600"
                   >
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="Write your bio here..."
-                  ></textarea>
-                </div> -->
-
+                    <CdEye
+                      class="text-[20px]"
+                      v-if="passwordVisibility.confirm"
+                    />
+                    <CdEyeClosed class="text-[20px]" v-else />
+                  </button>
+                </div>
+              </div>
               <div class="flex justify-end">
                 <button
                   type="submit"
@@ -251,6 +256,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { CdEye, CdEyeClosed } from "@kalimahapps/vue-icons";
 import axios from "axios";
 const router = useRouter();
 
@@ -260,8 +266,10 @@ const defaultAvatar = ref("https://www.gravatar.com/avatar/?d=mp");
 const passwordVisibility = ref({
   old: false,
   new: false,
-  confirm: false
+  confirm: false,
 });
+
+const passwordForm = ref([])
 
 const fetchProfile = async () => {
   try {
