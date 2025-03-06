@@ -1,29 +1,28 @@
-.swiperProduct swiper {
-  width: 100%;
+.swiperProduct .swiper {
+  width: 100% !important;
   height: 100%;
+  overflow: hidden !important;
 }
-.swiperProduct swiper-slide {
+.swiperProduct .swiper-slide {
   text-align: center;
   font-size: 18px;
   background: #fff;
-  max-width: 300px;
-  display: flex;
   justify-content: center;
   align-items: center;
-  display: flex;
-  flex: 1;
 }
 .swiperProduct {
   min-width: 300px;
   width: 100%;
   overflow: hidden;
 }
-.swiperProduct3 swiper-wrapper {
-  justify-content: center;
+
+.swiperProduct3 .swiper-wrapper {
+  justify-content: flex-start;
 }
 
-swiper-slide {
-  min-width: 200px;
+.swiper-slide {
+  min-width: 250px;
+  width: 100%;
 }
 
 .ant-tabs-nav-more {

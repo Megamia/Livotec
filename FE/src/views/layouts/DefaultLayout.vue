@@ -54,33 +54,39 @@ const handleOk = () => {
   margin-left: auto !important;
 }
 
-@media (min-width: 576px) {
+@media (min-width: 0) {
   .container {
-    max-width: 540px !important;
+    max-width: 576px !important;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 576px) {
   .container {
     max-width: 720px !important;
   }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 768px) {
   .container {
     max-width: 960px !important;
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 992px) {
   .container {
     max-width: 1140px !important;
   }
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1200px) {
   .container {
     max-width: 1320px !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1440px !important;
   }
 }
 </style>
