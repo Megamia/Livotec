@@ -78,11 +78,11 @@
               <a-flex class="px-[10px] w-[70%]">
                 <a-flex gap="12" vertical class="flex-1 max-w-[100%]">
                   <span
-                    class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
+                    class="text-[16px] text-center font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
                   >
                     {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
                   </span>
-                  <span class="text-[16px] font-bold text-[#02B6AC]">
+                  <span class="text-[16px] text-center font-bold text-[#02B6AC]">
                     {{
                       itemChil.price
                         ? formatCurrency(itemChil.price)
