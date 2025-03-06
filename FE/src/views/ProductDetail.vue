@@ -46,6 +46,7 @@
                     activeImage ||
                     'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
                   "
+                  class="max-w-[500px]"
                   alt="Product Image"
                 />
               </div>
@@ -92,7 +93,7 @@
               class="text-[25px] max-lg:text-center text-[#38B6AC]"
             />
             <span class="text-[#a2a2a2] mt-[5px] text-[15px]"
-              >(?? đánh giá)</span
+              >(0 đánh giá)</span
             >
           </a-flex>
           <div class="flex items-center gap-3 max-lg:justify-center">
@@ -324,5 +325,11 @@ const imgSocialMedia = ref([
   height: 100px;
   object-fit: cover;
   border-radius: 4px;
+}
+</style>
+<style scoped>
+:deep(.ant-image) {
+  display: flex;
+  justify-content: center;
 }
 </style>
