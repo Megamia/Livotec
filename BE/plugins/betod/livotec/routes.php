@@ -11,13 +11,15 @@ Route::group(['prefix' => 'apiProduct'], function () {
         return $product;
     });
     Route::get("allProduct", function () {
-        $allProduct = Product::with(['image'])->get();
-        if ($allProduct) {
+        $allProduct = Product::with(['gallery', 'image', 'category.parent', 'post'])->get();
+
+        if ($allProduct->isNotEmpty()) {
             return response()->json(['allProduct' => $allProduct, 'status' => 1]);
         } else {
-            return response()->json(['allProduct' => 'No data', 'status' => 0]);
+            return response()->json(['message' => 'No data', 'status' => 0]);
         }
     });
+
 
     Route::get('navProducts/{slug}', function ($slug) {
         $category = Category::with(['children'])->where('slug', $slug)->first();
