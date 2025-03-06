@@ -56,7 +56,7 @@ export const saveDataToIndexedDB = async (storeName, data) => {
 export const getDataFromIndexedDB = async (storeName) => {
   try {
     const db = await dbPromise;
-    const tx = db.transaction(storeName, "readonly"); 
+    const tx = db.transaction(storeName, "readonly");
     const store = tx.objectStore(storeName);
     const data = await store.getAll();
     await tx.done;
@@ -67,14 +67,17 @@ export const getDataFromIndexedDB = async (storeName) => {
   }
 };
 
-export const clearDataFromIndexedDB = async (storeName) => {
+export const deleteItemFromIndexedDB = async (storeName, itemId) => {
   try {
     const db = await dbPromise;
     const tx = db.transaction(storeName, "readwrite");
-    await tx.objectStore(storeName).clear();
+    await tx.objectStore(storeName).delete(itemId);
     await tx.done;
   } catch (error) {
-    console.error(`❌ Lỗi khi xóa dữ liệu trong ${storeName}:`, error);
+    console.error(
+      `❌ Lỗi khi xóa item có ID ${itemId} trong ${storeName}:`,
+      error
+    );
   }
 };
 
@@ -110,7 +113,6 @@ export const updateItemInIndexedDB = async (item) => {
     }
 
     await tx.done;
-    console.log("Cập nhật giỏ hàng thành công:", item);
   } catch (error) {
     console.error(" Lỗi khi cập nhật phần tử trong giỏ hàng:", error);
   }
