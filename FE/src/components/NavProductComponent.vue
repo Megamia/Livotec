@@ -145,7 +145,6 @@ import { useRouter } from "vue-router";
 import { BsArrowLeft, BsArrowRight } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
 import {
-  clearDataFromIndexedDB,
   getDataFromIndexedDB,
   saveDataToIndexedDB,
 } from "@/store/indexedDB";
@@ -234,7 +233,7 @@ const handleAddToCart = async (data) => {
     dataStoreCart: updatedCart,
   });
 
-  console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
+  // console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
 };
 
 const handleProductDetail = (items) => {
@@ -245,7 +244,6 @@ const add = () => {
   const a = JSON.parse(
     JSON.stringify(store.getters["product/getDataStoreCart"])
   );
-  console.log("cart: ", a);
 };
 
 // const add = async (data) => {

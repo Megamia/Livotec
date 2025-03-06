@@ -122,7 +122,10 @@ import { ref, onMounted } from "vue";
 import store from "@/store/store";
 import { CgClose } from "@kalimahapps/vue-icons";
 import { routeLocationKey, useRouter } from "vue-router";
-import { getDataFromIndexedDB } from "@/store/indexedDB";
+import {
+  deleteItemFromIndexedDB,
+  getDataFromIndexedDB,
+} from "@/store/indexedDB";
 
 const router = useRouter();
 const specs = ref([]);
@@ -134,13 +137,6 @@ onMounted(() => {
 });
 
 const fetchData = async () => {
-  // const dataStore = store.getters["product/getDataStoreCart"];
-  // if (dataStore && dataStore.length > 0) {
-  //   specs.value = dataStore;
-  //   haveData.value = true;
-  // } else {
-  //   haveData.value = false;
-  // }
   const dataStore = JSON.parse(
     JSON.stringify(store.getters["product/getDataStoreCart"])
   );
@@ -154,8 +150,6 @@ const fetchData = async () => {
       const cartItem = dataStore.find((cart) => cart.id === item.id);
       return { ...item, quantity: cartItem ? cartItem.quantity : 1 };
     });
-    console.log("data: ", specs.value);
-
     haveData.value = true;
   } else {
     haveData.value = false;
@@ -169,26 +163,16 @@ const formatPrice = (value) => {
   }).format(value);
 };
 
-// const deleteItem = async (itemId) => {
-//   store
-//     .dispatch("product/deleteItemProduct", itemId)
-//     .then(() => {
-//       alert(`Sản phẩm với id ${itemId} đã bị xóa thành công.`);
-//       fetchData();
-//     })
-//     .catch((error) => {
-//       console.error("Lỗi khi xóa sản phẩm:", error);
-//     });
-// };
 const deleteItem = async (itemId) => {
-  store
-    .dispatch("product/deleteItemCart", itemId)
-    .then(() => {
-      fetchData();
-    })
-    .catch((error) => {
-      console.error("Lỗi khi xóa sản phẩm:", error);
-    });
+  await deleteItemFromIndexedDB("cart", itemId);
+
+  let updatedCart = store.getters["product/getDataStoreCart"].filter(
+    (item) => item.id !== itemId
+  );
+
+  store.commit("product/setDataStoreCart", { dataStoreCart: updatedCart });
+
+  await fetchData();
 };
 
 const handlePayment = () => {
