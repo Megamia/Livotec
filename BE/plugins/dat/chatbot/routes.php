@@ -59,13 +59,11 @@ Route::group(['prefix' => 'apiChatBot'], function () {
                 return response()->json(['reply' => 'Vui lòng nhập tin nhắn hợp lệ.'], 400);
             }
 
-            // Kiểm tra trong database trước
             $response = ChatBot::where('question', $message)->inRandomOrder()->first();
             if ($response) {
                 return response()->json(['reply' => $response->answer]);
             }
 
-            // Gọi API Google Gemini
             $client = new Client();
             $gemini_api_key = env('GEMINI_API_KEY');
 
