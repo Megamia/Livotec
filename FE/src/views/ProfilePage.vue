@@ -159,93 +159,120 @@
         <div class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
           <h2 class="pl-6 text-2xl font-bold sm:text-xl">Đổi mật khẩu</h2>
           <div class="grid max-w-2xl mx-auto">
-            <div class="items-center mt-8 text-[#202142]">
-              <div class="mb-2 sm:mb-6">
-                <label
-                  for="email"
-                  class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                  >Mật khẩu cũ</label
-                >
-                <div class="relative">
-                  <input
-                    :type="passwordVisibility.old ? 'text' : 'password'"
-                    id="old_password"
-                    class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                    placeholder="Nhập mật khẩu cũ..."
-                    required
-                  />
-                  <button
-                    type="button"
-                    @click="passwordVisibility.old = !passwordVisibility.old"
-                    class="absolute inset-y-0 right-2 flex items-center text-indigo-600"
+            <form @submit.prevent="handleSubmit">
+              <div class="items-center mt-8 text-[#202142]">
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  autocomplete="username"
+                  style="display: none"
+                />
+                <div class="mb-2 sm:mb-6">
+                  <label
+                    for="old_password"
+                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    >Mật khẩu cũ</label
                   >
-                    <CdEye class="text-[20px]" v-if="passwordVisibility.old" />
-                    <CdEyeClosed class="text-[20px]" v-else />
-                  </button>
-                </div>
-              </div>
-              <div class="mb-2 sm:mb-6">
-                <label
-                  for="email"
-                  class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                  >Mật khẩu mới</label
-                >
-                <div class="relative">
-                  <input
-                    :type="passwordVisibility.new ? 'text' : 'password'"
-                    id="new_password"
-                    class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                    placeholder="Nhập mật khẩu mới..."
-                    required
-                  />
-                  <button
-                    type="button"
-                    @click="passwordVisibility.new = !passwordVisibility.new"
-                    class="absolute inset-y-0 right-2 flex items-center text-indigo-600"
-                  >
-                    <CdEye class="text-[20px]" v-if="passwordVisibility.new" />
-                    <CdEyeClosed class="text-[20px]" v-else />
-                  </button>
-                </div>
-              </div>
-              <div class="mb-2 sm:mb-6">
-                <label
-                  for="email"
-                  class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                  >Xác nhận mật khẩu mới</label
-                >
-                <div class="relative">
-                  <input
-                    :type="passwordVisibility.confirm ? 'text' : 'password'"
-                    id="confirm_password"
-                    class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                    placeholder="Nhập lại mật khẩu mới..."
-                    required
-                  />
-                  <button
-                    type="button"
-                    @click="
-                      passwordVisibility.confirm = !passwordVisibility.confirm
-                    "
-                    class="absolute inset-y-0 right-2 flex items-center text-indigo-600"
-                  >
-                    <CdEye
-                      class="text-[20px]"
-                      v-if="passwordVisibility.confirm"
+                  <div class="relative">
+                    <input
+                      :type="passwordVisibility.old ? 'text' : 'password'"
+                      id="old_password"
+                      class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                      v-model="passwordForm.old_password"
+                      placeholder="Nhập mật khẩu cũ..."
+                      autocomplete="current-password"
+                      required
                     />
-                    <CdEyeClosed class="text-[20px]" v-else />
+                    <button
+                      type="button"
+                      @click="passwordVisibility.old = !passwordVisibility.old"
+                      class="absolute inset-y-0 right-2 flex items-center text-indigo-600"
+                    >
+                      <CdEye
+                        class="text-[20px]"
+                        v-if="passwordVisibility.old"
+                      />
+                      <CdEyeClosed class="text-[20px]" v-else />
+                    </button>
+                  </div>
+                </div>
+                <div class="mb-2 sm:mb-6">
+                  <label
+                    for="new_password"
+                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    >Mật khẩu mới</label
+                  >
+                  <div class="relative">
+                    <input
+                      :type="passwordVisibility.new ? 'text' : 'password'"
+                      id="new_password"
+                      class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                      v-model="passwordForm.new_password"
+                      placeholder="Nhập mật khẩu mới..."
+                      required
+                      autocomplete="new-password"
+                    />
+                    <button
+                      type="button"
+                      @click="passwordVisibility.new = !passwordVisibility.new"
+                      class="absolute inset-y-0 right-2 flex items-center text-indigo-600"
+                    >
+                      <CdEye
+                        class="text-[20px]"
+                        v-if="passwordVisibility.new"
+                      />
+                      <CdEyeClosed class="text-[20px]" v-else />
+                    </button>
+                  </div>
+                </div>
+                <div class="mb-2 sm:mb-6">
+                  <label
+                    for="confirm_password"
+                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                    >Xác nhận mật khẩu mới</label
+                  >
+                  <div class="relative">
+                    <input
+                      :type="passwordVisibility.confirm ? 'text' : 'password'"
+                      id="confirm_password"
+                      class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                      v-model="passwordForm.confirm_password"
+                      placeholder="Nhập lại mật khẩu mới..."
+                      required
+                      autocomplete="new-password"
+                    />
+                    <button
+                      type="button"
+                      @click="
+                        passwordVisibility.confirm = !passwordVisibility.confirm
+                      "
+                      class="absolute inset-y-0 right-2 flex items-center text-indigo-600"
+                    >
+                      <CdEye
+                        class="text-[20px]"
+                        v-if="passwordVisibility.confirm"
+                      />
+                      <CdEyeClosed class="text-[20px]" v-else />
+                    </button>
+                  </div>
+                </div>
+                <p v-if="errorMessage" class="text-red-600">
+                  {{ errorMessage }}
+                </p>
+                <p v-if="successMessage" class="text-green-600">
+                  {{ successMessage }}
+                </p>
+                <div class="flex justify-end">
+                  <button
+                    type="submit"
+                    class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+                  >
+                    Save
                   </button>
                 </div>
               </div>
-              <div class="flex justify-end">
-                <button
-                  type="submit"
-                  class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
-                >
-                  Save
-                </button>
-              </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -263,13 +290,20 @@ const router = useRouter();
 const profile = ref({});
 const defaultAvatar = ref("https://www.gravatar.com/avatar/?d=mp");
 
+const errorMessage = ref("");
+const successMessage = ref("");
+
 const passwordVisibility = ref({
   old: false,
   new: false,
   confirm: false,
 });
 
-const passwordForm = ref([])
+const passwordForm = ref({
+  old_password: "",
+  new_password: "",
+  confirm_password: "",
+});
 
 const fetchProfile = async () => {
   try {
@@ -290,8 +324,51 @@ const fetchProfile = async () => {
     }
   }
 };
+const handleSubmit = async () => {
+  errorMessage.value = "";
+  successMessage.value = "";
+  console.log(passwordForm.value);
+
+  // Kiểm tra xác nhận mật khẩu trước khi gửi
+  if (passwordForm.value.new_password !== passwordForm.value.confirm_password) {
+    errorMessage.value = "Mật khẩu mới không khớp.";
+    return;
+  }
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_APP_URL_API_USER}/change-password`,
+      {
+        old_password: passwordForm.value.old_password,
+        new_password: passwordForm.value.new_password,
+      },
+      { withCredentials: true }
+    );
+
+    successMessage.value = response.data.message;
+    passwordForm.value.old_password = "";
+    passwordForm.value.new_password = "";
+    passwordForm.value.confirm_password = "";
+    console.log(response.data);
+    
+  } catch (error) {
+    if (error.response?.status === 422) {
+      errorMessage.value = error.response.data.error || "Lỗi dữ liệu nhập vào.";
+      console.log(errorMessage);
+    } else {
+      errorMessage.value = "Có lỗi xảy ra! Vui lòng thử lại.";
+      console.log(errorMessage);
+    }
+  }
+};
 
 onMounted(fetchProfile);
 </script>
 
-<style scoped></style>
+<style scoped>
+.text-red-600 {
+  color: red;
+}
+.text-green-600 {
+  color: green;
+}
+</style>
