@@ -40,3 +40,8 @@ columns:
         sortable: true
         select: name
         relation: category
+    stock:
+        label: 'Kho hàng'
+        type: number
+        searchable: true
+        sortable: true
