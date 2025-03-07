@@ -1,6 +1,13 @@
 <template>
   <a-flex vertical class="px-[100px] max-w-[100%]">
-    <img :src="pathImg" class="w-[100%] bg-red-500 mb-5" v-if="pathImg" />
+    <img
+      :src="
+        pathImg ||
+        'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
+      "
+      class="w-[100%] bg-red-500 mb-5"
+      v-if="pathImg"
+    />
     <a-flex
       justify="center"
       vertical
@@ -24,19 +31,19 @@
       </a-flex>
       <a-flex
         horizontal
-        class="max-w-[100%] overflow-hidden justify-center"
+        class="max-w-[100%] overflow-hidden justify-center gap-[30px]"
         v-if="dataChil.length > 0"
       >
         <a-flex
           v-for="itemChil in displayedItems"
           :key="itemChil.id"
-          class="mx-[10px] max-w-[100%] min-w-[100px]"
+          class="max-w-[100%] min-w-[100px]"
         >
           <a-flex vertical class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full">
             <a-flex vertical align="center" class="flex-1">
               <div class="w-full relative pt-[20px] justify-center flex">
                 <img
-                  class="w-[300px] h-[300px]"
+                  class="w-[300px] h-[300px] max-w-none"
                   :src="
                     itemChil.image?.path ||
                     'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'

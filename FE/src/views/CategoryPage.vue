@@ -164,21 +164,28 @@
           ></a-select>
         </a-flex>
       </a-flex>
-      <a-flex horizontal class="flex-wrap gap-8 justify-center"
-        ><ProductItemComponent
-          v-for="product in productCurrentData"
-          :key="product.id"
-          :product="product" /><ProductItemComponent
-          v-for="product in productCurrentData"
-          :key="product.id"
-          :product="product" /><ProductItemComponent
-          v-for="product in productCurrentData"
-          :key="product.id"
-          :product="product" /><ProductItemComponent
+      <a-flex horizontal class="flex-wrap gap-8 justify-center">
+        <ProductItemComponent
           v-for="product in productCurrentData"
           :key="product.id"
           :product="product"
-      /></a-flex>
+        />
+        <ProductItemComponent
+          v-for="product in productCurrentData"
+          :key="product.id"
+          :product="product"
+        />
+        <ProductItemComponent
+          v-for="product in productCurrentData"
+          :key="product.id"
+          :product="product"
+        />
+        <ProductItemComponent
+          v-for="product in productCurrentData"
+          :key="product.id"
+          :product="product"
+        />
+      </a-flex>
     </a-flex>
   </section>
 
@@ -205,17 +212,17 @@ const productCurrentData = ref("");
 
 const selectOption = (filterId, label) => {
   selectedFilter[filterId] = [label];
-  console.log(selectedFilter);
+  // console.log(selectedFilter);
 };
 
 const rangeOption = (filterId, label, min, max) => {
   selectedFilter[filterId] = [label, min, max];
-  console.log(selectedFilter);
+  // console.log(selectedFilter);
 };
 
 const clearOption = (filterId) => {
   delete selectedFilter[filterId];
-  console.log("Cleared:", selectedFilter);
+  // console.log("Cleared:", selectedFilter);
 };
 
 const applyFilter = () => {
