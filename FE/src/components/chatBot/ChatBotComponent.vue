@@ -43,7 +43,7 @@
       >
         <ul>
           <li v-for="(chat, index) in chatHistory" :key="index" class="">
-            <p v-if="chat.answer !== null" class="text-purple-600">
+            <p v-if="chat.answer !== null" class="text-purple-600 whitespace-pre-line">
               <strong>Chatbot:</strong> {{ chat.answer }}
             </p>
             <p class="text-blue-600 text-end">
@@ -128,6 +128,8 @@ const askChatbot = async () => {
       chatEntry.answer = reply;
       chatHistory.value = [...chatHistory.value];
     }, 2000);
+    console.log(reply);
+    
   } catch (error) {
     console.error("Lỗi khi hỏi chatbot:", error);
     alert("Đã xảy ra lỗi khi hỏi chatbot!" || error.response?.data?.reply);
