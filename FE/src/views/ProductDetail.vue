@@ -10,7 +10,7 @@
               >Trang chủ</RouterLink
             ></a-breadcrumb-item
           >
-          <a-breadcrumb-item v-if="product.category.parent"
+          <a-breadcrumb-item v-if="product[0]?.category?.parent != null"
             ><RouterLink
               :to="`/category/${product.category.parent?.slug}`"
               class="text-[15px] font-semibold"
@@ -46,6 +46,7 @@
                     activeImage ||
                     'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
                   "
+                  class="max-w-[500px]"
                   alt="Product Image"
                 />
               </div>
@@ -92,7 +93,7 @@
               class="text-[25px] max-lg:text-center text-[#38B6AC]"
             />
             <span class="text-[#a2a2a2] mt-[5px] text-[15px]"
-              >(?? đánh giá)</span
+              >(0 đánh giá)</span
             >
           </a-flex>
           <div class="flex items-center gap-3 max-lg:justify-center">
@@ -167,7 +168,7 @@
               v-if="product.thongso != null"
               :items="product.thongso"
           /></a-tab-pane>
-          <a-tab-pane key="3" tab="Đánh giá">Content of Tab Pane 3</a-tab-pane>
+          <a-tab-pane key="3" tab="Đánh giá">Content of Tab Pane 3 </a-tab-pane>
         </a-tabs>
       </div>
     </main>
@@ -184,6 +185,7 @@ import ProductSpecifications from "@/components/ProductSpecifications.vue";
 import ProductPosts from "@/components/ProductPosts.vue";
 import store from "@/store/store";
 import { BxFacebookSquare } from "@kalimahapps/vue-icons";
+import { getDataFromIndexedDB } from "@/store/indexedDB";
 
 const route = useRoute();
 const router = useRouter();
@@ -196,14 +198,22 @@ const compare = ref(false);
 onMounted(async () => {
   try {
     const { slug } = route.params;
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/detailProduct/${slug}`
-    );
-    product.value = response.data;
+
+    const allProductData = await getDataFromIndexedDB("products");
+    const detailProduct = allProductData.filter((item) => item.slug === slug);
+
+    if (detailProduct.length === 0) {
+      alert("Không tìm thấy sản phẩm!");
+      return;
+    }
+
+    product.value = detailProduct[0];
+
     formattedPrice.value = new Intl.NumberFormat("de-DE").format(
-      product.value.price
+      product.value?.price ?? 0
     );
-    if (product.value.gallery[0] != null) {
+
+    if (product.value?.gallery?.length > 0) {
       activeImage.value = product.value.gallery[0].path;
     }
   } catch (error) {
@@ -215,25 +225,27 @@ const setActiveImage = (path) => {
   activeImage.value = path;
 };
 
-const handleAddToCart = (cart) => {
-  console.log(cart);
-  
-  // const currentCart = store.getters["product/getDataStoreCart"] || [];
+const handleAddToCart = async (data) => {
+  const currentCart = store.getters["product/getDataStoreCart"] || [];
 
-  // const updatedCart = currentCart.map((item) => {
-  //   if (item.id === cart.id) {
-  //     return { ...item, quantity: (item.quantity || 1) + 1 };
-  //   }
-  //   return item;
-  // });
+  let itemExists = false;
+  const updatedCart = currentCart.map((item) => {
+    if (item.id === data.id) {
+      itemExists = true;
+      return { id: item.id, quantity: (item.quantity || 1) + 1 };
+    }
+    return item;
+  });
 
-  // if (!currentCart.some((item) => item.id === cart.id)) {
-  //   updatedCart.push({ ...cart, quantity: 1 });
-  // }
+  if (!itemExists) {
+    updatedCart.push({ id: data.id, quantity: 1 });
+  }
 
-  // store.commit("product/setDataStoreCart", {
-  //   dataStoreCart: updatedCart,
-  // });
+  store.commit("product/setDataStoreCart", {
+    dataStoreCart: updatedCart,
+  });
+
+  // console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
 };
 
 const addToComparison = (product) => {
@@ -313,5 +325,11 @@ const imgSocialMedia = ref([
   height: 100px;
   object-fit: cover;
   border-radius: 4px;
+}
+</style>
+<style scoped>
+:deep(.ant-image) {
+  display: flex;
+  justify-content: center;
 }
 </style>

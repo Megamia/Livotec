@@ -72,10 +72,10 @@ const updateDataIfNeeded = async () => {
       fetchData1(),
       fetchDataCategory(),
     ]);
-
-    const isEqual = (a, b) =>
-      JSON.stringify(a, Object.keys(a).sort()) ===
-      JSON.stringify(b, Object.keys(b).sort());
+    const removeTimestamp = (obj) => {
+      const { timestamp, ...rest } = obj;
+      return rest;
+    };
 
     const isProductChanged =
       localProducts.length !== apiProducts.length ||
@@ -84,7 +84,9 @@ const updateDataIfNeeded = async () => {
           (apiItem) => apiItem.id === localItem.id
         );
         return (
-          !apiItem || JSON.stringify(localItem) !== JSON.stringify(apiItem)
+          !apiItem ||
+          JSON.stringify(removeTimestamp(localItem)) !==
+            JSON.stringify(removeTimestamp(apiItem))
         );
       });
 
@@ -95,19 +97,21 @@ const updateDataIfNeeded = async () => {
           (apiItem) => apiItem.id === localItem.id
         );
         return (
-          !apiItem || JSON.stringify(localItem) !== JSON.stringify(apiItem)
+          !apiItem ||
+          JSON.stringify(removeTimestamp(localItem)) !==
+            JSON.stringify(removeTimestamp(apiItem))
         );
       });
 
     if (isProductChanged) await saveDataToIndexedDB("products", apiProducts);
     if (isCategoryChanged) await saveDataToIndexedDB("category", apiCategories);
-    // console.log(localProducts, apiProducts);
 
     if (isProductChanged || isCategoryChanged) {
       // console.log("Dữ liệu thay đổi");
+
       localStorage.setItem("lastUpdated", Date.now());
-    } 
-    // else {
+    }
+    //  else {
     //   console.log("Dữ liệu giữ nguyên");
     // }
   } catch (error) {
