@@ -64,26 +64,21 @@ Route::group(['prefix' => 'apiChatBot'], function () {
                 return response()->json(['reply' => 'Vui lòng nhập tin nhắn hợp lệ.'], 400);
             }
 
-            // **1️⃣ Kiểm tra xem câu hỏi đã được học trong database chưa**
             $chatResponse = ChatBot::where('question', $message)->inRandomOrder()->first();
             if ($chatResponse) {
                 return response()->json(['reply' => $chatResponse->answer]);
             }
 
-            // **2️⃣ Nếu tin nhắn bắt đầu bằng "Tư vấn", tìm kiếm sản phẩm**
             if (str_starts_with($message, 'tư vấn')) {
                 $keyword = str_replace('tư vấn', '', $message);
                 $keyword = trim($keyword);
 
                 if (!empty($keyword)) {
-                    // Kiểm tra nếu từ khóa là một category_id hợp lệ
                     $category = Category::where('name', 'LIKE', "%$keyword%")->first();
 
-                    // Nếu tìm thấy danh mục, lấy category_id
                     if ($category) {
                         $products = Product::where('category_id', $category->id)->get();
                     } else {
-                        // Nếu không, tìm theo tên sản phẩm
                         $products = Product::where('name', 'LIKE', "%$keyword%")->get();
                     }
 
@@ -105,7 +100,6 @@ Route::group(['prefix' => 'apiChatBot'], function () {
             }
 
 
-            // **3️⃣ Nếu không có trong database và không phải sản phẩm -> Gọi AI**
             $gemini_api_key = env('GEMINI_API_KEY');
 
             if (!$gemini_api_key) {
