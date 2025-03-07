@@ -71,7 +71,7 @@
                   <label
                     for="first_name"
                     class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                    >Your first name</label
+                    >Tên</label
                   >
                   <input
                     type="text"
@@ -87,7 +87,7 @@
                   <label
                     for="last_name"
                     class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                    >Your last name</label
+                    >Họ</label
                   >
                   <input
                     type="text"
@@ -104,7 +104,7 @@
                 <label
                   for="email"
                   class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                  >Your email</label
+                  >Email</label
                 >
                 <input
                   type="email"
@@ -114,44 +114,72 @@
                   disabled
                 />
               </div>
-
-              <!-- <div class="mb-2 sm:mb-6">
-                  <label
-                    for="profession"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                    >Profession</label
-                  >
-                  <input
-                    type="text"
-                    id="profession"
-                    class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                    placeholder="your profession"
-                    required
-                  />
-                </div>
-
-                <div class="mb-6">
-                  <label
-                    for="message"
-                    class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                    >Bio</label
-                  >
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-indigo-900 bg-indigo-50 rounded-lg border border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="Write your bio here..."
-                  ></textarea>
-                </div> -->
-
-              <div class="flex justify-end">
-                <button
-                  type="submit"
-                  class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+              <div class="mb-2 sm:mb-6">
+                <label
+                  for="email"
+                  class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                  >Số điện thoại</label
                 >
-                  Save
-                </button>
+                <input
+                  type="email"
+                  id="email"
+                  class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                  v-model="profile.phone"
+                  disabled
+                />
               </div>
+              <div class="mb-2 sm:mb-6">
+                <label
+                  for="email"
+                  class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                  >T</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                  v-model="profile.phone"
+                  disabled
+                />
+              </div>
+              <div class="mb-2 sm:mb-6">
+                <label
+                  for="email"
+                  class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                  >Số điện thoại</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                  v-model="profile.phone"
+                  disabled
+                />
+              </div>
+              <div class="mb-2 sm:mb-6">
+                <label
+                  for="email"
+                  class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                  >Số điện thoại</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                  v-model="profile.phone"
+                  disabled
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-end">
+              <button
+                type="submit"
+                class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>
@@ -291,8 +319,16 @@ import axios from "axios";
 const router = useRouter();
 
 const activePage = ref(0);
-const profile = ref({});
-const defaultAvatar = ref("https://www.gravatar.com/avatar/?d=mp");
+const profile = ref({
+  first_name: "",
+  last_name: "",
+  email: "",
+  phone: "",
+  province: "",
+  district: "",
+  subdistrict: "",
+  address: "",
+});
 
 const errorMessage = ref("");
 const successMessage = ref("");
@@ -321,7 +357,15 @@ const fetchProfile = async () => {
       {},
       { withCredentials: true }
     );
-    profile.value = response.data;
+    profile.value.first_name = response.data.first_name;
+    profile.value.last_name = response.data.last_name;
+    profile.value.email = response.data.email;
+    profile.value.phone = response.data.additional_user?.phone || "";
+    profile.value.province = response.data.additional_user?.province || "";
+    profile.value.district = response.data.additional_user?.district || "";
+    profile.value.subdistrict =
+      response.data.additional_user?.subdistrict || "";
+    profile.value.address = response.data.additional_user?.address || "";
     console.log(profile.value);
   } catch (error) {
     if (error.response && error.response.status === 401) {

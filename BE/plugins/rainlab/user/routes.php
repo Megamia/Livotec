@@ -9,7 +9,7 @@ Route::group(['prefix' => 'apiUser'], function () {
         if ($user instanceof \Illuminate\Http\JsonResponse) {
             return $user;
         }
-        $data = User::with(['avatar'])->find($user->id);
+        $data = User::with(['additional_user'])->find($user->id);
         return response()->json($data);
     });
     Route::post('user', function (Request $request) {
