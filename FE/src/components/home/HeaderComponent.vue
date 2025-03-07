@@ -112,13 +112,12 @@
       <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
       <a-flex class="items-center whitespace-nowrap">
         <a-flex
-          vertical
+        vertical
           v-if="isLogin"
           class="icon iconShow group relative items-center"
-          ><a-avatar :src="avatar" :size="40" /><span
-            class="text-[13px] font-medium"
-            >{{ firstName }}</span
-          >
+          ><CaUserAvatarFilledAlt class="text-[40px]"/><span class="text-[13px] font-medium">Hello, {{
+            firstName
+          }}</span>
 
           <div
             class="hidden group-hover:flex flex-col absolute bg-white text-black left-0 top-5 rounded-md px-3 py-1 mt-3 text-[17px]"
@@ -149,6 +148,7 @@ import {
   BsCart2,
   AnOutlinedMenu,
   AnFilledCaretDown,
+  CaUserAvatarFilledAlt,
 } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
 import { useRoute, useRouter } from "vue-router";
@@ -158,7 +158,6 @@ const router = useRouter();
 const route = useRoute();
 const isLogin = ref(false);
 const firstName = ref("");
-const avatar = ref("");
 const searchInputHover = ref(false);
 
 const getUser = async () => {
@@ -176,7 +175,6 @@ const getUser = async () => {
       const user = response.data;
       sessionStorage.setItem("user", JSON.stringify(user));
       firstName.value = user.first_name;
-      avatar.value = user.avatar_preview;
       isLogin.value = true;
     } else {
       isLogin.value = false;
@@ -197,7 +195,6 @@ const getUserSession = () => {
   if (storedUser) {
     const user = JSON.parse(storedUser);
     firstName.value = user.first_name;
-    avatar.value = user.avatar_preview;
     isLogin.value = true;
   }
 };
@@ -207,7 +204,6 @@ const checkUserSession = () => {
   if (storedUser) {
     const user = JSON.parse(storedUser);
     firstName.value = user.first_name;
-    avatar.value = user.avatar_preview;
     isLogin.value = true;
   } else {
     getUser();

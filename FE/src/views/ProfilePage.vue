@@ -8,24 +8,42 @@
       >
         <h2 class="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
 
-        <a
+        <button
           href="#"
-          class="flex items-center px-3 py-2.5 font-bold bg-white text-indigo-900 border rounded-full"
+          class="flex items-center px-3 py-2.5 hover:text-indigo-900 rounded-full"
+          :class="
+            activePage == 0
+              ? 'bg-slate-200 text-indigo-900 font-bold'
+              : 'bg-white font-semibold'
+          "
+          @click="handleChangeActivePage(0)"
         >
           Thông tin tài khoản
-        </a>
-        <a
+        </button>
+        <button
           href="#"
-          class="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full"
+          class="flex items-center px-3 py-2.5 hover:text-indigo-900 rounded-full"
+          @click="handleChangeActivePage(1)"
+          :class="
+            activePage == 1
+              ? 'bg-slate-200 text-indigo-900 font-bold'
+              : 'bg-white font-semibold'
+          "
         >
           Đổi mật khẩu
-        </a>
-        <a
+        </button>
+        <button
           href="#"
-          class="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full"
+          class="flex items-center px-3 py-2.5 hover:text-indigo-900 rounded-full"
+          @click="handleChangeActivePage(2)"
+          :class="
+            activePage == 2
+              ? 'bg-slate-200 text-indigo-900 font-bold'
+              : 'bg-white font-semibold'
+          "
         >
           Theo dõi đơn hàng
-        </a>
+        </button>
         <!-- <a
           href="#"
           class="flex items-center px-3 py-2.5 font-semibold hover:text-indigo-900 hover:border hover:rounded-full"
@@ -36,35 +54,16 @@
     </aside>
     <main class="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
       <div class="p-2 md:p-4">
-        <div class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg hidden">
-          <h2 class="pl-6 text-2xl font-bold sm:text-xl">Thông tin sản phẩm</h2>
-          <div class="grid max-w-2xl mx-auto mt-8">
-            <div
-              class="flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0"
-            >
-              <img
-                class="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500"
-                :src="profile.avatar?.path || defaultAvatar"
-                alt="Bordered avatar"
-              />
-
-              <div class="flex flex-col space-y-5 sm:ml-8">
-                <button
-                  type="button"
-                  class="py-3.5 px-7 text-base font-medium text-indigo-100 focus:outline-none bg-[#202142] rounded-lg border border-indigo-200 hover:bg-indigo-900 focus:z-10 focus:ring-4 focus:ring-indigo-200"
-                >
-                  Change picture
-                </button>
-                <button
-                  type="button"
-                  class="py-3.5 px-7 text-base font-medium text-indigo-900 focus:outline-none bg-white rounded-lg border border-indigo-200 hover:bg-indigo-100 hover:text-[#202142] focus:z-10 focus:ring-4 focus:ring-indigo-200"
-                >
-                  Delete picture
-                </button>
-              </div>
-            </div>
-
-            <div class="items-center mt-8 sm:mt-14 text-[#202142]">
+        <!-- Thong tin nguoi dung -->
+        <div
+          v-if="activePage == 0"
+          class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg"
+        >
+          <h2 class="pl-6 text-2xl font-bold sm:text-xl">
+            Thông tin tài khoản
+          </h2>
+          <div class="grid max-w-2xl mx-auto">
+            <div class="items-center mt-8 text-[#202142]">
               <div
                 class="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6"
               >
@@ -156,7 +155,11 @@
             </div>
           </div>
         </div>
-        <div class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg">
+        <!-- Doi mat khau -->
+        <div
+          v-if="activePage == 1"
+          class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg"
+        >
           <h2 class="pl-6 text-2xl font-bold sm:text-xl">Đổi mật khẩu</h2>
           <div class="grid max-w-2xl mx-auto">
             <form @submit.prevent="handleSubmit">
@@ -287,6 +290,7 @@ import { CdEye, CdEyeClosed } from "@kalimahapps/vue-icons";
 import axios from "axios";
 const router = useRouter();
 
+const activePage = ref(0);
 const profile = ref({});
 const defaultAvatar = ref("https://www.gravatar.com/avatar/?d=mp");
 
@@ -304,6 +308,11 @@ const passwordForm = ref({
   new_password: "",
   confirm_password: "",
 });
+
+const handleChangeActivePage = (value) => {
+  activePage.value = value;
+  console.log(activePage.value);
+};
 
 const fetchProfile = async () => {
   try {
@@ -349,7 +358,6 @@ const handleSubmit = async () => {
     passwordForm.value.new_password = "";
     passwordForm.value.confirm_password = "";
     console.log(response.data);
-    
   } catch (error) {
     if (error.response?.status === 422) {
       errorMessage.value = error.response.data.error || "Lỗi dữ liệu nhập vào.";

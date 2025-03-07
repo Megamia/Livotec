@@ -264,7 +264,6 @@ const login = async () => {
       const user = {
         id: response.data.user.id,
         first_name: response.data.user.first_name,
-        avatar_preview: response.data.user.avatar_preview,
       };
       sessionStorage.setItem("user", JSON.stringify(user));
       alert("Login successful!");
