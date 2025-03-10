@@ -17,7 +17,7 @@
           :rules="rules"
           layout="vertical"
         >
-          <a-flex class="w-full gap-10">
+          <a-flex class="w-full gap-10 content">
             <a-flex vertical class="flex-wrap w-full flex-1">
               <h3 class="text-xl font-medium">Billing details</h3>
               <a-form-item ref="name" name="name" class="w-full">
@@ -742,5 +742,11 @@ fetchProvinces();
   color: #0024d9;
   font-weight: bold;
   background-color: transparent;
+}
+
+@media only screen and (max-width: 480px) {
+  .content{
+    flex-direction: column;
+  }
 }
 </style>
