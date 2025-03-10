@@ -34,6 +34,7 @@
       <swiper
         :spaceBetween="30"
         :modules="modules"
+        :loop="true"
         @swiper="onSwiper"
         :navigation="false"
         :breakpoints="{
