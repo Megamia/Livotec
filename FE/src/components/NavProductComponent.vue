@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
   <a-flex vertical align="center" class="w-full">
-    <h1 class="text-[24px] font-semibold text-[#02b6ac]">
+    <h1 class="text-[24px] font-semibold text-[#02b6ac] text-center">
       Livotec - Công nghệ thông minh, sống khỏe mỗi ngày
     </h1>
     <a-flex class="max-w-[100%]">
@@ -22,11 +22,11 @@
 
     <a-flex
       v-if="haveData && dataChil.length > 0"
-      class="max-w-[100%] w-full px-[100px] py-[30px] relative"
+      class="max-w-[100%] w-full px-[100px] py-[30px] relative content"
     >
       <button
         v-if="dataChil.length > 4"
-        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] left-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
+        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] left-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5] buttonSlide"
         @click="prevSlide"
       >
         <BsArrowLeft class="font-black" />
@@ -34,11 +34,11 @@
       <swiper
         :spaceBetween="30"
         :modules="modules"
-        :loop="true"
         @swiper="onSwiper"
         :navigation="false"
         :breakpoints="{
-          580: { slidesPerView: 1 },
+          0: { slidesPerView: 1 },
+          480: { slidesPerView: 1 },
           768: { slidesPerView: 2 },
           992: { slidesPerView: 3 },
           1200: { slidesPerView: 4 },
@@ -49,7 +49,7 @@
             vertical
             class="bg-[#F3F4F6] rounded-lg pb-[20px] w-full flex-1"
           >
-            <a-flex vertical align="center" class="flex-1">
+            <a-flex vertical align="center" class="flex-1 itemsContent">
               <div class="w-full relative py-[20px] justify-center flex">
                 <img
                   :src="
@@ -59,7 +59,7 @@
                   class="justify-center items-center w-[300px] h-[300px] max-w-full max-h-full object-cover"
                 />
                 <div
-                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10"
+                  class="absolute bg-[#e20008] top-[20px] right-0 rounded-l-md label z-10 title"
                 >
                   <span class="text-[20px] text-white">Mới nhất</span>
                 </div>
@@ -112,7 +112,7 @@
       </swiper>
       <button
         v-if="dataChil.length > 4"
-        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] right-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5]"
+        class="absolute flex w-[30px] h-[30px] rounded-[50%] text-black items-center justify-center top-[50%] right-[50px] bg-[#F3F3F3] border-[1px] border-[#b4b6b5] buttonSlide"
         @click="nextSlide"
       >
         <BsArrowRight class="font-black" />
@@ -357,6 +357,23 @@ const nextSlide = () => {
 }
 :deep(.ant-tabs-nav .ant-tabs-tab-btn::first-letter) {
   text-transform: uppercase;
+}
+@media only screen and (max-width: 480px) {
+  .content {
+    height: auto;
+    padding-inline: 0;
+  }
+  .itemsContent {
+    width: 100%;
+  }
+  .title,
+  .buttonSlide {
+    display: none;
+  }
+  img {
+    width: 200px;
+    height: 200px;
+  }
 }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-  <a-flex vertical class="px-[100px] max-w-[100%]">
+  <a-flex vertical class="px-[100px] max-w-[100%] content">
     <img
       :src="
         pathImg ||
@@ -193,7 +193,6 @@ onMounted(() => fetchData());
 
 const screenWidth = ref(window.innerWidth);
 const maxItems = computed(() => {
-  if (screenWidth.value < 420) return 0;
   if (screenWidth.value < 720) return 1;
   if (screenWidth.value < 992) return 2;
   if (screenWidth.value < 1200) return 3;
@@ -254,5 +253,11 @@ const displayedItems = computed(() => dataChil.value.slice(0, maxItems.value));
 }
 :deep(.ant-tabs-nav .ant-tabs-tab-btn::first-letter) {
   text-transform: uppercase;
+}
+@media only screen and (max-width: 480px) {
+  .content {
+    height: auto;
+    padding-inline: 0;
+  }
 }
 </style>
