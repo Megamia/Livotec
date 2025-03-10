@@ -128,18 +128,18 @@
                   disabled
                 />
               </div>
-              
+
               <div class="mb-2 sm:mb-6">
                 <label
                   for="email"
                   class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                  >T</label
+                  >Tỉnh/Thành phố</label
                 >
                 <input
                   type="email"
                   id="email"
                   class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                  v-model="profile.phone"
+                  v-model="profile.province"
                   disabled
                 />
               </div>
@@ -147,27 +147,55 @@
                 <label
                   for="email"
                   class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                  >Số điện thoại</label
+                  >Quận/Huyện</label
                 >
                 <input
                   type="email"
                   id="email"
                   class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                  v-model="profile.phone"
+                  v-model="profile.district"
                   disabled
                 />
               </div>
               <div class="mb-2 sm:mb-6">
                 <label
+                  for="subdistrict"
+                  class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
+                  >Xã/Phường/Thị trấn</label
+                >
+                <a-select
+                  v-model:value="profile.subdistrict"
+                  placeholder="Chọn Xã/Phường/Thị trấn"
+                  id="subdistrict"
+                  class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 bg-transparent"
+                >
+                  <a-select-option
+                    v-for="ward in wards"
+                    :key="ward.code"
+                    :value="ward.code"
+                  >
+                    {{ ward.name }}
+                  </a-select-option>
+                </a-select>
+                <!-- <input
+                  type="email"
+                  id="email"
+                  class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
+                  v-model="profile.subdistrict"
+                  disabled
+                /> -->
+              </div>
+              <div class="mb-2 sm:mb-6">
+                <label
                   for="email"
                   class="block mb-2 text-sm font-medium text-indigo-900 dark:text-white"
-                  >Số điện thoại</label
+                  >Street address</label
                 >
                 <input
                   type="email"
                   id="email"
                   class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
-                  v-model="profile.phone"
+                  v-model="profile.address"
                   disabled
                 />
               </div>
