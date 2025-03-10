@@ -1,77 +1,72 @@
 <template>
-    <div class="w-full flex flex-1 flex-col">
-      <div class="w-full border-b-[1px] border-gray-300 py-3 mb-4">
-        <span class="text-[#38B6AC] font-bold">So sánh sản phẩm</span>
-      </div>
-      <div class="w-full flex justify-center items-center">
-        <h1 class="text-[#38B6AC] font-bold text-3xl">SO SÁNH SẢN PHẨM</h1>
-      </div>
-      <div class="product-comparison p-[10px] overflow-x-auto" v-if="haveData">
-        <table>
-          <thead>
-            <tr class="remove">
-              <th>&nbsp;</th>
-              <td
-                v-for="(item, index) in specs"
-                :key="index"
-                class="text-center"
-              >
-                <span @click="deleteItem(item.id)" class="spanDel"
-                  >Xóa
-                  <span class="x">x</span>
-                </span>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="name">
-              <th>Tên sản phẩm</th>
-              <td
-                v-for="(item, index) in specs"
-                :key="index"
-                class="text-center"
-              >
-                {{ item.name }}
-              </td>
-            </tr>
-            <tr class="price">
-              <th>Giá</th>
-              <td
-                v-for="(item, index) in specs"
-                :key="index"
-                class="text-center text-[#02B6AC] font-bold"
-                :style="{ color: '#02B6AC !important' }"
-              >
-                {{ item.price }} ₫
-              </td>
-            </tr>
-            <tr class="desc">
-              <th>Mô tả</th>
-              <td
-                v-for="(item, index) in specs"
-                :key="index"
-                class="text-center"
-              >
-                <div v-html="item.description" class="description" />
-              </td>
-            </tr>
-            <tr v-for="title in allThongSoTitles" :key="title.id">
-              <th>{{ title }}</th>
-
-              <td v-for="item in specs" :key="item.id" class="text-center">
-                {{ getThongSoValue(item.thongso, title) }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div
-        v-else
-        class="flex flex-1 justify-center items-center my-[20px] border-[1px] border-[ #dddddd]"
-      >
-        <span>Không có sản phẩm nào được thêm vào bảng so sánh.</span>
-      </div>
+  <div class="w-full flex flex-1 flex-col">
+    <div class="w-full border-b-[1px] border-gray-300 py-3 mb-4">
+      <span class="text-[#38B6AC] font-bold">So sánh sản phẩm</span>
     </div>
+    <div class="w-full flex justify-center items-center">
+      <h1 class="text-[#38B6AC] font-bold text-3xl">SO SÁNH SẢN PHẨM</h1>
+    </div>
+    <div class="product-comparison p-[10px] overflow-x-auto" v-if="haveData">
+      <table>
+        <thead>
+          <tr class="remove">
+            <th>&nbsp;</th>
+            <td v-for="(item, index) in specs" :key="index" class="text-center">
+              <span @click="deleteItem(item.id)" class="spanDel"
+                >Xóa
+                <span class="x">x</span>
+              </span>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="name">
+            <th>Tên sản phẩm</th>
+            <td v-for="(item, index) in specs" :key="index" class="text-center">
+              {{ item.name ? item.name : "Chưa có tên" }}
+            </td>
+          </tr>
+          <tr class="price">
+            <th>Giá</th>
+            <td
+              v-for="(item, index) in specs"
+              :key="index"
+              class="text-center text-[#02B6AC] font-bold"
+              :style="{ color: '#02B6AC !important' }"
+            >
+              {{ formatCurrency(item.price) }}
+            </td>
+          </tr>
+          <tr class="desc">
+            <th>Mô tả</th>
+            <td v-for="(item, index) in specs" :key="index" class="text-center">
+              <div
+                v-html="item.description ? item.description : 'Chưa có mô tả'"
+                class="description"
+              />
+            </td>
+          </tr>
+          <tr v-for="title in allThongSoTitles" :key="title.id">
+            <th>{{ title ? title : "Chưa có dữ liệu" }}</th>
+
+            <td v-for="item in specs" :key="item.id" class="text-center">
+              {{
+                getThongSoValue(item.thongso, title)
+                  ? getThongSoValue(item.thongso, title)
+                  : "Chưa có dữ liệu thông số"
+              }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div
+      v-else
+      class="flex flex-1 justify-center items-center my-[20px] border-[1px] border-[ #dddddd]"
+    >
+      <span>Không có sản phẩm nào được thêm vào bảng so sánh.</span>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -136,6 +131,13 @@ const getThongSoValue = (thongsoList, thuoc_tinh) => {
   } else {
     return;
   }
+};
+
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(value);
 };
 </script>
 

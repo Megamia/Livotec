@@ -85,11 +85,7 @@
                     {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
                   </span>
                   <span class="text-[16px] font-bold text-[#02B6AC]">
-                    {{
-                      itemChil.price
-                        ? formatCurrency(itemChil.price)
-                        : "Chưa có giá"
-                    }}
+                    {{ formatCurrency(itemChil.price) }}
                   </span>
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button

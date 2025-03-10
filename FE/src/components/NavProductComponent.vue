@@ -86,11 +86,7 @@
                     class="text-[16px] text-center font-bold text-[#02B6AC] cursor-pointer"
                     @click="add(itemChil)"
                   >
-                    {{
-                      itemChil.price
-                        ? formatCurrency(itemChil.price)
-                        : "Chưa có giá"
-                    }}
+                    {{ formatCurrency(itemChil.price) }}
                   </span>
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
@@ -144,10 +140,7 @@ import { Navigation } from "swiper";
 import { useRouter } from "vue-router";
 import { BsArrowLeft, BsArrowRight } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
-import {
-  getDataFromIndexedDB,
-  saveDataToIndexedDB,
-} from "@/store/indexedDB";
+import { getDataFromIndexedDB, saveDataToIndexedDB } from "@/store/indexedDB";
 
 const modules = [Navigation];
 const slugsToFilter = [
