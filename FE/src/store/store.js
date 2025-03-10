@@ -47,7 +47,7 @@ const store = createStore({
         },
         setItem: (key, value) => {
           try {
-            const encryptedData = encryptData(JSON.stringify(value)); 
+            const encryptedData = encryptData(value);
             localStorage.setItem(key, encryptedData);
           } catch (error) {
             console.error(
