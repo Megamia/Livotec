@@ -3,6 +3,7 @@
   <a-flex vertical class="flex-1 w-full">
     <img
       src="https://example.sudospaces.com/baohanhlivotec/2024/06/bao-hanh-livotec-pc.jpg"
+      class="imgGuarantee"
     />
     <a-flex vertical justify="center" class="flex-1 items-center">
       <a-flex vertical class="a">
@@ -39,13 +40,17 @@
     </a-flex>
 
     <a-flex vertical class="contentDiv">
-      <span class="text-[#01b6ac] text-[32px] font-bold leading-[46px]">
+      <span
+        class="text-[#01b6ac] text-[32px] font-bold leading-[46px] text-center"
+      >
         MÁY LỌC NƯỚC LIVOTEC
       </span>
-      <span class="text-[#01b6ac] text-[32px] font-medium leading-[46px]">
+      <span
+        class="text-[#01b6ac] text-[32px] font-medium leading-[46px] text-center"
+      >
         07 LÝ DO NÊN LỰA CHỌN MÁY LỌC NƯỚC LIVOTEC
       </span>
-      <span class="text-[22px] font-normal mb-71px"
+      <span class="text-[22px] font-normal mb-71px text-center"
         >Hàng triệu gia đình việt đã lựa chọn và hài lòng</span
       >
     </a-flex>
@@ -167,8 +172,8 @@
       </a-flex>
     </a-flex>
     <a-flex class="justify-center mb-0">
-      <a-flex class="a flex-1 justify-between">
-        <a-flex class="max-w-[33%] text-[12px] text-black">
+      <a-flex class="a flex-1 justify-between footerAfter">
+        <a-flex class="max-w-[33%] text-[12px] text-black up">
           <span
             >CÔNG TY TNHH LIVOTEC<br />
             Địa chỉ: Tầng 7, số 113 - 115 Đường Lê Duẩn, Phường Cửa Nam, Quận
@@ -177,7 +182,7 @@
             Điện thoại: 1800 2298</span
           >
         </a-flex>
-        <a-flex vertical class="gap-[30px] w-[300px]">
+        <a-flex vertical class="gap-[30px] w-[300px] down">
           <a-flex style="flex-basis: calc(100% - 105px)" class="">
             <span class="flex-1">Kết nối với chúng tôi</span>
             <a-flex class="basis-[105px] justify-between">
@@ -321,5 +326,31 @@ const handleChangeItem = (value) => {
   padding-block: 10px;
   padding-inline: 27px;
   border: 1px solid #cccccc;
+}
+@media only screen and (max-width: 520px) {
+  .footerAfter {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .footerAfter .up {
+    max-width: none;
+    width: 100%;
+    display: flex;
+    flex: 1;
+  }
+  .footerAfter .down {
+    max-width: none;
+    width: 100%;
+    display: flex;
+    flex: 1;
+  }
+}
+@media only screen and (max-width: 320px) {
+  .imgGuarantee {
+    display: none;
+  }
+  .h2Text {
+    padding-top: 0;
+  }
 }
 </style>

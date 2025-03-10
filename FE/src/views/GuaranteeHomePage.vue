@@ -1,7 +1,7 @@
 <template>
-  <a-flex class="flex-1 flex-col">
+  <a-flex class="flex-1 flex-col w-[100%]">
     <!-- <DefaultLayoutGuarantee> -->
-      <GuaranteePage />
+    <GuaranteePage />
     <!-- </DefaultLayoutGuarantee> -->
   </a-flex>
 </template>

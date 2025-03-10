@@ -1,49 +1,52 @@
 <template>
   <div class="p-5">
-    <h1 class="text-2xl font-bold text-center mb-6">Chatbot Học & Ứng Dụng</h1>
-
-    <!-- <div class="mb-8 p-5 border border-gray-400 rounded-lg">
-      <h2 class="text-xl font-bold mb-4 text-blue-600">Dạy Chatbot</h2>
-      <div class="flex gap-4 mb-4">
-        <input
-          v-model="teachQuestion"
-          placeholder="Nhập câu hỏi"
-          class="border p-2 w-full"
-        />
-        <input
-          v-model="teachAnswer"
-          placeholder="Nhập câu trả lời"
-          class="border p-2 w-full"
-        />
-        <button @click="teachChatbot" class="bg-blue-500 text-white px-4 py-2">
-          Gửi
-        </button>
-      </div>
-      <p v-if="teachMessage" class="text-green-600">{{ teachMessage }}</p>
-      <p v-else class="text-red-600">{{ messageError }}</p>
-    </div> -->
-
     <div class="p-5 border border-gray-400 rounded-lg">
       <h2 class="text-xl font-bold mb-4 text-green-600">Hỏi Chatbot</h2>
-      <div class="flex gap-4 mb-4">
-        <input
-          v-model="chatQuestion"
-          placeholder="Nhập câu hỏi"
-          class="border p-2 w-full"
-          @keyup.enter="askChatbot"
-        />
-        <button @click="askChatbot" class="bg-green-500 text-white px-4 py-2">
-          Hỏi
-        </button>
-      </div>
+      <a-flex vertical class="gap-4">
+        <a-flex>
+          <input
+            v-model="adviseQuestion"
+            placeholder="Nhập nội dung tư vấn"
+            class="border p-2 w-full"
+            @keyup.enter="handleEnter('advice', $event)"
+            :disabled="loadingAdvice"
+          />
+          <button
+            @click="askChatbot('advice')"
+            class="bg-green-500 text-white px-4 py-2 w-[150px] whitespace-nowrap"
+            :disabled="loadingAdvice"
+          >
+            {{ loadingAdvice ? "Đang tư vấn..." : "Tư vấn" }}
+          </button>
+        </a-flex>
+        <a-flex>
+          <input
+            v-model="chatQuestion"
+            placeholder="Nhập câu hỏi"
+            class="border p-2 w-full"
+            @keyup.enter="handleEnter('chat', $event)"
+            :disabled="loadingChat"
+          />
+          <button
+            @click="askChatbot('chat')"
+            class="bg-green-500 text-white px-4 py-2 w-[150px] whitespace-nowrap"
+            :disabled="loadingChat"
+          >
+            {{ loadingChat ? "Đang chat..." : "Chat với AI" }}
+          </button>
+        </a-flex>
+      </a-flex>
 
       <div
         v-if="chatHistory.length"
         class="mt-4 p-4 border rounded-lg bg-gray-100 max-h-80 overflow-y-scroll flex flex-col-reverse"
       >
         <ul>
-          <li v-for="(chat, index) in chatHistory" :key="index" class="">
-            <p v-if="chat.answer !== null" class="text-purple-600 whitespace-pre-line">
+          <li v-for="(chat, index) in chatHistory" :key="index">
+            <p
+              v-if="chat.answer !== null"
+              class="text-purple-600 whitespace-pre-line"
+            >
               <strong>Chatbot:</strong> {{ chat.answer }}
             </p>
             <p class="text-blue-600 text-end">
@@ -60,79 +63,60 @@
 import { ref } from "vue";
 import axios from "axios";
 
-// const teachQuestion = ref("");
-// const teachAnswer = ref("");
-// const teachMessage = ref("");
-// const messageError = ref("");
-
+const adviseQuestion = ref("Tư vấn ");
 const chatQuestion = ref("");
 const chatHistory = ref([]);
+const loadingAdvice = ref(false);
+const loadingChat = ref(false);
 
-// const teachChatbot = async () => {
-//   if (!teachQuestion.value.trim() || !teachAnswer.value.trim()) {
-//     messageError.value = "Vui lòng nhập cả câu hỏi và câu trả lời!";
-//     return;
-//   }
+const handleEnter = (type, event) => {
+  event.preventDefault();
+  askChatbot(type);
+};
 
-//   try {
-//     const message = `${teachQuestion.value} | ${teachAnswer.value}`;
-//     const response = await axios.post(
-//       `${import.meta.env.VITE_APP_URL_API_CHATBOT}/learn`,
-//       { message }
-//     );
+const askChatbot = async (type) => {
+  if (
+    (type === "advice" && loadingAdvice.value) ||
+    (type === "chat" && loadingChat.value)
+  ) {
+    return;
+  }
 
-//     if (
-//       response.data.status === 1 &&
-//       response.data.message === "Tạo dữ liệu mới"
-//     ) {
-//       teachMessage.value = response.data.reply;
-//       teachQuestion.value = "";
-//       teachAnswer.value = "";
-//     } else if (
-//       response.data.status === 0 &&
-//       response.data.message === "Đã tồn tại"
-//     ) {
-//       teachMessage.value = "";
-//       messageError.value = response.data.reply;
-//     } else {
-//       alert("Phản hồi không hợp lệ từ API.");
-//     }
-//   } catch (error) {
-//     console.error("Lỗi khi dạy chatbot:", error);
-//     messageError.value =
-//       error.response?.data?.reply || "Đã xảy ra lỗi khi dạy chatbot!";
-//   }
-// };
+  let userQuestion =
+    type === "advice" ? adviseQuestion.value.trim() : chatQuestion.value.trim();
 
-const askChatbot = async () => {
-  if (!chatQuestion.value.trim()) {
+  if (!userQuestion) {
     alert("Vui lòng nhập câu hỏi!");
     return;
   }
 
-  const chatEntry = { question: chatQuestion.value, answer: null };
-  chatHistory.value.unshift(chatEntry);
+  const newChat = { question: userQuestion, answer: "Đang xử lý..." };
+  chatHistory.value.unshift(newChat);
 
-  const userQuestion = chatQuestion.value;
-  chatQuestion.value = "";
+  if (type === "advice") {
+    adviseQuestion.value = "Tư vấn ";
+    loadingAdvice.value = true;
+  } else {
+    chatQuestion.value = "";
+    loadingChat.value = true;
+  }
 
   try {
-    const response = await axios.post(
+    const { data } = await axios.post(
       `${import.meta.env.VITE_APP_URL_API_CHATBOT}/chat`,
       { message: userQuestion }
     );
 
-    const reply = response.data.reply || "Không nhận được phản hồi từ chatbot.";
-
     setTimeout(() => {
-      chatEntry.answer = reply;
-      chatHistory.value = [...chatHistory.value];
+      newChat.answer = data?.reply || "Không nhận được phản hồi từ chatbot.";
+      chatHistory.value = [...chatHistory.value]; // Vue sẽ cập nhật lại UI
     }, 2000);
-    console.log(reply);
-    
   } catch (error) {
     console.error("Lỗi khi hỏi chatbot:", error);
-    alert("Đã xảy ra lỗi khi hỏi chatbot!" || error.response?.data?.reply);
+    newChat.answer = "Đã xảy ra lỗi!";
+  } finally {
+    if (type === "advice") loadingAdvice.value = false;
+    else loadingChat.value = false;
   }
 };
 </script>

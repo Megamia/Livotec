@@ -1,15 +1,15 @@
 <template>
-  <a-flex class="flex-1 relative justify-between p-[20px] gap-[30px] a">
+  <a-flex class="flex-1 relative justify-between p-[20px] gap-[30px] main">
     <a-flex>
       <router-link to="/">
         <img
-          src="https://livotec.com/wp-content/uploads/2024/08/logo-livotec.png"
-          class="w-[126px] min-w-[126px]"
+          src="https://livotec.com/wp-content/uploads/2024/08/logo-livotec.png "
+          class="w-[126px] min-w-[126px] imgLivo"
         />
       </router-link>
     </a-flex>
 
-    <a-flex class="flex-1 justify-center gap-[100px]">
+    <a-flex class="flex-1 justify-center gap-[100px] content">
       <span
         :class="{
           'active-liText': liActive === '1',
@@ -75,5 +75,16 @@ const changeLiActive = (value) => {
   background-color: white !important;
   color: #01b6ac !important;
   border-radius: 15px !important;
+}
+@media only screen and (max-width: 720px) {
+  .imgLivo {
+    display: none;
+  }
+  .main {
+    padding-inline: 0;
+  }
+  .content {
+    gap: 0;
+  }
 }
 </style>
