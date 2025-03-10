@@ -18,7 +18,7 @@
         ChatBot
       </button>
     </div>
-    <a-modal v-model:open="openChat" @ok="handleOk" class="modal">
+    <a-modal v-model:open="openChat" @ok="handleOk" :style="{ top: '50px' }">
       <ChatBotComponent />
     </a-modal>
     <a-flex class="justify-center bg-[#EAEBF4] bottom-0">
