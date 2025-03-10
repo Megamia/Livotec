@@ -40,12 +40,13 @@ Route::group(['prefix' => 'api'], function () {
         }
 
         $cookie = cookie(
-            name: 'token',       // Tên cookie
-            value: $token,       // Giá trị token
-            minutes: 1440,         // Thời gian hết hạn trong phút
-            path: '/',           // Đường dẫn cookie
+            name: 'token',
+            value: $token,
+            minutes: 1440,
+            path: '/',
             sameSite: 'Lax',
             secure: true,
+            httpOnly: true,
         );
         // if no errors are encountered we can return a JWT
         return response()->json(compact('user'))->cookie(cookie: $cookie);
@@ -97,6 +98,7 @@ Route::group(['prefix' => 'api'], function () {
             path: '/',
             sameSite: 'None',
             secure: true,
+            httpOnly: true,
         );
         return response()->json(['message' => 'logged_out'])->cookie($cookie);
     });

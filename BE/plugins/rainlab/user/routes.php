@@ -10,18 +10,52 @@ Route::group(['prefix' => 'apiUser'], function () {
             return $user;
         }
         $data = User::with(['additional_user'])->find($user->id);
-        return response()->json($data);
+        $userdata = [
+            'id' => $data->id,
+            'first_name' => $data->first_name,
+            'last_name' => $data->last_name,
+            'email' => $data->email,
+            'additional_user' => $data->additional_user,
+        ];
+        return response()->json($userdata);
     });
-    Route::post('user', function (Request $request) {
+    Route::post('/change-info', function (Request $request) {
         $user = checkToken($request);
         if ($user instanceof \Illuminate\Http\JsonResponse) {
             return $user;
         }
-        $data = User::with(['avatar'])->find($user->id);
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'province' => 'nullable|integer',
+            'district' => 'nullable|integer',
+            'subdistrict' => 'nullable|integer',
+            'address' => 'nullable|string|max:500',
+        ]);
+
+        $user->update([
+            'first_name' => $validatedData['first_name'],
+            'last_name' => $validatedData['last_name'],
+        ]);
+
+        $user->additional_user()->updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'phone' => $validatedData['phone'],
+                'province' => $validatedData['province'],
+                'district' => $validatedData['district'],
+                'subdistrict' => $validatedData['subdistrict'],
+                'address' => $validatedData['address'],
+            ]
+        );
+        $data = User::with('additional_user')->find($user->id);
         $userdata = [
             'id' => $data->id,
             'first_name' => $data->first_name,
-            'avatar_preview' => $data->avatar_url,
+            'last_name' => $data->last_name,
+            'email' => $data->email,
+            'additional_user' => $data->additional_user,
         ];
         return response()->json($userdata);
     });

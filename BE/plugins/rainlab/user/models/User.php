@@ -158,14 +158,18 @@ class User extends Model implements Authenticatable, CanResetPassword
     public $hasMany = [
         'activity_log' => [UserLog::class, 'delete' => true],
     ];
-
+    /**
+     * @var array hasOne relations
+     */
+    public $hasOne = [
+        'additional_user' => 'Betod\Livotec\Models\AdditionalUser',
+    ];
     /**
      * @var array belongsTo
      */
 
     public $belongsTo = [
-        'primary_group' => UserGroup::class,
-        'additional_user' => 'Betod\Livotec\Models\AdditionalUser'
+        'primary_group' => UserGroup::class
     ];
 
     /**
