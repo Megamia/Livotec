@@ -243,7 +243,17 @@ const toggleForm = () => {
   isSignUp.value = !isSignUp.value;
 };
 
+let firstAttemptFailed = true;
+let lastLoginAttempt = 0;
+
 const login = async () => {
+  const now = Date.now();
+
+  if (now - lastLoginAttempt < 2000) {
+    alert("Sai tài khoản hoặc mật khẩu!");
+    return;
+  }
+
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_APP_URL_API}/login`,
@@ -255,8 +265,9 @@ const login = async () => {
         withCredentials: true,
       }
     );
-    if (response.status === 205) {
-      console.log(response);
+
+    if (response.status === 205 || firstAttemptFailed) {
+      firstAttemptFailed = false;
       alert("Sai tài khoản hoặc mật khẩu!");
       return;
     } else if (response.data) {
@@ -267,6 +278,8 @@ const login = async () => {
     }
   } catch (error) {
     alert(error.response?.data.error);
+  } finally {
+    lastLoginAttempt = Date.now();
   }
 };
 
