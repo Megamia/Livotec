@@ -112,12 +112,13 @@
       <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
       <a-flex class="items-center whitespace-nowrap">
         <a-flex
-        vertical
+          vertical
           v-if="isLogin"
           class="icon iconShow group relative items-center"
-          ><CaUserAvatarFilledAlt class="text-[40px]"/><span class="text-[13px] font-medium">Hello, {{
-            firstName
-          }}</span>
+          ><CaUserAvatarFilledAlt class="text-[40px]" /><span
+            class="text-[13px] font-medium"
+            >Hello, {{ firstName }}</span
+          >
 
           <div
             class="hidden group-hover:flex flex-col absolute bg-white text-black left-0 top-5 rounded-md px-3 py-1 mt-3 text-[17px]"
@@ -183,7 +184,6 @@ const getUser = async () => {
     console.error("Failed to fetch user profile:", error);
     if (error.response && error.response.status === 401) {
       console.log("Chưa đăng nhập");
-
       sessionStorage.removeItem("user");
     }
     isLogin.value = false;
@@ -200,13 +200,18 @@ const getUserSession = () => {
 };
 
 const checkUserSession = () => {
-  const storedUser = sessionStorage.getItem("user");
-  if (storedUser) {
-    const user = JSON.parse(storedUser);
-    firstName.value = user.first_name;
-    isLogin.value = true;
-  } else {
+  // const storedUser = sessionStorage.getItem("user");
+  // if (storedUser) {
+  //   const user = JSON.parse(storedUser);
+  //   firstName.value = user.first_name;
+  //   isLogin.value = true;
+  // } else {
+  //   getUser();
+  // }
+  if (!getUserSession()) {
     getUser();
+  } else {
+    return;
   }
 };
 

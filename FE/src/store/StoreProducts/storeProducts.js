@@ -5,6 +5,7 @@ const storeProducts = {
   state: {
     dataStoreProducts: [],
     dataStoreCart: [],
+    autoClearTimeout: null,
   },
   mutations: {
     //Product
@@ -42,6 +43,15 @@ const storeProducts = {
       }
     },
     //Cart
+    setAutoClearTimeout(state, timeout) {
+      state.autoClearTimeout = timeout;
+    },
+    clearAutoClearTimeout(state) {
+      if (state.autoClearTimeout) {
+        clearTimeout(state.autoClearTimeout);
+        state.autoClearTimeout = null;
+      }
+    },
   },
   actions: {
     //Product
@@ -57,6 +67,7 @@ const storeProducts = {
     //Cart
     clearDataStoreCart({ commit }) {
       commit("clearDataStoreCart");
+      localStorage.removeItem("vuex");
       return Promise.resolve();
     },
 
@@ -68,15 +79,24 @@ const storeProducts = {
     },
 
     //Cart
+
     startAutoClear({ dispatch }) {
       if (autoClearTimeout) {
         clearTimeout(autoClearTimeout);
       }
 
       autoClearTimeout = setTimeout(() => {
-        dispatch("clearDataStoreProducts");
+        console.log("Clearing cart...");
+        dispatch("clearDataStoreCart");
         dispatch("startAutoClear");
-      }, 3600000); //1h
+      }, 3600000); 
+    },
+
+    stopAutoClear({ commit, state }) {
+      if (state.autoClearTimeout) {
+        clearTimeout(state.autoClearTimeout);
+        commit("clearAutoClearTimeout");
+      }
     },
   },
   getters: {

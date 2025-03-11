@@ -52,7 +52,9 @@
               <a-flex class="w-full gap-8">
                 <a-form-item name="province" class="w-full">
                   <template #label>
-                    <span class="text-base">Tỉnh/Thành phố</span>
+                    <span class="text-base whitespace-nowrap"
+                      >Tỉnh/Thành phố</span
+                    >
                   </template>
                   <a-select
                     v-model:value="LocateState.province"
@@ -90,7 +92,9 @@
               <a-flex class="w-full gap-8">
                 <a-form-item name="subdistrict" class="w-full">
                   <template #label>
-                    <span class="text-base">Xã/Phường/Thị trấn</span>
+                    <span class="text-base whitespace-nowrap"
+                      >Xã/Phường/Thị trấn</span
+                    >
                   </template>
                   <a-select
                     v-model:value="LocateState.subdistrict"
@@ -107,7 +111,9 @@
                 </a-form-item>
                 <a-form-item ref="address" name="address" class="w-full">
                   <template #label>
-                    <span class="text-base">Street address</span>
+                    <span class="text-base whitespace-nowrap"
+                      >Street address</span
+                    >
                   </template>
                   <a-input
                     v-model:value="formState.address"
@@ -150,7 +156,9 @@
                 <a-flex class="w-full gap-8">
                   <a-form-item name="diffprovince" class="w-full">
                     <template #label>
-                      <span class="text-base">Tỉnh/Thành phố</span>
+                      <span class="text-base whitespace-nowrap"
+                        >Tỉnh/Thành phố</span
+                      >
                     </template>
                     <a-select
                       v-model:value="LocateState.diffprovince"
@@ -188,7 +196,9 @@
                 <a-flex class="w-full gap-8">
                   <a-form-item name="diffsubdistrict" class="w-full">
                     <template #label>
-                      <span class="text-base">Xã/Phường/Thị trấn</span>
+                      <span class="text-base whitespace-nowrap"
+                        >Xã/Phường/Thị trấn</span
+                      >
                     </template>
                     <a-select
                       v-model:value="LocateState.diffsubdistrict"
@@ -209,7 +219,9 @@
                     class="w-full"
                   >
                     <template #label>
-                      <span class="text-base">Street address</span>
+                      <span class="text-base whitespace-nowrap"
+                        >Street address</span
+                      >
                     </template>
                     <a-input
                       v-model:value="formState.diffaddress"
@@ -233,7 +245,7 @@
           <a-flex class="w-full mb-[20px]"
             ><a-table
               :columns="columns"
-              :data-source="data"
+              :data-source="dataTable"
               :pagination="false"
               bordered
               class="w-full"
@@ -372,14 +384,13 @@ import { AkXSmall } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
 import PayPalButton from "@/components/paypal/PayPalButton.vue";
 import { useRouter } from "vue-router";
+import { getDataFromIndexedDB } from "@/store/indexedDB";
+import { toRaw } from "vue";
 
 const router = useRouter();
 const PayPalButtonRef = ref(false);
 
-const data = ref([]);
-
-const dataStore = store.getters["product/getDataStoreCart"];
-data.value = dataStore;
+const dataTable = ref([]);
 
 const formRef = ref();
 const formState = reactive({
@@ -401,20 +412,45 @@ const formState = reactive({
   terms: false,
   paymenttype: 1,
   differentaddresschecked: false,
-  items: data.value.map((item) => ({
-    product_id: item.id, // ID sản phẩm
-    quantity: item.quantity, // Số lượng
-    price: item.price, // Giá của một sản phẩm
-  })),
+  items: [],
 });
 
+const fetchDataTable = async () => {
+  try {
+    const dataStore = JSON.parse(
+      JSON.stringify(store.getters["product/getDataStoreCart"])
+    );
+    const dataProduct = await getDataFromIndexedDB("products");
+
+    const dataCart = dataProduct.filter((item) =>
+      dataStore.some((cartItem) => cartItem.id === item.id)
+    );
+    if (dataCart && dataCart.length > 0) {
+      dataTable.value = dataCart.map((item) => {
+        const cartItem = dataStore.find((cart) => cart.id === item.id);
+        return { ...item, quantity: cartItem ? cartItem.quantity : 1 };
+      });
+
+      formState.items = dataTable.value.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+    }
+  } catch (e) {
+    console.log("Error: ", e);
+  }
+};
+
+onMounted(() => fetchDataTable());
+
 const LocateState = reactive({
-  province: "",
-  district: "",
-  subdistrict: "",
-  diffprovince: "",
-  diffdistrict: "",
-  diffsubdistrict: "",
+  province: null,
+  district: null,
+  subdistrict: null,
+  diffprovince: null,
+  diffdistrict: null,
+  diffsubdistrict: null,
 });
 
 const provinces = ref([]);
@@ -446,7 +482,7 @@ const columns = ref([
 
 const totals = computed(() => {
   let subtotal = 0;
-  data.value.forEach(({ price, quantity }) => {
+  dataTable.value.forEach(({ price, quantity }) => {
     subtotal += price * quantity;
   });
   return {
@@ -687,7 +723,6 @@ const rules = {
 
 const onSubmit = async () => {
   try {
-    // Validate form
     await formRef.value.validate();
     if (formState.paymenttype == 1) {
       PayPalButtonRef.value = true;
@@ -698,7 +733,7 @@ const onSubmit = async () => {
         `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
         formState
       );
-      console.log("Order created successfully:", response.data);
+      // console.log("Order created successfully:", response.data);
       store.dispatch("product/clearDataStoreCart");
       alert("Order created successfully");
       router.push(`/payment/order-received/${response.data.order_code}`);
@@ -719,9 +754,10 @@ const handlePaymentSuccess = async (orderID) => {
     // Gửi request API thêm đơn hàng vào cơ sở dữ liệu khi thanh toán thành công
     const response = await axios.post(
       `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
-      formState
+      JSON.parse(JSON.stringify(formState))
     );
-    console.log("Order created successfully:", response.data);
+
+    // console.log("Order created successfully:", response.data);
     store.dispatch("product/clearDataStoreCart");
     alert("Order created successfully");
     router.push(`/payment/order-received/${response.data.order_code}`);
@@ -745,7 +781,7 @@ fetchProvinces();
 }
 
 @media only screen and (max-width: 480px) {
-  .content{
+  .content {
     flex-direction: column;
   }
 }
