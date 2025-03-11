@@ -385,7 +385,6 @@ import store from "@/store/store";
 import PayPalButton from "@/components/paypal/PayPalButton.vue";
 import { useRouter } from "vue-router";
 import { getDataFromIndexedDB } from "@/store/indexedDB";
-import { toRaw } from "vue";
 
 const router = useRouter();
 const PayPalButtonRef = ref(false);
@@ -441,6 +440,8 @@ const fetchDataTable = async () => {
     console.log("Error: ", e);
   }
 };
+
+const checkUser = () =>
 
 onMounted(() => fetchDataTable());
 
