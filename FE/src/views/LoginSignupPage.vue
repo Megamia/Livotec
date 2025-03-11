@@ -265,14 +265,9 @@ const login = async () => {
         withCredentials: true,
       }
     );
-<<<<<<< HEAD
 
     if (response.status === 205 || firstAttemptFailed) {
       firstAttemptFailed = false;
-=======
-    if (response.status === 205) {
-      console.log(response);
->>>>>>> 02115fceb0a07dc6aacfa5d2f93713c3df149c4f
       alert("Sai tài khoản hoặc mật khẩu!");
       return;
     } else if (response.data) {
