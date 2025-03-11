@@ -7,8 +7,6 @@ require_once __DIR__ . '/functionChatBot.php';
 
 
 Route::group(['prefix' => 'apiChatBot'], function () {
-
-    // **1. API học câu hỏi**
     Route::post('/learn', function (Request $request) {
         $message = trim($request->input('message', ''));
 
@@ -54,29 +52,24 @@ Route::group(['prefix' => 'apiChatBot'], function () {
         }
     });
 
-    // **2. API chat với chatbot**
     Route::post('/chat', function (Request $request) {
         $message = strtolower(trim($request->input('message', '')));
         if (empty($message)) {
             return response()->json(['reply' => 'Vui lòng nhập tin nhắn hợp lệ.'], 400);
         }
 
-        // Kiểm tra câu trả lời có sẵn trong database
         $chatResponse = ChatBot::where('question', $message)->inRandomOrder()->first();
         if ($chatResponse) {
             return response()->json(['reply' => $chatResponse->answer]);
         }
 
-        // Xử lý yêu cầu tư vấn sản phẩm
-        if (str_starts_with($message, 'tư vấn')) {
-            return handleProductAdvice($message);
+        if (str_starts_with($message, 'tìm kiếm')) {
+            return handleProductFind($message);
         }
 
-        // Gọi API AI nếu không có câu trả lời sẵn
         return callGeminiAPI($message);
     });
 
-    // **3. API lấy toàn bộ dữ liệu chatbot**
     Route::get('/allChat', function () {
         $data = ChatBot::all();
 

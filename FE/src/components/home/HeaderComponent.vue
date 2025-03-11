@@ -206,13 +206,18 @@ const getUserSession = () => {
 };
 
 const checkUserSession = () => {
-  const storedUser = sessionStorage.getItem("user");
-  if (storedUser) {
-    const user = JSON.parse(storedUser);
-    firstName.value = user.first_name;
-    isLogin.value = true;
-  } else {
+  // const storedUser = sessionStorage.getItem("user");
+  // if (storedUser) {
+  //   const user = JSON.parse(storedUser);
+  //   firstName.value = user.first_name;
+  //   isLogin.value = true;
+  // } else {
+  //   getUser();
+  // }
+  if (!getUserSession()) {
     getUser();
+  } else {
+    return;
   }
 };
 

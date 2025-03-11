@@ -5,18 +5,18 @@
       <a-flex vertical class="gap-4">
         <a-flex>
           <input
-            v-model="adviseQuestion"
-            placeholder="Nhập nội dung tư vấn"
+            v-model="findQuestion"
+            placeholder="Nhập sản phẩm cần tìm"
             class="border p-2 w-full"
-            @keyup.enter="handleEnter('advice', $event)"
-            :disabled="loadingAdvice"
+            @keyup.enter="handleEnter('find', $event)"
+            :disabled="loadingFind"
           />
           <button
-            @click="askChatbot('advice')"
+            @click="askChatbot('find')"
             class="bg-green-500 text-white px-4 py-2 w-[150px] whitespace-nowrap"
-            :disabled="loadingAdvice"
+            :disabled="loadingFind"
           >
-            {{ loadingAdvice ? "Đang tư vấn..." : "Tư vấn" }}
+            {{ loadingFind ? "Đang Tìm kiếm..." : "Tìm kiếm" }}
           </button>
         </a-flex>
         <a-flex>
@@ -63,10 +63,10 @@
 import { ref } from "vue";
 import axios from "axios";
 
-const adviseQuestion = ref("Tư vấn ");
+const findQuestion = ref("Tìm kiếm ");
 const chatQuestion = ref("");
 const chatHistory = ref([]);
-const loadingAdvice = ref(false);
+const loadingFind = ref(false);
 const loadingChat = ref(false);
 
 const handleEnter = (type, event) => {
@@ -76,14 +76,14 @@ const handleEnter = (type, event) => {
 
 const askChatbot = async (type) => {
   if (
-    (type === "advice" && loadingAdvice.value) ||
+    (type === "find" && loadingFind.value) ||
     (type === "chat" && loadingChat.value)
   ) {
     return;
   }
 
   let userQuestion =
-    type === "advice" ? adviseQuestion.value.trim() : chatQuestion.value.trim();
+    type === "find" ? findQuestion.value.trim() : chatQuestion.value.trim();
 
   if (!userQuestion) {
     alert("Vui lòng nhập câu hỏi!");
@@ -93,9 +93,9 @@ const askChatbot = async (type) => {
   const newChat = { question: userQuestion, answer: "Đang xử lý..." };
   chatHistory.value.unshift(newChat);
 
-  if (type === "advice") {
-    adviseQuestion.value = "Tư vấn ";
-    loadingAdvice.value = true;
+  if (type === "find") {
+    findQuestion.value = "Tìm kiếm ";
+    loadingFind.value = true;
   } else {
     chatQuestion.value = "";
     loadingChat.value = true;
@@ -109,13 +109,13 @@ const askChatbot = async (type) => {
 
     setTimeout(() => {
       newChat.answer = data?.reply || "Không nhận được phản hồi từ chatbot.";
-      chatHistory.value = [...chatHistory.value]; // Vue sẽ cập nhật lại UI
-    }, 2000);
+      chatHistory.value = [...chatHistory.value]; 
+    }, 1000);
   } catch (error) {
     console.error("Lỗi khi hỏi chatbot:", error);
     newChat.answer = "Đã xảy ra lỗi!";
   } finally {
-    if (type === "advice") loadingAdvice.value = false;
+    if (type === "find") loadingFind.value = false;
     else loadingChat.value = false;
   }
 };

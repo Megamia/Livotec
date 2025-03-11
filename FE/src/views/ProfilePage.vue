@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-model-argument -->
   <div
     class="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]"
   >
@@ -333,6 +334,7 @@
       </div>
     </main>
   </div>
+  <!-- eslint-disable vue/no-v-model-argument -->
 </template>
 
 <script setup>

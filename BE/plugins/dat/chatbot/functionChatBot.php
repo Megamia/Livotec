@@ -6,15 +6,14 @@ use Betod\Livotec\Models\Category;
 use Betod\Livotec\Models\Product;
 use Illuminate\Support\Facades\Log;
 
-function handleProductAdvice($message)
+function handleProductFind($message)
 {
-    $keyword = trim(str_replace('tư vấn', '', $message));
+    $keyword = trim(str_replace('tìm kiếm', '', $message));
     if (empty($keyword)) {
-        return response()->json(['reply' => 'Vui lòng nhập từ khóa sản phẩm cần tư vấn.']);
+        return response()->json(['reply' => 'Vui lòng nhập từ khóa sản phẩm cần tìm kiếm.']);
     }
 
-    // Kiểm tra cache để giảm tải truy vấn
-    $products = Cache::remember("product_advice_$keyword", 600, function () use ($keyword) {
+    $products = Cache::remember("find_product_$keyword", 600, function () use ($keyword) {
         $category = Category::where('name', 'LIKE', "%$keyword%")->first();
         return $category ? Product::where('category_id', $category->id)->get() : Product::where('name', 'LIKE', "%$keyword%")->get();
     });
@@ -36,9 +35,6 @@ function handleProductAdvice($message)
     return response()->json(['reply' => 'Xin lỗi, không tìm thấy sản phẩm phù hợp.']);
 }
 
-/**
- * Gọi API AI Gemini
- */
 function callGeminiAPI($message)
 {
     $gemini_api_key = env('GEMINI_API_KEY');

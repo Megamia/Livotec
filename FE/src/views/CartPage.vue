@@ -184,7 +184,23 @@ const handleUpdateCart = () => {
     dataStoreCart: specs.value,
   });
   changeQuantity.value = true;
+  const dataWithNoQuantity = specs.value.filter((item) => item.quantity === 0);
+
+  if (dataWithNoQuantity && dataWithNoQuantity.length > 0) {
+    if (
+      confirm(
+        "Bạn chắc chắn muốn xóa các sản phẩm không mong muốn khỏi giỏ hảng?"
+      )
+    ) {
+      dataWithNoQuantity.forEach((item) => {
+        deleteItem(item.id);
+      });
+    } else {
+      return;
+    }
+  }
 };
+
 const handleChangeQuantity = () => {
   changeQuantity.value = false;
 };
