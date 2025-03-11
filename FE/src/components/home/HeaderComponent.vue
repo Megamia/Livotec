@@ -170,6 +170,12 @@ const getUser = async () => {
         withCredentials: true,
       }
     );
+    if (response.status === 204) {
+      console.log("Token lỗi hoặc đã hết hạn!");
+      sessionStorage.removeItem("user");
+      isLogin.value = false;
+      return;
+    }
     if (response.status === 205) {
       return;
     } else if (response.data) {
@@ -196,18 +202,12 @@ const getUserSession = () => {
     const user = JSON.parse(storedUser);
     firstName.value = user.first_name;
     isLogin.value = true;
+    return true;
   }
+  return false;
 };
 
 const checkUserSession = () => {
-  // const storedUser = sessionStorage.getItem("user");
-  // if (storedUser) {
-  //   const user = JSON.parse(storedUser);
-  //   firstName.value = user.first_name;
-  //   isLogin.value = true;
-  // } else {
-  //   getUser();
-  // }
   if (!getUserSession()) {
     getUser();
   } else {

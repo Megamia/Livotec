@@ -265,16 +265,18 @@ const login = async () => {
         withCredentials: true,
       }
     );
+<<<<<<< HEAD
 
     if (response.status === 205 || firstAttemptFailed) {
       firstAttemptFailed = false;
+=======
+    if (response.status === 205) {
+      console.log(response);
+>>>>>>> 02115fceb0a07dc6aacfa5d2f93713c3df149c4f
       alert("Sai tài khoản hoặc mật khẩu!");
       return;
     } else if (response.data) {
-      const user = {
-        id: response.data.user.id,
-        first_name: response.data.user.first_name,
-      };
+      const user = response.data.user;
       sessionStorage.setItem("user", JSON.stringify(user));
       alert("Login successful!");
       router.push("/");
