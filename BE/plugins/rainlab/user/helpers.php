@@ -19,6 +19,15 @@ function checkToken(Request $request)
         return JWTAuth::setToken($token)->toUser();
     } catch (Exception $e) {
         Log::error('Error validating token: ' . $e->getMessage());
-        return response()->json(['message' => 'Token is invalid or expired'], 500);
+        $cookie = cookie(
+            name: 'token',
+            value: '',
+            minutes: -1,
+            path: '/',
+            sameSite: 'None',
+            secure: true,
+            httpOnly: true,
+        );
+        return response()->json(['message' => 'Token is invalid or expired'], 204)->cookie($cookie);
     }
 }

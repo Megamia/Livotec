@@ -435,9 +435,15 @@ const handleChangeInfo = async () => {
       profile.value,
       { withCredentials: true }
     );
-    alert("Cập nhật thông tin tài khoản thành công");
-    sessionStorage.clear("user");
-    sessionStorage.setItem("user", JSON.stringify(response.data));
+    if (response.data) {
+      alert("Cập nhật thông tin tài khoản thành công");
+      sessionStorage.clear("user");
+      sessionStorage.setItem("user", JSON.stringify(response.data));
+    } else if (response.status == 205) {
+      alert("Chưa đăng nhập");
+      sessionStorage.clear("user");
+      router.push("/login");
+    }
   } catch (error) {
     if (error.response && error.response.status === 401) {
       console.log("Bạn chưa đăng nhập. Đang chuyển hướng...");
@@ -465,12 +471,16 @@ const handleChangePassword = async () => {
       },
       { withCredentials: true }
     );
-
-    successMessage.value = response.data.message;
-    passwordForm.value.old_password = "";
-    passwordForm.value.new_password = "";
-    passwordForm.value.confirm_password = "";
-    console.log(response.data);
+    if (response.data) {
+      successMessage.value = response.data.message;
+      passwordForm.value.old_password = "";
+      passwordForm.value.new_password = "";
+      passwordForm.value.confirm_password = "";
+    } else if (response.status == 205) {
+      alert("Chưa đăng nhập");
+      sessionStorage.clear("user");
+      router.push("/login");
+    }
   } catch (error) {
     if (error.response?.status === 422) {
       errorMessage.value = error.response.data.error || "Lỗi dữ liệu nhập vào.";

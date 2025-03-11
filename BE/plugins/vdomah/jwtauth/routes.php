@@ -30,12 +30,10 @@ Route::group(['prefix' => 'api'], function () {
         } else {
             $user = [
                 'id' => $userModel->id,
-                'username' => $userModel->username,
-                'surname' => $userModel->surname,
                 'first_name' => $userModel->first_name,
+                'last_name' => $userModel->last_name,
                 'email' => $userModel->email,
-                'is_activated' => $userModel->is_activated,
-                'avatar_preview' => $userModel->avatar ? $userModel->avatar_url : null,
+                'additional_user' => $userModel->additional_user,
             ];
         }
 

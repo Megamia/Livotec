@@ -112,12 +112,13 @@
       <MenuComponent v-if="isOpenMenu" @close-menu="showMenu" />
       <a-flex class="items-center whitespace-nowrap">
         <a-flex
-        vertical
+          vertical
           v-if="isLogin"
           class="icon iconShow group relative items-center"
-          ><CaUserAvatarFilledAlt class="text-[40px]"/><span class="text-[13px] font-medium">Hello, {{
-            firstName
-          }}</span>
+          ><CaUserAvatarFilledAlt class="text-[40px]" /><span
+            class="text-[13px] font-medium"
+            >Hello, {{ firstName }}</span
+          >
 
           <div
             class="hidden group-hover:flex flex-col absolute bg-white text-black left-0 top-5 rounded-md px-3 py-1 mt-3 text-[17px]"
@@ -169,6 +170,12 @@ const getUser = async () => {
         withCredentials: true,
       }
     );
+    if (response.status === 204) {
+      console.log("Token lỗi hoặc đã hết hạn!");
+      sessionStorage.removeItem("user");
+      isLogin.value = false;
+      return;
+    }
     if (response.status === 205) {
       return;
     } else if (response.data) {
@@ -183,7 +190,6 @@ const getUser = async () => {
     console.error("Failed to fetch user profile:", error);
     if (error.response && error.response.status === 401) {
       console.log("Chưa đăng nhập");
-
       sessionStorage.removeItem("user");
     }
     isLogin.value = false;
