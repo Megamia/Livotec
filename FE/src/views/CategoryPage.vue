@@ -8,8 +8,8 @@
         class="mb-[1rem] border-t-[1px] border-b-[1px] border-[#dbe0f0] bg-[#f6f9ff] gap-[24px] w-full"
       >
         <a-flex class="p-[18px] px-[15px] border-b border-b-[#02b6ac]">
-          <h1 class="text-[16px] font-bold text-[#02b6ac]">
-            {{ category?.category?.name }}
+          <h1 class="text-[16px] font-bold text-[#02b6ac] capitalize">
+            {{ category[0]?.name }}
           </h1>
         </a-flex>
       </a-flex>
@@ -170,7 +170,7 @@
           :key="product.id"
           :product="product"
         />
-        <ProductItemComponent
+        <!-- <ProductItemComponent
           v-for="product in productCurrentData"
           :key="product.id"
           :product="product"
@@ -184,7 +184,7 @@
           v-for="product in productCurrentData"
           :key="product.id"
           :product="product"
-        />
+        /> -->
       </a-flex>
     </a-flex>
   </section>
@@ -195,6 +195,7 @@
 <script setup>
 import CategorySlideComponent from "@/components/CategorySlideComponent.vue";
 import ProductItemComponent from "@/components/ProductItemComponent.vue";
+import { getDataFromIndexedDB } from "@/store/indexedDB";
 import {
   PhLightFunnel,
   AkChevronDownSmall,
@@ -222,66 +223,94 @@ const rangeOption = (filterId, label, min, max) => {
 
 const clearOption = (filterId) => {
   delete selectedFilter[filterId];
+  applyFilter();
   // console.log("Cleared:", selectedFilter);
 };
 
-const applyFilter = () => {
-  if (Object.keys(selectedFilter).length === 0) {
-    productCurrentData.value = category.value.products;
+const applyFilter = async () => {
+  const dataProduct = await getDataFromIndexedDB("products");
+
+  if (!category.value || category.value.length === 0) {
     return;
   }
 
-  productCurrentData.value = category.value.products.filter((product) => {
+  productCurrentData.value = dataProduct.filter(
+    (item) => item.category_id === category.value[0].id
+  );
+
+  if (Object.keys(selectedFilter).length === 0) {
+    return;
+  }
+
+  productCurrentData.value = productCurrentData.value.filter((product) => {
     return Object.keys(selectedFilter).every((filterId) => {
       const filterValue = selectedFilter[filterId];
+      if (!filterValue) return true; // Nếu không có giá trị filter, giữ lại sản phẩm
 
       if (filterId === "price") {
-        // Lọc theo giá
         const productValue = product[filterId];
         const [label, min, max] = filterValue;
+
+        const minVal = parseInt(min);
+        const maxVal = parseInt(max);
         return (
-          (min === "" || productValue >= parseInt(min)) &&
-          (max === "" || productValue <= parseInt(max))
+          (isNaN(minVal) || productValue >= minVal) &&
+          (isNaN(maxVal) || productValue <= maxVal)
         );
       } else {
-        // Lọc theo thuộc tính trong thongso
-        const thongsoItem = product.thongso?.find(
+        if (!Array.isArray(product.thongso)) return false;
+
+        const thongsoItem = product.thongso.find(
           (item) => item.thuoc_tinh === filterId
         );
         if (!thongsoItem) return false;
 
         if (Array.isArray(filterValue) && filterValue.length === 3) {
-          // Nếu là lọc theo khoảng giá trị (range)
           const [label, min, max] = filterValue;
           const productValue = parseInt(
             thongsoItem.gia_tri.replace(/[^0-9]/g, "") || 0
           );
+
+          const minVal = parseInt(min);
+          const maxVal = parseInt(max);
           return (
-            (min === "" || productValue >= parseInt(min)) &&
-            (max === "" || productValue <= parseInt(max))
+            (isNaN(minVal) || productValue >= minVal) &&
+            (isNaN(maxVal) || productValue <= maxVal)
           );
         } else if (Array.isArray(filterValue) && filterValue.length === 1) {
-          // Nếu là lọc theo giá trị đơn
           return thongsoItem.gia_tri === filterValue[0];
         }
 
-        return true; // Trường hợp không xác định, giữ lại sản phẩm
+        return true;
       }
     });
   });
-
-  console.log("Filtered Products:", productCurrentData.value);
 };
+
+const data = ref([]);
 
 onMounted(async () => {
   try {
     const { slug1, slug2 } = route.params;
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/category/${slug1}/${slug2}`
+
+    // const response = await axios.get(
+    //   `${import.meta.env.VITE_APP_URL_API_CATEGORY}/category/${slug1}/${slug2}`
+    // );
+    // category.value = response.data;
+    // productCurrentData.value = category.value.products;
+
+    const dataProduct = await getDataFromIndexedDB("products");
+    const dataCategory = await getDataFromIndexedDB("category");
+
+    if (slug2) {
+      category.value = dataCategory.filter((item) => item.slug === slug2);
+    } else {
+      category.value = dataCategory.filter((item) => item.slug === slug1);
+    }
+
+    productCurrentData.value = dataProduct.filter(
+      (item) => item.category_id === category.value[0].id
     );
-    category.value = response.data;
-    productCurrentData.value = category.value.products;
-    console.log("Danh sách: ", productCurrentData.value);
   } catch (error) {
     console.error("Error fetching category:", error);
   }
@@ -338,7 +367,7 @@ const focus = () => {
   console.log("focus");
 };
 const handleChange = (value) => {
-  console.log(`selected ${value}`);
+  // console.log(`selected ${value}`);
   sortProducts(value); // Gọi hàm sắp xếp sản phẩm
 };
 
@@ -355,6 +384,7 @@ const sortProducts = (order) => {
       productCurrentData.value.sort(
         (a, b) => (b.sold_out || 0) - (a.sold_out || 0)
       );
+
       break;
     case "best-rate":
       // Giả sử có trường `rating` cho điểm đánh giá

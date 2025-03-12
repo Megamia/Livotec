@@ -114,13 +114,28 @@ Route::group(['prefix' => 'apiCategory'], function () {
     });
 
     Route::get('allCategory', function () {
-        $allCategory = Category::all();
-        if ($allCategory) {
-            return response()->json(['allCategory' => $allCategory, 'status' => 1]);
-        } else {
-            return response()->json(['allCategory' => 'No data', 'status' => 0]);
+        $allCategory = Category::with(['image', 'filters', 'children'])->get();
+
+        if ($allCategory->isEmpty()) {
+            return response()->json(['message' => 'No categories found', 'status' => 0]);
         }
+
+        // $allCategory->each(function ($category) {
+        //     $categoryIds = $category->getAllChildrenAndSelf()->pluck('id');
+        //     $products = Product::with('image')
+        //         ->whereIn('category_id', $categoryIds)
+        //         ->get();
+
+        //     $category->setAttribute('products', $products);
+        // });
+
+        return response()->json([
+            'allCategory' => $allCategory,
+            'status' => 1
+        ]);
     });
+
+
     Route::get('allCategoryParent', function () {
         $allCategoryParent = Category::whereNull('parent_id')->get();
 
