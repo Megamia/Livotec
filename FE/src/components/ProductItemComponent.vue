@@ -5,6 +5,7 @@
         <img
           :src="product.image?.path || 'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'"
           alt="Product Image"
+          class="h-[300px] w-[300px]"
         />
         <div
           v-if="product.sold_out >= 10"

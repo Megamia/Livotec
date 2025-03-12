@@ -102,9 +102,14 @@ const updateDataIfNeeded = async () => {
             JSON.stringify(removeTimestamp(apiItem))
         );
       });
+    const categoriesWithFilters = apiCategories.map((cat) => ({
+      ...cat,
+      filters: cat.filters ? [...cat.filters] : [],
+    }));
 
     if (isProductChanged) await saveDataToIndexedDB("products", apiProducts);
-    if (isCategoryChanged) await saveDataToIndexedDB("category", apiCategories);
+    if (isCategoryChanged)
+      await saveDataToIndexedDB("category", categoriesWithFilters);
 
     if (isProductChanged || isCategoryChanged) {
       // console.log("Dữ liệu thay đổi");
