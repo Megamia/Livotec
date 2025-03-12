@@ -453,8 +453,6 @@ const fetchDataTable = async () => {
 const checkUser = () => {
   const user = JSON.parse(sessionStorage.getItem("user"));
   if (user) {
-    console.log("user: ", user);
-
     formState.user_id = user.id;
     formState.name = `${user.last_name || ""} ${user.first_name || ""}`.trim();
     formState.phone = user.additional_user?.phone;
@@ -569,7 +567,6 @@ function handleProvinceChange(newProvinceCode) {
   );
   if (selectedProvince) {
     formState.province = selectedProvince.name;
-    // console.log(formState.province);
   }
 }
 
@@ -735,9 +732,6 @@ const onSubmit = async () => {
   if (!formState.subdistrict) {
     handleSubdistrictChange(LocateState.subdistrict);
   }
-
-  console.log("data: ", formState.province, LocateState.province);
-
   try {
     await formRef.value.validate();
     if (formState.paymenttype == 1) {
@@ -749,7 +743,6 @@ const onSubmit = async () => {
         `${import.meta.env.VITE_APP_URL_API_ORDER}/createOrder`,
         formState
       );
-      // console.log("Order created successfully:", response.data);
       store.dispatch("product/clearDataStoreCart");
       alert("Order created successfully");
       router.push(`/payment/order-received/${response.data.order_code}`);
@@ -773,7 +766,6 @@ const handlePaymentSuccess = async (orderID) => {
       JSON.parse(JSON.stringify(formState))
     );
 
-    // console.log("Order created successfully:", response.data);
     store.dispatch("product/clearDataStoreCart");
     alert("Order created successfully");
     router.push(`/payment/order-received/${response.data.order_code}`);
@@ -786,8 +778,6 @@ onMounted(() => {
   fetchProvinces();
   fetchDataTable();
   checkUser();
-  console.log(formState);
-  console.log(LocateState);
 });
 </script>
 

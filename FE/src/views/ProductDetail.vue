@@ -10,7 +10,7 @@
               >Trang chủ</RouterLink
             ></a-breadcrumb-item
           >
-          <a-breadcrumb-item v-if="product[0]?.category?.parent != null"
+          <a-breadcrumb-item v-if="product.category?.parent != null"
             ><RouterLink
               :to="`/category/${product.category.parent?.slug}`"
               class="text-[15px] font-semibold"
@@ -180,11 +180,9 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import axios from "axios";
 import ProductSpecifications from "@/components/ProductSpecifications.vue";
 import ProductPosts from "@/components/ProductPosts.vue";
 import store from "@/store/store";
-import { BxFacebookSquare } from "@kalimahapps/vue-icons";
 import { getDataFromIndexedDB } from "@/store/indexedDB";
 
 const route = useRoute();
