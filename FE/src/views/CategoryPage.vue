@@ -203,7 +203,7 @@ import {
 } from "@kalimahapps/vue-icons";
 
 import axios from "axios";
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -224,24 +224,28 @@ const rangeOption = (filterId, label, min, max) => {
 const clearOption = (filterId) => {
   delete selectedFilter[filterId];
   applyFilter();
-  // console.log("Cleared:", selectedFilter);
 };
 
 const applyFilter = async () => {
   const dataProduct = await getDataFromIndexedDB("products");
 
+  // Nếu không có danh mục nào được chọn, không lọc
   if (!category.value || category.value.length === 0) {
     return;
   }
 
-  productCurrentData.value = dataProduct.filter(
-    (item) => item.category_id === category.value[0].id
+  // Lọc sản phẩm theo danh mục đang chọn
+  const categoryIds = category.value.map((cat) => cat.id);
+  productCurrentData.value = dataProduct.filter((item) =>
+    categoryIds.includes(item.category_id)
   );
 
+  // Nếu không có bộ lọc nào, giữ nguyên danh sách sản phẩm
   if (Object.keys(selectedFilter).length === 0) {
     return;
   }
 
+  // Áp dụng bộ lọc của danh mục hiện tại
   productCurrentData.value = productCurrentData.value.filter((product) => {
     return Object.keys(selectedFilter).every((filterId) => {
       const filterValue = selectedFilter[filterId];
@@ -251,12 +255,10 @@ const applyFilter = async () => {
         const productValue = product[filterId];
         const [label, min, max] = filterValue;
 
-        const minVal = parseInt(min);
-        const maxVal = parseInt(max);
-        return (
-          (isNaN(minVal) || productValue >= minVal) &&
-          (isNaN(maxVal) || productValue <= maxVal)
-        );
+        const minVal = min ? parseInt(min) : Number.NEGATIVE_INFINITY;
+        const maxVal = max ? parseInt(max) : Number.POSITIVE_INFINITY;
+
+        return productValue >= minVal && productValue <= maxVal;
       } else {
         if (!Array.isArray(product.thongso)) return false;
 
@@ -271,12 +273,10 @@ const applyFilter = async () => {
             thongsoItem.gia_tri.replace(/[^0-9]/g, "") || 0
           );
 
-          const minVal = parseInt(min);
-          const maxVal = parseInt(max);
-          return (
-            (isNaN(minVal) || productValue >= minVal) &&
-            (isNaN(maxVal) || productValue <= maxVal)
-          );
+          const minVal = min ? parseInt(min) : Number.NEGATIVE_INFINITY;
+          const maxVal = max ? parseInt(max) : Number.POSITIVE_INFINITY;
+
+          return productValue >= minVal && productValue <= maxVal;
         } else if (Array.isArray(filterValue) && filterValue.length === 1) {
           return thongsoItem.gia_tri === filterValue[0];
         }
@@ -287,6 +287,7 @@ const applyFilter = async () => {
   });
 };
 
+// Dữ liệu bộ lọc chỉ lấy từ danh mục đang chọn
 const data = ref([]);
 
 onMounted(async () => {
@@ -311,21 +312,39 @@ onMounted(async () => {
       }
     }
 
+    // Chỉ lấy bộ lọc của danh mục đang chọn
     category.value = selectedCategories;
+    if (selectedCategories.length > 0) {
+      data.value = selectedCategories[0].filters;
+    }
 
+    // Lọc sản phẩm thuộc danh mục hiện tại
     const categoryIds = selectedCategories.map((cat) => cat.id);
-
     productCurrentData.value = dataProduct.filter((item) =>
       categoryIds.includes(item.category_id)
     );
-
-    category.value.forEach((item) => {
-      data.value = item.filters;
-    });
   } catch (error) {
     console.error("Error fetching category:", error);
   }
 });
+
+// Theo dõi sự thay đổi của danh mục để cập nhật bộ lọc
+watch(category, (newCategory) => {
+  if (newCategory.length > 0) {
+    data.value = newCategory[0].filters; // Chỉ lấy bộ lọc của danh mục đầu tiên
+  } else {
+    data.value = [];
+  }
+});
+
+// Theo dõi sự thay đổi của `selectedFilter` để cập nhật sản phẩm
+watch(
+  selectedFilter,
+  () => {
+    applyFilter();
+  },
+  { deep: true }
+);
 
 const price = ref([
   {
