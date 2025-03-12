@@ -293,28 +293,35 @@ onMounted(async () => {
   try {
     const { slug1, slug2 } = route.params;
 
-    // const response = await axios.get(
-    //   `${import.meta.env.VITE_APP_URL_API_CATEGORY}/category/${slug1}/${slug2}`
-    // );
-    // category.value = response.data;
-    // productCurrentData.value = category.value.products;
-
     const dataProduct = await getDataFromIndexedDB("products");
     const dataCategory = await getDataFromIndexedDB("category");
 
+    let selectedCategories = [];
+
     if (slug2) {
-      category.value = dataCategory.filter((item) => item.slug === slug2);
+      selectedCategories = dataCategory.filter((item) => item.slug === slug2);
     } else {
-      category.value = dataCategory.filter((item) => item.slug === slug1);
+      const parentCategory = dataCategory.find((item) => item.slug === slug1);
+      if (parentCategory) {
+        selectedCategories = [parentCategory];
+        const childCategories = dataCategory.filter(
+          (item) => item.parent_id === parentCategory.id
+        );
+        selectedCategories = selectedCategories.concat(childCategories);
+      }
     }
 
-    category.value.forEach((item, index) => {
+    category.value = selectedCategories;
+
+    const categoryIds = selectedCategories.map((cat) => cat.id);
+
+    productCurrentData.value = dataProduct.filter((item) =>
+      categoryIds.includes(item.category_id)
+    );
+
+    category.value.forEach((item) => {
       data.value = item.filters;
     });
-
-    productCurrentData.value = dataProduct.filter(
-      (item) => item.category_id === category.value[0].id
-    );
   } catch (error) {
     console.error("Error fetching category:", error);
   }

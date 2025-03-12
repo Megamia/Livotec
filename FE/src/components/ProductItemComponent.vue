@@ -34,7 +34,7 @@
       <a-flex class="px-[10px] w-[70%] h-full text-center">
         <a-flex gap="12" vertical class="flex-1">
           <span
-            class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer line-clamp-2"
+            class="text-[16px] font-bold w-[100%] hover:text-[#02B6AC] cursor-pointer line-clamp-2 h-[48px] mt-[10px]"
           >
             {{ product.name ? product.name : "Chưa có tên" }}
           </span>
