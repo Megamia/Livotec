@@ -466,13 +466,6 @@ const checkUser = () => {
   }
 };
 
-onMounted(() => {
-  fetchDataTable();
-  checkUser();
-  console.log(formState);
-  console.log(LocateState);
-});
-
 const provinces = ref([]);
 const districts = ref([]);
 const wards = ref([]);
@@ -568,77 +561,66 @@ const onDistrictChange = async () => {
   }
 };
 
-watch(
-  () => LocateState.province,
-  (newProvinceCode) => {
-    const selectedProvince = provinces.value.find(
-      (p) => p.code === newProvinceCode
-    );
-    if (selectedProvince) {
-      formState.province = selectedProvince.name;
-    }
+function handleProvinceChange(newProvinceCode) {
+  const selectedProvince = provinces.value.find(
+    (p) => p.code === newProvinceCode
+  );
+  if (selectedProvince) {
+    formState.province = selectedProvince.name;
+    console.log(formState.province);
   }
-);
+}
 
-watch(
-  () => LocateState.district,
-  (newDistrictCode) => {
-    const selectedDistrict = districts.value.find(
-      (d) => d.code === newDistrictCode
-    );
-    if (selectedDistrict) {
-      formState.district = selectedDistrict.name;
-    }
+function handleDistrictChange(newDistrictCode) {
+  const selectedDistrict = districts.value.find(
+    (d) => d.code === newDistrictCode
+  );
+  if (selectedDistrict) {
+    formState.district = selectedDistrict.name;
   }
-);
+}
 
-watch(
-  () => LocateState.subdistrict,
-  (newSubdistrictCode) => {
-    const selectedSubdistrict = wards.value.find(
-      (w) => w.code === newSubdistrictCode
-    );
-    if (selectedSubdistrict) {
-      formState.subdistrict = selectedSubdistrict.name;
-    }
+function handleSubdistrictChange(newSubdistrictCode) {
+  const selectedSubdistrict = wards.value.find(
+    (w) => w.code === newSubdistrictCode
+  );
+  if (selectedSubdistrict) {
+    formState.subdistrict = selectedSubdistrict.name;
   }
-);
+}
+function handleDiffProvinceChange(newDiffProvinceCode) {
+  const selectedDiffProvince = provinces.value.find(
+    (p) => p.code === newDiffProvinceCode
+  );
+  formState.diffprovince = selectedDiffProvince
+    ? selectedDiffProvince.name
+    : "";
+}
 
-watch(
-  () => LocateState.diffprovince,
-  (newDiffProvinceCode) => {
-    const selectedDiffProvince = provinces.value.find(
-      (p) => p.code === newDiffProvinceCode
-    );
-    formState.diffprovince = selectedDiffProvince
-      ? selectedDiffProvince.name
-      : "";
-  }
-);
+function handleDiffDistrictChange(newDiffDistrictCode) {
+  const selectedDiffDistrict = diffdistricts.value.find(
+    (d) => d.code === newDiffDistrictCode
+  );
+  formState.diffdistrict = selectedDiffDistrict
+    ? selectedDiffDistrict.name
+    : "";
+}
 
-watch(
-  () => LocateState.diffdistrict,
-  (newDiffDistrictCode) => {
-    const selectedDiffDistrict = diffdistricts.value.find(
-      (d) => d.code === newDiffDistrictCode
-    );
-    formState.diffdistrict = selectedDiffDistrict
-      ? selectedDiffDistrict.name
-      : "";
-  }
-);
+function handleDiffSubdistrictChange(newDiffSubdistrictCode) {
+  const selectedDiffSubdistrict = diffwards.value.find(
+    (w) => w.code === newDiffSubdistrictCode
+  );
+  formState.diffsubdistrict = selectedDiffSubdistrict
+    ? selectedDiffSubdistrict.name
+    : "";
+}
 
-watch(
-  () => LocateState.diffsubdistrict,
-  (newDiffSubdistrictCode) => {
-    const selectedDiffSubdistrict = diffwards.value.find(
-      (w) => w.code === newDiffSubdistrictCode
-    );
-    formState.diffsubdistrict = selectedDiffSubdistrict
-      ? selectedDiffSubdistrict.name
-      : "";
-  }
-);
+watch(() => LocateState.province, handleProvinceChange);
+watch(() => LocateState.district, handleDistrictChange);
+watch(() => LocateState.subdistrict, handleSubdistrictChange);
+watch(() => LocateState.diffprovince, handleDiffProvinceChange);
+watch(() => LocateState.diffdistrict, handleDiffDistrictChange);
+watch(() => LocateState.diffsubdistrict, handleDiffSubdistrictChange);
 
 const rules = {
   name: [
@@ -786,7 +768,13 @@ const handlePaymentSuccess = async (orderID) => {
   }
 };
 
-fetchProvinces();
+onMounted(() => {
+  fetchProvinces();
+  fetchDataTable();
+  checkUser();
+  console.log(formState);
+  console.log(LocateState);
+});
 </script>
 
 <style scoped>
