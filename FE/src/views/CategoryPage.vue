@@ -2,7 +2,7 @@
   <!-- eslint-disable vue/no-v-model-argument -->
 
   <section class="w-full flex flex-col gap-[30px]">
-    <CategorySlideComponent :path="category?.category?.image?.path" />
+    <CategorySlideComponent :path="category?.image?.path" />
     <a-flex vertical class="w-full">
       <a-flex
         class="mb-[1rem] border-t-[1px] border-b-[1px] border-[#dbe0f0] bg-[#f6f9ff] gap-[24px] w-full"
@@ -40,7 +40,7 @@
                 ></a-flex
               >
             </a-badge>
-            <div v-for="filter in category?.category?.filters" :key="filter.id">
+            <div v-for="filter in data" :key="filter.id">
               <a-dropdown :trigger="['click']" arrow>
                 <a
                   @click.prevent
@@ -307,6 +307,10 @@ onMounted(async () => {
     } else {
       category.value = dataCategory.filter((item) => item.slug === slug1);
     }
+
+    category.value.forEach((item, index) => {
+      data.value = item.filters;
+    });
 
     productCurrentData.value = dataProduct.filter(
       (item) => item.category_id === category.value[0].id
