@@ -453,14 +453,16 @@ const fetchDataTable = async () => {
 const checkUser = () => {
   const user = JSON.parse(sessionStorage.getItem("user"));
   if (user) {
+    console.log("user: ", user);
+
     formState.user_id = user.id;
-    formState.name = user.last_name + " " + user.first_name;
-    formState.phone = user.additional_user.phone;
+    formState.name = `${user.last_name || ""} ${user.first_name || ""}`.trim();
+    formState.phone = user.additional_user?.phone;
     formState.email = user.email;
-    LocateState.province = user.additional_user.province;
-    LocateState.district = user.additional_user.district;
-    LocateState.subdistrict = user.additional_user.subdistrict;
-    formState.address = user.additional_user.address;
+    LocateState.province = user.additional_user?.province;
+    LocateState.district = user.additional_user?.district;
+    LocateState.subdistrict = user.additional_user?.subdistrict;
+    formState.address = user.additional_user?.address;
     onProvinceChange();
     onDistrictChange();
   }
@@ -567,7 +569,7 @@ function handleProvinceChange(newProvinceCode) {
   );
   if (selectedProvince) {
     formState.province = selectedProvince.name;
-    console.log(formState.province);
+    // console.log(formState.province);
   }
 }
 
@@ -724,6 +726,18 @@ const rules = {
 };
 
 const onSubmit = async () => {
+  if (!formState.province) {
+    handleProvinceChange(LocateState.province);
+  }
+  if (!formState.district) {
+    handleDistrictChange(LocateState.district);
+  }
+  if (!formState.subdistrict) {
+    handleSubdistrictChange(LocateState.subdistrict);
+  }
+
+  console.log("data: ", formState.province, LocateState.province);
+
   try {
     await formRef.value.validate();
     if (formState.paymenttype == 1) {
