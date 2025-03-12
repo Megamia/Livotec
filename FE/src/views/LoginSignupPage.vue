@@ -248,12 +248,10 @@ let lastLoginAttempt = 0;
 
 const login = async () => {
   const now = Date.now();
-
   if (now - lastLoginAttempt < 2000) {
     alert("Sai tài khoản hoặc mật khẩu!");
     return;
   }
-
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_APP_URL_API}/login`,

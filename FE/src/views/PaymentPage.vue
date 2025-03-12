@@ -385,7 +385,6 @@ import store from "@/store/store";
 import PayPalButton from "@/components/paypal/PayPalButton.vue";
 import { useRouter } from "vue-router";
 import { getDataFromIndexedDB } from "@/store/indexedDB";
-import { toRaw } from "vue";
 
 const router = useRouter();
 const PayPalButtonRef = ref(false);
@@ -415,6 +414,15 @@ const formState = reactive({
   items: [],
 });
 
+const LocateState = reactive({
+  province: null,
+  district: null,
+  subdistrict: null,
+  diffprovince: null,
+  diffdistrict: null,
+  diffsubdistrict: null,
+});
+
 const fetchDataTable = async () => {
   try {
     const dataStore = JSON.parse(
@@ -442,15 +450,27 @@ const fetchDataTable = async () => {
   }
 };
 
-onMounted(() => fetchDataTable());
+const checkUser = () => {
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  if (user) {
+    formState.user_id = user.id;
+    formState.name = user.last_name + " " + user.first_name;
+    formState.phone = user.additional_user.phone;
+    formState.email = user.email;
+    LocateState.province = user.additional_user.province;
+    LocateState.district = user.additional_user.district;
+    LocateState.subdistrict = user.additional_user.subdistrict;
+    formState.address = user.additional_user.address;
+    onProvinceChange();
+    onDistrictChange();
+  }
+};
 
-const LocateState = reactive({
-  province: null,
-  district: null,
-  subdistrict: null,
-  diffprovince: null,
-  diffdistrict: null,
-  diffsubdistrict: null,
+onMounted(() => {
+  fetchDataTable();
+  checkUser();
+  console.log(formState);
+  console.log(LocateState);
 });
 
 const provinces = ref([]);

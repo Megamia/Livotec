@@ -14,7 +14,7 @@ class BuilderTableCreateBetodLivotecFilter extends Migration
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->integer('category_id');
-            $table->text('property')->nullable();
+            $table->text('options')->nullable();
             $table->string('type', 255)->nullable();
         });
     }
