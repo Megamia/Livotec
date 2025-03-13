@@ -35,6 +35,7 @@ const fetchData1 = async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_PRODUCT}/allProduct`
     );
+    console.log("Lấy fetchData1");
     return response.data.status === 1
       ? response.data.allProduct.map((product) => ({
           ...product,
@@ -53,6 +54,7 @@ const fetchDataCategory = async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
     );
+    console.log("Lấy fetchDataCategory");
     return response.data.status === 1 ? response.data.allCategory : [];
   } catch (e) {
     console.error("Error fetching categories:", e);
