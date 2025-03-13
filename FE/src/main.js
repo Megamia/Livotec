@@ -7,7 +7,7 @@ import store from "./store/store";
 import "./style.css";
 
 const app = createApp(App);
-store.dispatch("product/startAutoClear");
+store.dispatch("product/initializeAutoClear");
 
 app.use(router);
 app.use(Antd);

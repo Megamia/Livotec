@@ -121,10 +121,10 @@
           >
 
           <div
-            class="hidden group-hover:flex flex-col absolute bg-white text-black left-0 top-5 rounded-md px-3 py-1 mt-3 text-[17px]"
+            class="hidden group-hover:flex flex-col absolute bg-white text-black left-[-10px] border-[1px] border-[gray] top-[50px] rounded-md  mt-3 text-[17px]"
           >
-            <RouterLink to="/profile">Profile</RouterLink>
-            <RouterLink to="/" @click="handleLogout">Logout</RouterLink>
+            <RouterLink to="/profile" class="hover:bg-[#02B6AC] hover:text-white px-3">Profile</RouterLink>
+            <RouterLink to="/" @click="handleLogout" class="hover:bg-[#02B6AC] hover:text-white px-3">Logout</RouterLink>
           </div>
         </a-flex>
         <RouterLink to="/login" v-else>

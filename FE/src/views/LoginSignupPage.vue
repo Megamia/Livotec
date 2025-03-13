@@ -271,7 +271,7 @@ const login = async () => {
     } else if (response.data) {
       const user = response.data.user;
       sessionStorage.setItem("user", JSON.stringify(user));
-      alert("Login successful!");
+      alert("Đăng nhập thành công!");
       router.push("/");
     }
   } catch (error) {
@@ -287,7 +287,7 @@ const signup = async () => {
       `${import.meta.env.VITE_APP_URL_API}/signup`,
       dataForm.value
     );
-    alert("Sign up successful!");
+    alert("Đăng ký thành công!");
     toggleForm();
   } catch (error) {
     console.error("Sign up failed:", error.response?.data || error.message);
