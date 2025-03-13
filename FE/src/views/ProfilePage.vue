@@ -1,14 +1,15 @@
 <template>
   <!-- eslint-disable vue/no-v-model-argument -->
   <div
-    class="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]"
+    class="bg-white w-full flex flex-col md:gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]"
   >
-    <aside class="hidden py-4 md:w-1/3 lg:w-1/4 md:block">
+    <aside class="py-4 md:w-1/3 lg:w-1/4 md:block">
       <div
-        class="sticky flex flex-col gap-2 p-4 text-sm border-r border-indigo-100 top-12"
+        class="sticky flex flex-row max-md:justify-center md:flex-col gap-2 p-4 text-sm md:border-r max-md:border-b border-indigo-100 top-12"
       >
-        <h2 class="pl-3 mb-4 text-2xl font-semibold">Settings</h2>
-
+        <h2 class="hidden md:flex pl-3 max-md:mb-4 text-2xl font-semibold">
+          Settings
+        </h2>
         <button
           href="#"
           class="flex items-center px-3 py-2.5 hover:text-indigo-900 rounded-full"
@@ -40,14 +41,14 @@
         <!-- Thong tin nguoi dung -->
         <div
           v-if="activePage == 0"
-          class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg"
+          class="w-full px-6 pb-8 md:mt-4 sm:max-w-xl sm:rounded-lg"
         >
           <h2 class="pl-6 text-2xl font-bold sm:text-xl">
             Thông tin tài khoản
           </h2>
           <div class="grid max-w-2xl mx-auto">
             <form @submit.prevent="handleChangeInfo">
-              <div class="items-center mt-8 text-[#202142]">
+              <div class="items-center mt-4 md:mt-8 text-[#202142]">
                 <div
                   class="flex flex-col items-center w-full mb-2 space-x-0 space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0 sm:mb-6"
                 >
@@ -64,6 +65,7 @@
                       placeholder="Nhập tên"
                       v-model="profile.first_name"
                       required
+                      :disabled="!editMode"
                     />
                   </div>
 
@@ -79,6 +81,7 @@
                       class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                       placeholder="Nhập họ"
                       v-model="profile.last_name"
+                      :disabled="!editMode"
                     />
                   </div>
                 </div>
@@ -109,6 +112,7 @@
                     class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                     v-model="profile.phone"
                     placeholder="Nhập số điện thoại"
+                    :disabled="!editMode"
                   />
                 </div>
 
@@ -130,6 +134,7 @@
                       v-for="province in provinces"
                       :key="province.code"
                       :value="province.code"
+                      :disabled="!editMode"
                     >
                       {{ province.name }}
                     </a-select-option>
@@ -153,6 +158,7 @@
                       v-for="district in districts"
                       :key="district.code"
                       :value="district.code"
+                      :disabled="!editMode"
                     >
                       {{ district.name }}
                     </a-select-option>
@@ -175,6 +181,7 @@
                       v-for="ward in wards"
                       :key="ward.code"
                       :value="ward.code"
+                      :disabled="!editMode"
                     >
                       {{ ward.name }}
                     </a-select-option>
@@ -192,16 +199,35 @@
                     class="bg-indigo-50 border border-indigo-300 text-indigo-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5"
                     v-model="profile.address"
                     placeholder="Nhập địa chỉ đường"
+                    :disabled="!editMode"
                   />
                 </div>
               </div>
-              <div>
-                <div class="flex justify-end">
+              <div class="flex flex-col md:flex-row md:justify-end gap-3 mt-[20px]">
+                <div v-if="editMode" class="flex justify-end">
                   <button
                     type="submit"
                     class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
                   >
                     Save
+                  </button>
+                </div>
+                <div class="flex justify-end">
+                  <button
+                    v-if="editMode"
+                    @click="handleEditInfo"
+                    type="button"
+                    class="text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+                  >
+                    Thoát
+                  </button>
+                  <button
+                    v-else
+                    @click="handleEditInfo"
+                    type="button"
+                    class="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-indigo-600 dark:hover:bg-indigo-700 dark:focus:ring-indigo-800"
+                  >
+                    Cập nhật thông tin
                   </button>
                 </div>
               </div>
@@ -211,12 +237,12 @@
         <!-- Doi mat khau -->
         <div
           v-if="activePage == 1"
-          class="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg"
+          class="w-full px-6 pb-8 md:mt-4 sm:max-w-xl sm:rounded-lg"
         >
           <h2 class="pl-6 text-2xl font-bold sm:text-xl">Đổi mật khẩu</h2>
           <div class="grid max-w-2xl mx-auto">
             <form @submit.prevent="handleChangePassword">
-              <div class="items-center mt-8 text-[#202142]">
+              <div class="items-center max-md:mt-4 md:mt-8 text-[#202142]">
                 <input
                   type="text"
                   id="username"
@@ -313,12 +339,14 @@
                     </button>
                   </div>
                 </div>
-                <p v-if="errorMessage" class="text-red-600">
-                  {{ errorMessage }}
-                </p>
-                <p v-if="successMessage" class="text-green-600">
-                  {{ successMessage }}
-                </p>
+                <div class="h-[20px]">
+                  <p v-if="errorMessage" class="text-red-600">
+                    {{ errorMessage }}
+                  </p>
+                  <p v-if="successMessage" class="text-green-600">
+                    {{ successMessage }}
+                  </p>
+                </div>
                 <div class="flex justify-end">
                   <button
                     type="submit"
@@ -338,7 +366,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, resolveDirective, watch } from "vue";
 import { useRouter } from "vue-router";
 import { CdEye, CdEyeClosed } from "@kalimahapps/vue-icons";
 import axios from "axios";
@@ -348,6 +376,7 @@ const provinces = ref([]);
 const districts = ref([]);
 const wards = ref([]);
 const activePage = ref(0);
+const editMode = ref(false);
 const profile = ref({
   first_name: "",
   last_name: "",
@@ -373,6 +402,10 @@ const passwordForm = ref({
   new_password: "",
   confirm_password: "",
 });
+
+const handleEditInfo = () => {
+  editMode.value = !editMode.value;
+};
 
 const handleChangeActivePage = (value) => {
   activePage.value = value;
@@ -439,6 +472,7 @@ const handleChangeInfo = async () => {
     );
     if (response.data) {
       alert("Cập nhật thông tin tài khoản thành công");
+      handleEditInfo();
       sessionStorage.clear("user");
       sessionStorage.setItem("user", JSON.stringify(response.data));
     } else if (response.status == 205) {

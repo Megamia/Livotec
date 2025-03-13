@@ -123,8 +123,8 @@
           <div
             class="hidden group-hover:flex flex-col absolute bg-white text-black left-0 top-5 rounded-md px-3 py-1 mt-3 text-[17px]"
           >
-            <RouterLink to="/profile">Profile</RouterLink>
-            <RouterLink to="/" @click="handleLogout">Logout</RouterLink>
+            <a-button> <RouterLink to="/profile">Profile</RouterLink></a-button>
+            <a-button @click="showLogoutConfirm">Logout</a-button>
           </div>
         </a-flex>
         <RouterLink to="/login" v-else>
@@ -142,7 +142,9 @@
 <script setup>
 import MenuComponent from "../MenuComponent.vue";
 import SearchComponent from "../SearchComponent.vue";
-import { ref, onMounted, computed, watchEffect, watch } from "vue";
+import { ref, onMounted, computed, watchEffect, watch, createVNode } from "vue";
+import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import { Modal } from "ant-design-vue";
 import "./header.css";
 import {
   BxSearch,
@@ -214,25 +216,34 @@ const checkUserSession = () => {
     return;
   }
 };
+const showLogoutConfirm = () => {
+  Modal.confirm({
+    title: "Chắc chắn đăng xuất?",
+    icon: createVNode(ExclamationCircleOutlined),
+    onOk() {
+      handleLogout();
+    },
+    onCancel() {},
+    class: "test",
+  });
+};
 
 const handleLogout = async () => {
   try {
-    if (confirm("Chắc chắn muốn đăng xuất?")) {
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_URL_API}/logout`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
+    const response = await axios.post(
+      `${import.meta.env.VITE_APP_URL_API}/logout`,
+      {},
+      { withCredentials: true }
+    );
+
+    if (response.data) {
       sessionStorage.removeItem("user");
       isLogin.value = false;
-    } else {
-      return;
+      router.push("/");
     }
   } catch (error) {
-    console.error("Logout failed:", error.response?.data || error.message);
-    alert("Logout failed! Please check your credentials.");
+    console.error("Đăng xuất thất bại:", error.response?.data || error.message);
+    alert("Đăng xuất thất bại! Vui lòng kiểm tra lại.");
   }
 };
 
