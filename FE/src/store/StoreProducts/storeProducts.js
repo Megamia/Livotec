@@ -87,7 +87,7 @@ const storeProducts = {
       }
 
       const clearTime = Date.now() + 3600000; // 1h
-      localStorage.setItem("autoClearTime", clearTime); 
+      localStorage.setItem("autoClearTime", clearTime);
 
       autoClearTimeout = setTimeout(() => {
         dispatch("clearDataStoreCart");

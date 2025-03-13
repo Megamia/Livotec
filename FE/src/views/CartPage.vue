@@ -118,7 +118,7 @@
 
 <script setup>
 import DefaultLayout from "./layouts/DefaultLayout.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import store from "@/store/store";
 import { CgClose } from "@kalimahapps/vue-icons";
 import { routeLocationKey, useRouter } from "vue-router";
@@ -155,6 +155,13 @@ const fetchData = async () => {
     haveData.value = false;
   }
 };
+watch(
+  () => store.getters["product/getDataStoreCart"],
+  (newVal, oldVal) => {
+    fetchData();
+  },
+  { deep: true }
+);
 
 const formatPrice = (value) => {
   return new Intl.NumberFormat("vi-VN", {
