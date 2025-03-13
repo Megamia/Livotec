@@ -116,12 +116,12 @@
           v-if="isLogin"
           class="icon iconShow group relative items-center"
           ><CaUserAvatarFilledAlt class="text-[40px]" /><span
-            class="text-[13px] font-medium"
+            class="text-[13px] font-medium mb-2"
             >Hello, {{ firstName }}</span
           >
 
           <div
-            class="hidden group-hover:flex flex-col absolute bg-white text-black left-[-10px] border-[1px] border-[gray] top-[50px] rounded-md mt-3 text-[17px]"
+            class="hidden group-hover:flex flex-col absolute bg-white text-black left-[-10px] border-[1px] border-gray-200 top-[50px] rounded-md mt-3 text-[17px] overflow-hidden"
           >
             <RouterLink
               to="/profile"
