@@ -2,6 +2,7 @@
 namespace Betod\Livotec\Controllers;
 
 use Betod\Livotec\Models\OrderDetail;
+use Betod\Livotec\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Betod\Livotec\Models\Orders;
@@ -62,6 +63,13 @@ class OrderController extends Controller
                 'quantity' => $item['quantity'],
                 'price' => ($item['price'] * $item['quantity']), // Tổng giá của từng sản phẩm
             ]);
+            $product = Product::find($item['product_id']);
+
+            if ($product) {
+                $product->stock -= $item['quantity']; 
+                $product->sold_out += $item['quantity']; 
+                $product->save();
+            }
         }
 
         return response()->json([
