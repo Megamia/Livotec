@@ -30,21 +30,64 @@
         class="cursor-pointer text-[20px] hover:text-[#02b6ac]"
       />
     </a-flex>
-    <a-flex v-if="filteredData.length" vertical>
-      <a-flex
-        class="pt-[10px] pl-[5px]"
-        v-for="item in filteredData"
-        :key="item.id"
-        vertical
-      >
-        <h5 class="text-[1.25rem] font-medium">{{ item.title }}</h5>
+
+    <template v-if="!searchInput.trim()">
+      <a-flex v-if="dataQuickFind.length" vertical>
+        <a-flex class="pt-[10px] pl-[5px]" vertical>
+          <h5 class="text-[1.25rem] font-medium">Tìm kiếm nhanh</h5>
+          <ul class="flex flex-col gap-[10px] py-[10px]">
+            <li
+              v-for="item in dataQuickFind"
+              :key="item.id"
+              class="text-black cursor-pointer"
+            >
+              <a
+                :href="`/product/${item.slug}`"
+                class="hover:bg-white hover:text-black"
+              >
+                {{ item.name }}
+              </a>
+            </li>
+          </ul>
+        </a-flex>
+      </a-flex>
+
+      <a-flex v-if="dataMostFind.length" vertical>
+        <a-flex class="pt-[10px] pl-[5px]" vertical>
+          <h5 class="text-[1.25rem] font-medium">Từ khóa tìm kiếm nhiều</h5>
+          <ul class="flex flex-col gap-[10px] py-[10px]">
+            <li
+              v-for="item in dataMostFind"
+              :key="item.id"
+              class="text-black cursor-pointer"
+            >
+              <a
+                :href="`/product/${item.slug}`"
+                class="hover:bg-white hover:text-black"
+              >
+                {{ item.name }}
+              </a>
+            </li>
+          </ul>
+        </a-flex>
+      </a-flex>
+    </template>
+
+    <a-flex v-else vertical>
+      <a-flex class="pt-[10px] pl-[5px]" vertical>
+        <h5 class="text-[1.25rem] font-medium">Kết quả tìm kiếm</h5>
         <ul class="flex flex-col gap-[10px] py-[10px]">
           <li
-            v-for="itemChil in item.item"
-            :key="`${item.id}-${itemChil.id}`"
-            class="text-black"
+            v-for="item in filteredData"
+            :key="item.id"
+            class="text-black cursor-pointer"
           >
-            {{ itemChil.name }}
+            <a
+              :href="`/product/${item.slug}`"
+              class="hover:bg-white hover:text-black"
+            >
+              {{ item.name }}
+            </a>
           </li>
         </ul>
       </a-flex>
@@ -52,27 +95,43 @@
   </a-drawer>
   <!-- eslint-disable vue/no-v-model-argument -->
 </template>
-
 <script setup>
-import { ref, defineEmits, computed } from "vue";
-import { ClCloseLg } from "@kalimahapps/vue-icons";
-import { BxSearch } from "@kalimahapps/vue-icons";
-import "./SearchComponent.css";
-const emit = defineEmits(["closeSearch"]);
+import { ref, computed, onMounted } from "vue";
+import { getDataFromIndexedDB } from "@/store/indexedDB";
+import { ClCloseLg, BxSearch } from "@kalimahapps/vue-icons";
 
+const emit = defineEmits(["closeSearch"]);
 const open = ref(true);
 const searchInput = ref("");
+const dataQuickFind = ref([]);
+const dataMostFind = ref([]);
+
+const fetchData = async () => {
+  try {
+    const dataProduct = await getDataFromIndexedDB("products");
+
+    if (Array.isArray(dataProduct) && dataProduct.length > 0) {
+      dataQuickFind.value = dataProduct.slice(0, 4);
+
+      dataMostFind.value = [...dataProduct].sort(
+        (a, b) => b.sold_out - a.sold_out
+      );
+    } else {
+      console.warn("Không có dữ liệu hợp lệ từ IndexedDB.");
+    }
+  } catch (e) {
+    console.error("Lỗi khi lấy dữ liệu từ IndexedDB: ", e);
+  }
+};
 
 const filteredData = computed(() => {
-  if (!searchInput.value.trim()) return data.value;
-  return data.value
-    .map((group) => ({
-      ...group,
-      item: group.item.filter((item) =>
-        item.name.toLowerCase().includes(searchInput.value.toLowerCase())
-      ),
-    }))
-    .filter((group) => group.item.length > 0);
+  const search = searchInput.value.trim().toLowerCase();
+
+  if (!search) return [];
+
+  return dataMostFind.value.filter((item) =>
+    item.name?.toLowerCase().includes(search)
+  );
 });
 const closeSearch = () => {
   open.value = false;
@@ -80,39 +139,5 @@ const closeSearch = () => {
     emit("closeSearch");
   }, 500);
 };
-
-const data = ref([
-  {
-    id: 1,
-    title: "Tìm kiếm nhanh",
-    item: [
-      { id: 1, name: "Máy lọc nước Livotec 630" },
-      { id: 2, name: "Máy lọc nước Livotec 638" },
-      { id: 3, name: "Bếp từ đôi LID-888" },
-      { id: 4, name: "Bình nước nóng LWH-ID30" },
-    ],
-  },
-  {
-    id: 2,
-    title: "Từ khóa tìm kiếm nhiều",
-    item: [
-      { id: 1, name: "Bếp từ đôi" },
-      { id: 2, name: "Máy lọc nước Livotec 216" },
-      { id: 3, name: "Máy lọc nước Livotec 616" },
-      { id: 4, name: "Bình nước nóng" },
-    ],
-  },
-  {
-    id: 3,
-    title: "Từ khóa tìm kiếm nhiều",
-    item: [
-      { id: 1, name: "Bếp từ đôi" },
-      { id: 2, name: "Máy lọc nước Livotec 216" },
-      { id: 3, name: "Máy lọc nước Livotec 616" },
-      { id: 4, name: "Bình nước nóng" },
-    ],
-  },
-]);
+onMounted(fetchData);
 </script>
-
-<style></style>

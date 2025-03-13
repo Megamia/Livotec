@@ -58,7 +58,7 @@
                 v-model:value="item.quantity"
                 @change="handleChangeQuantity()"
                 :min="0"
-                :max="100000"
+                :max="item.stock"
                 class="border-[#666] hover:border-[#666] rounded-none w-[60px] text-center"
               />
             </td>
@@ -118,7 +118,7 @@
 
 <script setup>
 import DefaultLayout from "./layouts/DefaultLayout.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import store from "@/store/store";
 import { CgClose } from "@kalimahapps/vue-icons";
 import { routeLocationKey, useRouter } from "vue-router";
@@ -140,9 +140,9 @@ const fetchData = async () => {
   const dataStore = JSON.parse(
     JSON.stringify(store.getters["product/getDataStoreCart"])
   );
-  const a = await getDataFromIndexedDB("products");
+  const dataProduct = await getDataFromIndexedDB("products");
 
-  const dataCart = a.filter((item) =>
+  const dataCart = dataProduct.filter((item) =>
     dataStore.some((cartItem) => cartItem.id === item.id)
   );
   if (dataCart && dataCart.length > 0) {
@@ -155,6 +155,13 @@ const fetchData = async () => {
     haveData.value = false;
   }
 };
+watch(
+  () => store.getters["product/getDataStoreCart"],
+  (newVal, oldVal) => {
+    fetchData();
+  },
+  { deep: true }
+);
 
 const formatPrice = (value) => {
   return new Intl.NumberFormat("vi-VN", {

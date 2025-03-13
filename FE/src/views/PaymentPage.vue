@@ -723,6 +723,8 @@ const rules = {
 };
 
 const onSubmit = async () => {
+  console.log(formState, LocateState);
+
   if (!formState.province) {
     handleProvinceChange(LocateState.province);
   }

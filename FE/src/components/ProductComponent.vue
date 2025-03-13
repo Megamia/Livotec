@@ -90,7 +90,7 @@
                   <a-flex vertical class="gap-[10px] text-[16px]">
                     <button
                       class="flex-1 font-bold px-[12px] py-[10px] rounded-[9999px] text-white hover:bg-[#CC020B] bg-[linear-gradient(270deg,_#e20008_0%,_rgba(226,_0,_8,_0.7)_100%,_rgba(226,_0,_8,_0.68)_100%)] shadow-[#ff0000] shadow-sm"
-                      @click="handleProductDetail(itemChil.slug)"
+                      @click="handleAddToCart(itemChil)"
                     >
                       Mua ngay
                     </button>
@@ -120,6 +120,7 @@ import { onMounted, ref, defineProps, onUnmounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import "./ProductComponent.css";
 import { getDataFromIndexedDB } from "@/store/indexedDB";
+import store from "@/store/store";
 
 const router = useRouter();
 const dataChil = ref([]);
@@ -183,6 +184,29 @@ const fillterData = (id) => {
 
 const changeData = (id) => {
   fillterData(id);
+};
+
+const handleAddToCart = async (data) => {
+  const currentCart = store.getters["product/getDataStoreCart"] || [];
+
+  let itemExists = false;
+  const updatedCart = currentCart.map((item) => {
+    if (item.id === data.id) {
+      itemExists = true;
+      return { id: item.id, quantity: (item.quantity || 1) + 1 };
+    }
+    return item;
+  });
+
+  if (!itemExists) {
+    updatedCart.push({ id: data.id, quantity: 1 });
+  }
+
+  store.commit("product/setDataStoreCart", {
+    dataStoreCart: updatedCart,
+  });
+
+  // console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
 };
 
 const handleProductDetail = (items) => {
