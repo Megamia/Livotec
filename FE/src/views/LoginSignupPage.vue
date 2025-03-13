@@ -245,13 +245,19 @@ const toggleForm = () => {
 
 let firstAttemptFailed = true;
 let lastLoginAttempt = 0;
+let isLoggingIn = false;
+let retryDelay = 2000; 
 
 const login = async () => {
+  if (isLoggingIn) return;
+
   const now = Date.now();
-  if (now - lastLoginAttempt < 2000) {
-    alert("Sai tài khoản hoặc mật khẩu!");
+  if (now - lastLoginAttempt < retryDelay) {
+    alert(`Vui lòng thử lại sau ${retryDelay / 1000} giây!`);
     return;
   }
+
+  isLoggingIn = true;
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_APP_URL_API}/login`,
@@ -259,25 +265,26 @@ const login = async () => {
         email: dataForm.value.email,
         password: dataForm.value.password,
       },
-      {
-        withCredentials: true,
-      }
+      { withCredentials: true }
     );
 
     if (response.status === 205 || firstAttemptFailed) {
       firstAttemptFailed = false;
       alert("Sai tài khoản hoặc mật khẩu!");
+      retryDelay = Math.min(retryDelay * 2); 
       return;
     } else if (response.data) {
-      const user = response.data.user;
-      sessionStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("user", JSON.stringify(response.data.user));
       alert("Đăng nhập thành công!");
+      retryDelay = 2000; 
       router.push("/");
     }
   } catch (error) {
     alert(error.response?.data.error);
+    retryDelay = Math.min(retryDelay * 2, 10000);
   } finally {
     lastLoginAttempt = Date.now();
+    isLoggingIn = false;
   }
 };
 

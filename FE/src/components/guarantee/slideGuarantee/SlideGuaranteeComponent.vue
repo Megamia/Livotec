@@ -21,7 +21,7 @@
     <a-flex class="flex-1 w-[100%] justify-center">
       <a-flex
         v-if="haveData && dataSlide.length > 0"
-        class="max-w-[100%] w-full px-[100px] py-[30px] justify-center relative"
+        class="max-w-[100%] w-full flex-1 py-[30px] justify-center relative"
       >
         <button
           v-if="dataSlide.length > 4"
@@ -47,7 +47,7 @@
           >
             <a-flex
               vertical
-              class="rounded-[26px] border border-[#01b6ac] border-t-[8px] bg-white shadow-md shadow-black/20 p-5 flex flex-col items-center justify-center ml-[7px] m-2"
+              class="rounded-[26px] min-w-[100%] w-[400px]  border border-[#01b6ac] border-t-[8px] bg-white shadow-md shadow-black/20 p-5 flex flex-col items-center justify-center ml-[7px] m-2"
             >
               <a-flex vertical align="center" class="flex-1">
                 <div class="w-full relative py-[20px] justify-center flex">
@@ -56,7 +56,7 @@
                       itemChil.image?.path ||
                       'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
                     "
-                    class="justify-center items-center w-[300px] h-[300px] max-w-full max-h-full object-cover"
+                    class="justify-center items-center min-w-[100%] max-w-[300px] w-[100%] h-[300px]  max-h-full object-cover"
                   />
                 </div>
                 <a-flex class="px-[10px] w-[70%]">
@@ -67,7 +67,9 @@
                     <p class="truncate max-w-[180px]">
                       {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
                     </p>
-                    <p>{{ itemChil.price ? itemChil.price : "Chưa có giá" }}</p>
+                    <p class="truncate">
+                      {{ itemChil.price ? itemChil.price : "Chưa có giá" }}
+                    </p>
                   </a-flex>
                 </a-flex>
               </a-flex>
