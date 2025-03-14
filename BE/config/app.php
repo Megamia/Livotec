@@ -114,7 +114,9 @@ return [
 
         // Core Service Provider
         System\ServiceProvider::class,
-
+        App\Providers\EventServiceProvider::class,
+        Illuminate\Auth\AuthServiceProvider::class,
+        BeyondCode\LaravelWebSockets\WebSocketsServiceProvider::class,
         // Package Service Providers...
         // Illuminate\Html\HtmlServiceProvider::class, // Example
 

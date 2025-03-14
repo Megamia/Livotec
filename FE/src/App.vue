@@ -1,68 +1,93 @@
 <script setup>
-import layouts from "./views/layouts";
-import { RouterView, useRoute } from "vue-router";
-import { computed, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import { useRoute } from "vue-router";
 import { saveDataToIndexedDB, getDataFromIndexedDB } from "./store/indexedDB";
 import axios from "axios";
+import echo from "@/utils/echo";
+import layouts from "./views/layouts";
+
+const products = ref([]);
+const messages = ref([]);
+const echoChannel = echo.channel("products");
 
 const route = useRoute();
 const layout = computed(() => layouts[route.meta.layout] || layouts.default);
 
 let timeoutId;
+let dataUpdateInterval;
 
-// Xử lý token
 const handleToken = () => {
+  const token = localStorage.getItem("token");
   const tokenTimestamp = localStorage.getItem("tokenTimestamp");
   const currentTime = Date.now();
-  const timeElapsed = tokenTimestamp ? currentTime - tokenTimestamp : 0;
   const oneHour = 3600000;
 
-  if (!tokenTimestamp || timeElapsed >= oneHour) {
+  if (!token) {
+    localStorage.removeItem("tokenTimestamp");
+    return;
+  }
+
+  const timeElapsed = tokenTimestamp ? currentTime - tokenTimestamp : 0;
+  const remainingTime = oneHour - timeElapsed;
+
+  if (remainingTime <= 0) {
     localStorage.removeItem("token");
     localStorage.removeItem("tokenTimestamp");
-    localStorage.setItem("tokenTimestamp", Date.now());
   } else {
     timeoutId = setTimeout(() => {
       localStorage.removeItem("token");
       localStorage.removeItem("tokenTimestamp");
-    }, oneHour - timeElapsed);
+    }, remainingTime);
   }
 };
 
-// Lấy dữ liệu sản phẩm từ API
-const fetchData1 = async () => {
+const fetchData = async (url) => {
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_PRODUCT}/allProduct`
-    );
-    console.log("Lấy fetchData1");
+    const response = await axios.get(url);
     return response.data.status === 1
-      ? response.data.allProduct.map((product) => ({
-          ...product,
-          image: product.image?.path || "",
-        }))
+      ? response.data.allProduct || response.data.allCategory
       : [];
   } catch (e) {
-    console.error("Error fetching products:", e);
+    console.error("Error fetching data:", e);
     return [];
   }
 };
 
-// Lấy dữ liệu danh mục từ API
-const fetchDataCategory = async () => {
-  try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`
-    );
-    console.log("Lấy fetchDataCategory");
-    return response.data.status === 1 ? response.data.allCategory : [];
-  } catch (e) {
-    console.error("Error fetching categories:", e);
-    return [];
-  }
+// Kiểm tra sự thay đổi dữ liệu
+const hasDataChanged = (localData, apiData) => {
+  if (localData.length !== apiData.length) return true;
+
+  const localMap = new Map(localData.map((item) => [item.id, item]));
+
+  return apiData.some((apiItem) => {
+    const localItem = localMap.get(apiItem.id);
+    if (!localItem) {
+      console.log(`New item added:`, apiItem);
+      return true;
+    }
+
+    const changes = {};
+    Object.keys(apiItem).forEach((key) => {
+      if (JSON.stringify(localItem[key]) !== JSON.stringify(apiItem[key])) {
+        changes[key] = { old: localItem[key], new: apiItem[key] };
+      }
+    });
+
+    if (Object.keys(changes).length > 0) {
+      console.log(`🔄 Item ID ${apiItem.id} changed:`, changes);
+      return true;
+    }
+
+    return false;
+  });
 };
 
-// Kiểm tra và cập nhật dữ liệu nếu cần
+const updateProductListInState = async (apiProducts) => {
+  products.value = apiProducts;
+
+  await saveDataToIndexedDB("products", apiProducts);
+};
+
 const updateDataIfNeeded = async () => {
   try {
     const [localProducts, localCategories] = await Promise.all([
@@ -71,79 +96,60 @@ const updateDataIfNeeded = async () => {
     ]);
 
     const [apiProducts, apiCategories] = await Promise.all([
-      fetchData1(),
-      fetchDataCategory(),
+      fetchData(`${import.meta.env.VITE_APP_URL_API_PRODUCT}/allProduct`),
+      fetchData(`${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategory`),
     ]);
-    const removeTimestamp = (obj) => {
-      const { timestamp, ...rest } = obj;
-      return rest;
-    };
 
-    const isProductChanged =
-      localProducts.length !== apiProducts.length ||
-      localProducts.some((localItem) => {
-        const apiItem = apiProducts.find(
-          (apiItem) => apiItem.id === localItem.id
-        );
-        return (
-          !apiItem ||
-          JSON.stringify(removeTimestamp(localItem)) !==
-            JSON.stringify(removeTimestamp(apiItem))
-        );
-      });
-
-    const isCategoryChanged =
-      localCategories.length !== apiCategories.length ||
-      localCategories.some((localItem) => {
-        const apiItem = apiCategories.find(
-          (apiItem) => apiItem.id === localItem.id
-        );
-        return (
-          !apiItem ||
-          JSON.stringify(removeTimestamp(localItem)) !==
-            JSON.stringify(removeTimestamp(apiItem))
-        );
-      });
     const categoriesWithFilters = apiCategories.map((cat) => ({
       ...cat,
-      filters: cat.filters ? [...cat.filters] : [],
+      filters: cat.filters || [],
     }));
+
+    const isProductChanged = hasDataChanged(localProducts, apiProducts);
+    const isCategoryChanged = hasDataChanged(
+      localCategories,
+      categoriesWithFilters
+    );
 
     if (isProductChanged) await saveDataToIndexedDB("products", apiProducts);
     if (isCategoryChanged)
       await saveDataToIndexedDB("category", categoriesWithFilters);
 
     if (isProductChanged || isCategoryChanged) {
-      // console.log("Dữ liệu thay đổi");
-
       localStorage.setItem("lastUpdated", Date.now());
     }
-    //  else {
-    //   console.log("Dữ liệu giữ nguyên");
-    // }
+
+    if (isProductChanged) {
+      await updateProductListInState(apiProducts);
+    }
   } catch (error) {
-    console.error("❌ Lỗi khi cập nhật dữ liệu:", error);
+    console.error("Error updating data:", error);
   }
 };
 
-onMounted(async () => {
+onMounted(() => {
   handleToken();
-  await updateDataIfNeeded();
+  updateDataIfNeeded();
+
+  dataUpdateInterval = setInterval(updateDataIfNeeded, 1 * 60 * 100);
+
+  echoChannel.listen("ProductUpdated", (event) => {
+    console.log("ProductUpdated event:", event.product);
+
+    messages.value.push(event.product);
+    updateProductListInState([event.product]);
+  });
 });
 
 onUnmounted(() => {
   clearTimeout(timeoutId);
+  clearInterval(dataUpdateInterval);
+  echoChannel.stopListening("ProductUpdated");
 });
 </script>
 
 <template>
-  <a-config-provider
-    :theme="{
-      token: {
-        colorPrimary: '#02B6AC',
-      },
-    }"
-  >
+  <a-config-provider :theme="{ token: { colorPrimary: '#02B6AC' } }">
     <component :is="layout">
       <router-view />
     </component>

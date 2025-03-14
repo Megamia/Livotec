@@ -30,14 +30,19 @@ return [
 
         'pusher' => [
             'driver' => 'pusher',
-            'key' => env('PUSHER_KEY'),
-            'secret' => env('PUSHER_SECRET'),
+            'key' => env('PUSHER_APP_KEY'),
+            'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
-                'cluster' => 'eu',
-                'encrypted' => true,
+                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'useTLS' => false, // Nếu dùng HTTPS thì chuyển thành true
+                'encrypted' => false,
+                'host' => env('PUSHER_HOST', '127.0.0.1'),
+                'port' => env('PUSHER_PORT', 6001),
+                'scheme' => env('PUSHER_SCHEME', 'http'),
             ],
         ],
+
 
         'redis' => [
             'driver' => 'redis',
