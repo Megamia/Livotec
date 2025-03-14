@@ -79,11 +79,12 @@
               </div>
               <a-flex class="px-[10px] w-[70%] text-center max-w-[200px]">
                 <a-flex gap="12" vertical class="flex-1 w-[100%]">
-                  <span
-                    class="text-[16px] font-bold max-w-[100%] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
+                  <a
+                    :href="`/product/${itemChil.slug}`"
+                    class="text-[16px] font-bold max-w-[100%] hover:bg-[#F3F4F6] hover:text-[#02B6AC] cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap"
                   >
                     {{ itemChil.name ? itemChil.name : "Chưa có tên" }}
-                  </span>
+                  </a>
                   <span class="text-[16px] font-bold text-[#02B6AC]">
                     {{ formatCurrency(itemChil.price) }}
                   </span>
