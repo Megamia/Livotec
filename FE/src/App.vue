@@ -62,7 +62,7 @@ const hasDataChanged = (localData, apiData) => {
   return apiData.some((apiItem) => {
     const localItem = localMap.get(apiItem.id);
     if (!localItem) {
-      console.log(`New item added:`, apiItem);
+      // console.log(`New item added:`, apiItem);
       return true;
     }
 
@@ -74,7 +74,7 @@ const hasDataChanged = (localData, apiData) => {
     });
 
     if (Object.keys(changes).length > 0) {
-      console.log(`🔄 Item ID ${apiItem.id} changed:`, changes);
+      console.log(`Item ID ${apiItem.id} changed:`, changes);
       return true;
     }
 
@@ -134,7 +134,7 @@ onMounted(() => {
   dataUpdateInterval = setInterval(updateDataIfNeeded, 1 * 60 * 100);
 
   echoChannel.listen("ProductUpdated", (event) => {
-    console.log("ProductUpdated event:", event.product);
+    // console.log("ProductUpdated event:", event.product);
 
     messages.value.push(event.product);
     updateProductListInState([event.product]);
