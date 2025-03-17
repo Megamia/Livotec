@@ -203,7 +203,9 @@
                   />
                 </div>
               </div>
-              <div class="flex flex-col md:flex-row md:justify-end gap-3 mt-[20px]">
+              <div
+                class="flex flex-col md:flex-row md:justify-end gap-3 mt-[20px]"
+              >
                 <div v-if="editMode" class="flex justify-end">
                   <button
                     type="submit"
@@ -531,6 +533,7 @@ const handleChangePassword = async () => {
 onMounted(() => {
   fetchProfile();
   fetchProvinces();
+  console.log(profile.value);
 });
 </script>
 

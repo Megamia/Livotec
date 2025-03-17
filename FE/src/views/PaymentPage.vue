@@ -458,11 +458,12 @@ const checkUser = () => {
     formState.phone = user.additional_user?.phone;
     formState.email = user.email;
     LocateState.province = user.additional_user?.province;
+    onProvinceChange();
     LocateState.district = user.additional_user?.district;
+    onDistrictChange();
     LocateState.subdistrict = user.additional_user?.subdistrict;
     formState.address = user.additional_user?.address;
-    onProvinceChange();
-    onDistrictChange();
+    console.log(LocateState);
   }
 };
 
