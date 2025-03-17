@@ -10,20 +10,20 @@ const echo = new Echo({
   disableStats: true,
 });
 
-echo.connector.pusher.connection.bind("connected", () => {
-  console.log("WebSocket Connected!");
-});
+// echo.connector.pusher.connection.bind("connected", () => {
+//   console.log("WebSocket Connected!");
+// });
 
-echo.connector.pusher.connection.bind("disconnected", () => {
-  console.log("WebSocket Disconnected!");
-});
+// echo.connector.pusher.connection.bind("disconnected", () => {
+//   console.log("WebSocket Disconnected!");
+// });
 
-echo.connector.pusher.connection.bind("reconnected", () => {
-  console.log(" WebSocket Reconnected!");
-});
+// echo.connector.pusher.connection.bind("reconnected", () => {
+//   console.log(" WebSocket Reconnected!");
+// });
 
-echo.connector.pusher.connection.bind("error", (error) => {
-  console.error("WebSocket Connection Error:", error);
-});
+// echo.connector.pusher.connection.bind("error", (error) => {
+//   console.error("WebSocket Connection Error:", error);
+// });
 
 export default echo;

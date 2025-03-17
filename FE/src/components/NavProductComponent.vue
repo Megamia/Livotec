@@ -53,7 +53,7 @@
               <div class="w-full relative py-[20px] justify-center flex">
                 <img
                   :src="
-                    itemChil.image ||
+                    itemChil?.image?.path ||
                     'http://cptudong.vmts.vn/content/images/thumbs/default-image_450.png'
                   "
                   class="justify-center items-center w-[300px] h-[300px] max-w-full max-h-full object-cover"
@@ -86,7 +86,6 @@
                   </a>
                   <span
                     class="text-[16px] text-center font-bold text-[#02B6AC] cursor-pointer"
-                    @click="add(itemChil)"
                   >
                     {{ formatCurrency(itemChil.price) }}
                   </span>
@@ -128,11 +127,6 @@
 import {
   ref,
   onMounted,
-  onUnmounted,
-  computed,
-  isRef,
-  toRaw,
-  isReactive,
 } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
@@ -142,7 +136,7 @@ import { Navigation } from "swiper";
 import { useRouter } from "vue-router";
 import { BsArrowLeft, BsArrowRight } from "@kalimahapps/vue-icons";
 import store from "@/store/store";
-import { getDataFromIndexedDB, saveDataToIndexedDB } from "@/store/indexedDB";
+import { getDataFromIndexedDB } from "@/store/indexedDB";
 
 const modules = [Navigation];
 const slugsToFilter = [
@@ -227,46 +221,11 @@ const handleAddToCart = async (data) => {
   store.commit("product/setDataStoreCart", {
     dataStoreCart: updatedCart,
   });
-
-  // console.log("Giỏ hàng sau khi cập nhật:", updatedCart);
 };
 
 const handleProductDetail = (items) => {
   router.push(`/product/${items}`);
 };
-
-const add = () => {
-  const a = JSON.parse(
-    JSON.stringify(store.getters["product/getDataStoreCart"])
-  );
-};
-
-// const add = async (data) => {
-//   console.log("Dữ liệu gốc:", data);
-
-//   let plainData = isReactive(data) || isRef(data) ? toRaw(data) : data;
-
-//   console.log("Dữ liệu sau khi chuyển đổi:", plainData);
-
-//   if (!plainData || typeof plainData !== "object" || !plainData.id) {
-//     console.error("❌ Dữ liệu không hợp lệ (thiếu id):", plainData);
-//     return;
-//   }
-
-//   const cart = await getDataFromIndexedDB("cart");
-
-//   const existingItem = cart.find((item) => item.id === plainData.id);
-
-//   if (existingItem) {
-//     existingItem.quantity += 1;
-//   } else {
-//     cart.push({ id: plainData.id, quantity: 1 });
-//   }
-
-//   console.log("Giỏ hàng sau khi cập nhật:", cart);
-
-//   await saveDataToIndexedDB("cart", cart);
-// };
 
 const changeData = async (slug) => {
   activeKey.value = slug;
@@ -320,29 +279,6 @@ const nextSlide = () => {
   if (swiperInstance.value) swiperInstance.value.slideNext();
 };
 
-// const screenWidth = ref(window.innerWidth);
-// const maxItems = computed(() => {
-//   if (screenWidth.value < 420) return 0;
-//   if (screenWidth.value < 720) return 1;
-//   if (screenWidth.value < 992) return 2;
-//   if (screenWidth.value < 1200) return 3;
-//   if (screenWidth.value < 1400) return 4;
-//   return 4;
-// });
-
-// const updateScreenWidth = () => {
-//   screenWidth.value = window.innerWidth;
-// };
-
-// onMounted(() => {
-//   window.addEventListener("resize", updateScreenWidth);
-// });
-
-// onUnmounted(() => {
-//   window.removeEventListener("resize", updateScreenWidth);
-// });
-
-// const displayedItems = computed(() => dataChil.value.slice(0, maxItems.value));
 </script>
 
 <style scoped>
