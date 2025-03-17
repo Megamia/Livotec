@@ -38,7 +38,7 @@ onMounted(async () => {
 
           const data = response.data;
           if (data.status === "success") {
-            console.log("Order created, orderID:", data.orderID); // Kiểm tra orderID
+            console.log("Order created"); // Kiểm tra orderID
             return data.orderID; // Trả về orderID đúng
           } else {
             console.error("Error creating order:", data.message);
@@ -58,7 +58,7 @@ onMounted(async () => {
           );
 
           const result = response.data;
-          console.log("Payment confirmation response:", result);
+          console.log("Payment confirmation response");
 
           emit("payment-success", data.orderID);
         } catch (error) {

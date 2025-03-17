@@ -246,7 +246,7 @@ const toggleForm = () => {
 let firstAttemptFailed = true;
 let lastLoginAttempt = 0;
 let isLoggingIn = false;
-let retryDelay = 2000; 
+let retryDelay = 2000;
 
 const login = async () => {
   if (isLoggingIn) return;
@@ -271,12 +271,12 @@ const login = async () => {
     if (response.status === 205 || firstAttemptFailed) {
       firstAttemptFailed = false;
       alert("Sai tài khoản hoặc mật khẩu!");
-      retryDelay = Math.min(retryDelay * 2); 
+      retryDelay = Math.min(retryDelay);
       return;
     } else if (response.data) {
       sessionStorage.setItem("user", JSON.stringify(response.data.user));
       alert("Đăng nhập thành công!");
-      retryDelay = 2000; 
+      retryDelay = 2000;
       router.push("/");
     }
   } catch (error) {

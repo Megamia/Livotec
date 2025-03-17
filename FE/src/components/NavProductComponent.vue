@@ -239,7 +239,7 @@ const fetchData = async (slug) => {
 
     const parent = categoryData.find((item) => item.slug === slug);
     if (!parent) {
-      console.log("Không tìm thấy danh mục");
+      alert("Không tìm thấy danh mục");
       return;
     }
 

@@ -385,6 +385,7 @@ import store from "@/store/store";
 import PayPalButton from "@/components/paypal/PayPalButton.vue";
 import { useRouter } from "vue-router";
 import { getDataFromIndexedDB } from "@/store/indexedDB";
+import { Modal } from "ant-design-vue";
 
 const router = useRouter();
 const PayPalButtonRef = ref(false);
@@ -463,7 +464,7 @@ const checkUser = () => {
     onDistrictChange();
     LocateState.subdistrict = user.additional_user?.subdistrict;
     formState.address = user.additional_user?.address;
-    console.log(LocateState);
+    // console.log(LocateState);
   }
 };
 
@@ -530,13 +531,31 @@ const onProvinceChange = async () => {
     if (provinceCode) {
       const response = await axios.get(`${host}p/${provinceCode}?depth=2`);
       districts.value = response.data.districts;
-      wards.value = []; // Reset wards khi thay đổi tỉnh
+      if (
+        districts.value.some(
+          (districts) => districts.code === LocateState.district
+        )
+      ) {
+      } else {
+        LocateState.district = null;
+        wards.value = [];
+        LocateState.subdistrict = null;
+      }
     }
 
     if (diffprovinceCode) {
       const response = await axios.get(`${host}p/${diffprovinceCode}?depth=2`);
       diffdistricts.value = response.data.districts;
-      diffwards.value = []; // Reset diffwards khi thay đổi tỉnh
+      if (
+        diffdistricts.value.some(
+          (diffdistricts) => diffdistricts.code === LocateState.diffdistrict
+        )
+      ) {
+      } else {
+        LocateState.diffdistrict = null;
+        diffwards.value = [];
+        LocateState.diffsubdistrict = null;
+      }
     }
   } catch (error) {
     console.error("Failed to fetch districts:", error);
@@ -551,11 +570,23 @@ const onDistrictChange = async () => {
     if (districtCode) {
       const response = await axios.get(`${host}d/${districtCode}?depth=2`);
       wards.value = response.data.wards;
+      if (wards.value.some((wards) => wards.code === LocateState.subdistrict)) {
+      } else {
+        LocateState.subdistrict = null;
+      }
     }
 
     if (diffdistrictCode) {
       const response = await axios.get(`${host}d/${diffdistrictCode}?depth=2`);
       diffwards.value = response.data.wards;
+      if (
+        diffwards.value.some(
+          (diffwards) => diffwards.code === LocateState.diffsubdistrict
+        )
+      ) {
+      } else {
+        LocateState.diffsubdistrict = null;
+      }
     }
   } catch (error) {
     console.error("Failed to fetch wards:", error);
@@ -724,8 +755,7 @@ const rules = {
 };
 
 const onSubmit = async () => {
-  console.log(formState, LocateState);
-
+  // console.log(formState, LocateState);
   if (!formState.province) {
     handleProvinceChange(LocateState.province);
   }
@@ -770,7 +800,9 @@ const handlePaymentSuccess = async (orderID) => {
     );
 
     store.dispatch("product/clearDataStoreCart");
-    alert("Order created successfully");
+    Modal.success({
+      title: "Thanh toán đơn hàng thành công!",
+    });
     router.push(`/payment/order-received/${response.data.order_code}`);
   } catch (error) {
     console.error("Error adding order to database:", error);

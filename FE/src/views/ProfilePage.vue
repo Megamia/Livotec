@@ -424,25 +424,38 @@ const fetchProvinces = async () => {
   }
 };
 
-const onProvinceChange = async () => {
-  const provinceCode = profile.value.province;
+const onProvinceChange = async (provinceCode) => {
   try {
     if (provinceCode) {
       const response = await axios.get(`${host}p/${provinceCode}?depth=2`);
       districts.value = response.data.districts;
-      wards.value = [];
+      if (
+        districts.value.some(
+          (district) => district.code === profile.value.district
+        )
+      ) {
+      } else {
+        profile.value.district = null;
+        wards.value = [];
+        profile.value.subdistrict = null;
+      }
     }
   } catch (error) {
     console.error("Failed to fetch districts:", error);
   }
 };
 
-const onDistrictChange = async () => {
-  const districtCode = profile.value.district;
+const onDistrictChange = async (districtCode) => {
   try {
     if (districtCode) {
       const response = await axios.get(`${host}d/${districtCode}?depth=2`);
       wards.value = response.data.wards;
+      if (
+        wards.value.some((wards) => wards.code === profile.value.subdistrict)
+      ) {
+      } else {
+        profile.value.subdistrict = null;
+      }
     }
   } catch (error) {
     console.error("Failed to fetch wards:", error);
@@ -458,11 +471,11 @@ const fetchProfile = () => {
     profile.value.email = user.email;
     profile.value.phone = user.additional_user?.phone || null;
     profile.value.province = user.additional_user?.province || null;
+    onProvinceChange(profile.value.province);
     profile.value.district = user.additional_user?.district || null;
+    onDistrictChange(profile.value.district);
     profile.value.subdistrict = user.additional_user?.subdistrict || null;
     profile.value.address = user.additional_user?.address || "";
-    onProvinceChange();
-    onDistrictChange();
   }
 };
 const handleChangeInfo = async () => {
@@ -484,7 +497,7 @@ const handleChangeInfo = async () => {
     }
   } catch (error) {
     if (error.response && error.response.status === 401) {
-      console.log("Bạn chưa đăng nhập. Đang chuyển hướng...");
+      // console.log("Bạn chưa đăng nhập. Đang chuyển hướng...");
       alert("Bạn chưa đăng nhập. Đang chuyển hướng...");
       router.push("/login");
     } else {
@@ -531,9 +544,9 @@ const handleChangePassword = async () => {
 };
 
 onMounted(() => {
-  fetchProfile();
   fetchProvinces();
-  console.log(profile.value);
+  fetchProfile();
+  // console.log(profile.value);
 });
 </script>
 

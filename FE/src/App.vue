@@ -74,7 +74,7 @@ const hasDataChanged = (localData, apiData) => {
     });
 
     if (Object.keys(changes).length > 0) {
-      console.log(`Item ID ${apiItem.id} changed:`, changes);
+      // console.log(`Item ID ${apiItem.id} changed:`, changes);
       return true;
     }
 
