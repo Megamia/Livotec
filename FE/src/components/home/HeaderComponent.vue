@@ -34,14 +34,14 @@
           >
             <h5 class="text-[1.25rem] font-medium">{{ item.title }}</h5>
             <ul class="flex flex-col gap-[10px] py-[10px]">
-              <li
+              <a
                 v-for="itemChil in item.item"
                 :key="`${item.id}-${itemChil.id}`"
                 class="text-black cursor-pointer"
                 @click="handleChangeToProductDetails(itemChil)"
               >
                 {{ itemChil.name }}
-              </li>
+              </a>
             </ul>
           </a-flex>
         </a-flex>
@@ -69,8 +69,9 @@
                     v-for="itemChil in item.products"
                     :key="itemChil.id"
                   >
+                    <!-- :href="`/product/${itemChil.slug}`" -->
                     <a
-                      :href="`/product/${itemChil.slug}`"
+                      @click="handleChangeToProductDetails(itemChil)"
                       class="hover:bg-[#F5F5F5] flex flex-col gap-1 relative"
                     >
                       <img
@@ -166,6 +167,7 @@ import {
 import store from "@/store/store";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+import { getDataFromIndexedDB } from "../../store/indexedDB";
 
 const router = useRouter();
 const route = useRoute();
@@ -269,12 +271,11 @@ const data = ref({});
 
 const getdata = async () => {
   try {
-    const categoryResponse = await axios.get(
-      `${import.meta.env.VITE_APP_URL_API_CATEGORY}/allCategoryParent`
-    );
+    const allProducts = await getDataFromIndexedDB("products");
+    const allCategories = await getDataFromIndexedDB("category");
 
-    if (!Array.isArray(categoryResponse.data.allCategoryParent)) {
-      console.error("API did not return an array:", categoryResponse.data);
+    if (!Array.isArray(allCategories)) {
+      console.error("IndexedDB did not return an array:", allCategories);
       return;
     }
 
@@ -285,46 +286,29 @@ const getdata = async () => {
       "binh-nuoc-nong",
     ];
 
-    const categories = categoryResponse.data.allCategoryParent.filter(
-      (category) => allowedCategories.includes(category.slug)
+    const categories = allCategories.filter((category) =>
+      allowedCategories.includes(category.slug)
     );
 
     let maxId = 0;
 
-    const productRequests = categories.map((category) =>
-      axios
-        .get(
-          `${import.meta.env.VITE_APP_URL_API_PRODUCT}/product/${category.slug}`
-        )
-        .catch((error) => {
-          console.error(
-            `Error fetching products for category: ${category.slug}`,
-            error
-          );
-          return { data: [] };
-        })
-    );
+    const categorizedProducts = categories.map((category) => {
+      let categoryIds = [category.id];
 
-    const productResponses = await Promise.allSettled(productRequests);
-
-    const categorizedProducts = categories.map((category, index) => {
-      if (productResponses[index].status === "fulfilled") {
-        const productsInCategory = productResponses[index].value.data;
-        const shuffled = productsInCategory.sort(() => 0.5 - Math.random());
-
-        return {
-          category,
-          products: shuffled.slice(0, 4),
-        };
-      } else {
-        console.error(
-          `Failed to fetch products for category: ${category.slug}`
-        );
-        return {
-          category,
-          products: [],
-        };
+      if (Array.isArray(category.children)) {
+        category.children.forEach((child) => categoryIds.push(child.id));
       }
+
+      const productsInCategory = allProducts.filter((product) =>
+        categoryIds.includes(product.category_id)
+      );
+
+      const shuffled = productsInCategory.sort(() => 0.5 - Math.random());
+
+      return {
+        category,
+        products: shuffled.slice(0, 4),
+      };
     });
 
     const anotherData = [
@@ -348,7 +332,7 @@ const getdata = async () => {
 
     data.value = [...categorizedProducts, ...anotherData];
   } catch (e) {
-    console.log("Error: ", e);
+    console.error("Error:", e);
   }
 };
 
@@ -384,18 +368,7 @@ const showSearch = () => {
 };
 
 const searchInput = ref("");
-
-const filteredData = computed(() => {
-  if (!searchInput.value.trim()) return data1.value;
-  return data1.value
-    .map((group) => ({
-      ...group,
-      item: group.item.filter((item) =>
-        item.name.toLowerCase().includes(searchInput.value.toLowerCase())
-      ),
-    }))
-    .filter((group) => group.item.length > 0);
-});
+const allProducts = ref([]);
 const data1 = ref([
   {
     id: 1,
@@ -428,9 +401,27 @@ const data1 = ref([
     ],
   },
 ]);
+onMounted(async () => {
+  allProducts.value = await getDataFromIndexedDB("products");
+});
 
+const filteredData = computed(() => {
+  if (!searchInput.value.trim()) {
+    return data1.value;
+  }
+
+  const result = allProducts.value.filter((product) =>
+    product.name.toLowerCase().includes(searchInput.value.toLowerCase())
+  );
+
+  return result.length
+    ? [{ id: 99, title: "Kết quả tìm kiếm", item: result }]
+    : [];
+});
 const handleChangeToProductDetails = (value) => {
-  alert("Chưa có data để đổi trang");
+  // console.log(value);
+  router.push(`/product/${value.slug}`);
+  // alert("Chưa có data để đổi trang");
 };
 
 const handleBlur = () => {
